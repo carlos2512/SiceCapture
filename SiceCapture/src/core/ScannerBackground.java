@@ -25,7 +25,7 @@ public class ScannerBackground  implements ScannerListener,Runnable  {
         this.scanner = scanner;
     }
     
-    private void storeImage(BufferedImage image) {
+    private void saveImage(BufferedImage image) {
         try {
             index++;
             ImageIO.write(image, "jpg", new File("scn" + index + ".jpg"));
@@ -57,7 +57,7 @@ public class ScannerBackground  implements ScannerListener,Runnable  {
         ScannerDevice sd = metadata.getDevice();
         if (type.equals(ScannerIOMetadata.ACQUIRED)) {
             logger.info("ScannerHandler: Image acquired");
-            storeImage(metadata.getImage());
+            saveImage(metadata.getImage());
         } else if (type.equals(ScannerIOMetadata.NEGOTIATE)) {
             try {
                 logger.info("ScannerHandler: Setup settings");
