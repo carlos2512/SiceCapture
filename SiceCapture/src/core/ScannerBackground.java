@@ -56,7 +56,7 @@ public class ScannerBackground  implements ScannerListener,Runnable  {
     public void update(ScannerIOMetadata.Type type, ScannerIOMetadata metadata) {
         ScannerDevice sd = metadata.getDevice();
         if (type.equals(ScannerIOMetadata.ACQUIRED)) {
-            logger.info("ScannerHandler: Image acquired");
+            logger.info("ScannerHandler: Image");
             saveImage(metadata.getImage());
         } else if (type.equals(ScannerIOMetadata.NEGOTIATE)) {
             try {
