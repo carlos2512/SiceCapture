@@ -16,14 +16,10 @@ public class Main {
     public static void main(String[] args) {
 
         BasicConfigurator.configure();
-        
-
-        
 
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
             new MainGui().setVisible(true);
-//            new TwainAppletExample("Twain Applet Example [2007-11-02]");
         } catch (Exception e) {
             e.printStackTrace();
         }
