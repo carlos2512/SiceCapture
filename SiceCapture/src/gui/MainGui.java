@@ -1,5 +1,4 @@
 package gui;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -28,37 +27,39 @@ public class MainGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        mainPanelNavigation = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
-        jMenu4 = new javax.swing.JMenu();
+        jToolBar1 = new javax.swing.JToolBar();
+        jButton1 = new javax.swing.JButton();
+        mainBarMenu = new javax.swing.JMenuBar();
+        mainTemplateOption = new javax.swing.JMenu();
+        mainDocumentOption = new javax.swing.JMenu();
+        mainScanningOption = new javax.swing.JMenu();
+        mainConsultOption = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Sice Capture Demo");
         setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        mainPanelNavigation.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jTree1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jScrollPane1.setViewportView(jTree1);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout mainPanelNavigationLayout = new javax.swing.GroupLayout(mainPanelNavigation);
+        mainPanelNavigation.setLayout(mainPanelNavigationLayout);
+        mainPanelNavigationLayout.setHorizontalGroup(
+            mainPanelNavigationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelNavigationLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        mainPanelNavigationLayout.setVerticalGroup(
+            mainPanelNavigationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelNavigationLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
                 .addContainerGap())
@@ -70,7 +71,7 @@ public class MainGui extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 423, Short.MAX_VALUE)
+            .addGap(0, 444, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -78,31 +79,40 @@ public class MainGui extends javax.swing.JFrame {
         );
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 51, 153));
+        jLabel1.setForeground(new java.awt.Color(153, 153, 153));
         jLabel1.setText("SiceCapture");
 
-        jMenu1.setForeground(new java.awt.Color(0, 51, 153));
-        jMenu1.setText("Plantillas");
-        jMenu1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jMenuBar1.add(jMenu1);
+        jToolBar1.setRollover(true);
 
-        jMenu2.setForeground(new java.awt.Color(0, 51, 153));
-        jMenu2.setText("Documentos");
-        jMenu2.setFocusable(false);
-        jMenu2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jMenuBar1.add(jMenu2);
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/scnIco.png"))); // NOI18N
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton1);
 
-        jMenu3.setForeground(new java.awt.Color(0, 51, 153));
-        jMenu3.setText("Digitalización");
-        jMenu3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jMenuBar1.add(jMenu3);
+        mainTemplateOption.setText("Plantillas");
+        mainTemplateOption.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        mainBarMenu.add(mainTemplateOption);
 
-        jMenu4.setForeground(new java.awt.Color(0, 51, 153));
-        jMenu4.setText("Consultas & Reportes");
-        jMenu4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jMenuBar1.add(jMenu4);
+        mainDocumentOption.setText("Documentos");
+        mainDocumentOption.setFocusable(false);
+        mainDocumentOption.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        mainBarMenu.add(mainDocumentOption);
 
-        setJMenuBar(jMenuBar1);
+        mainScanningOption.setText("Digitalización");
+        mainScanningOption.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        mainBarMenu.add(mainScanningOption);
+
+        mainConsultOption.setText("Consultas & Reportes");
+        mainConsultOption.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        mainBarMenu.add(mainConsultOption);
+
+        setJMenuBar(mainBarMenu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -112,26 +122,35 @@ public class MainGui extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1))
-                .addGap(27, 27, 27))
+                        .addComponent(mainPanelNavigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(102, Short.MAX_VALUE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(mainPanelNavigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -162,22 +181,26 @@ public class MainGui extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            
             public void run() {
+                
                 new MainGui().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTree jTree1;
+    private javax.swing.JMenuBar mainBarMenu;
+    private javax.swing.JMenu mainConsultOption;
+    private javax.swing.JMenu mainDocumentOption;
+    private javax.swing.JPanel mainPanelNavigation;
+    private javax.swing.JMenu mainScanningOption;
+    private javax.swing.JMenu mainTemplateOption;
     // End of variables declaration//GEN-END:variables
 }
