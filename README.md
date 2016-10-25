@@ -1,2 +1,2 @@
 # SiceCapture
-Sice Capture (Java Swing Version)
+Sice Capture Demo (Java Swing Version)
