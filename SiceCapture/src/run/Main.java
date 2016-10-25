@@ -1,8 +1,8 @@
 package run;
 
-import examples.TwainAppletExample;
+import gui.MainGui;
+import javax.swing.UIManager;
 import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -10,18 +10,22 @@ import org.apache.log4j.Logger;
  */
 public class Main {
 
-
     /**
      * @param args
      */
     public static void main(String[] args) {
+
         BasicConfigurator.configure();
+        
+
+        
+
         try {
-            new TwainAppletExample("Twain Applet Example [2007-11-02]");
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            new MainGui().setVisible(true);
+//            new TwainAppletExample("Twain Applet Example [2007-11-02]");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 }
