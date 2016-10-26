@@ -20,6 +20,7 @@ public class ScannerBackground  implements ScannerListener,Runnable  {
     private final Scanner scanner;
     private int index = 0;
     private boolean active;
+    private DataSource dataSource;
 
     public ScannerBackground(Scanner scanner) {
         this.scanner = scanner;
@@ -37,6 +38,8 @@ public class ScannerBackground  implements ScannerListener,Runnable  {
     @Override
      public void run() {
         try {
+            dataSource = new DataSource();
+            dataSource.getAllNamedExpedient();
             logger.info("Starting ScannerBackground Process");
             scanner.acquire();
         } catch (ScannerIOException se) {

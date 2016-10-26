@@ -70,10 +70,8 @@ public class TwainAppletExample extends Applet implements ActionListener, Scanne
         filename = System.getProperty("user.home") + "\\My Documents\\test";
 
         scanner = Scanner.getDevice();
-        
         sc = new ScannerBackground(scanner);
         scanner.addListener(sc);
-        acquireButton.setEnabled(!scanner.isBusy());
 
 //    scanner.select("TWAIN_32 Sample Source");
     }
