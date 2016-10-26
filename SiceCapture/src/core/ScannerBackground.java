@@ -19,6 +19,7 @@ public class ScannerBackground  implements ScannerListener,Runnable  {
     final static Logger logger = Logger.getLogger(ScannerBackground.class);
     private final Scanner scanner;
     private int index = 0;
+    private boolean asds;
     private boolean active;
 
     public ScannerBackground(Scanner scanner) {
