@@ -1,9 +1,18 @@
 package gui;
 
-import core.DataSource;
+import controller.DocumentJpaController;
+import controller.ExpedientJpaController;
 import uk.co.mmscomputing.device.scanner.Scanner;
 import core.ScannerBackground;
+import entities.Document;
+import entities.Expedient;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -20,15 +29,22 @@ import javax.swing.tree.DefaultTreeModel;
 public class MainGui extends javax.swing.JFrame {
 
     private final ScannerBackground scannerBackground;
-    DataSource dataSource;
+    private Map<String, Integer> namedDocumentMapping;
+    private ExpedientJpaController expedientController;
+    private DocumentJpaController documentController;
+    private final EntityManagerFactory emf;
 
     /**
      * Creates new form MainGui
+     *
+     * @param emf
      */
-    public MainGui() {
-        dataSource = new DataSource();
+    public MainGui(EntityManagerFactory emf) {
+        this.emf = emf;
+        initControllers();
         initComponents();
         desactiveExpedientCreationPanel();
+        initDocumentList();
         initExpedientTree();
         setLocationRelativeTo(null);
         scannerBackground = new ScannerBackground(Scanner.getDevice());
@@ -55,6 +71,9 @@ public class MainGui extends javax.swing.JFrame {
         expedientDescriptionTxt = new javax.swing.JTextField();
         CrearExpButton = new javax.swing.JButton();
         limpiarExpButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        mainDocumentList = new javax.swing.JList();
+        jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         scannerButton = new javax.swing.JButton();
         mainBarMenu = new javax.swing.JMenuBar();
@@ -144,37 +163,57 @@ public class MainGui extends javax.swing.JFrame {
         jLabel3.setText("Descripción:");
 
         CrearExpButton.setText("Crear");
+        CrearExpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CrearExpButtonActionPerformed(evt);
+            }
+        });
 
         limpiarExpButton.setText("Limpiar");
+
+        mainDocumentList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(mainDocumentList);
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel4.setText("Documentos:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(39, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(limpiarExpButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(CrearExpButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(56, 56, 56))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addGap(42, 42, 42)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(expedientNameTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(expedientDescriptionTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(expedientDescriptionTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(47, 47, 47))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(limpiarExpButton)
+                .addGap(18, 18, 18)
+                .addComponent(CrearExpButton)
+                .addGap(61, 61, 61))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addComponent(jLabel5)
                 .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -184,11 +223,15 @@ public class MainGui extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(expedientDescriptionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(95, 95, 95)
+                .addGap(34, 34, 34)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CrearExpButton)
-                    .addComponent(limpiarExpButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(limpiarExpButton)
+                    .addComponent(CrearExpButton))
+                .addGap(67, 67, 67))
         );
 
         javax.swing.GroupLayout mainOperationalPaneLayout = new javax.swing.GroupLayout(mainOperationalPane);
@@ -313,19 +356,55 @@ public class MainGui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_scannerButtonActionPerformed
 
+    private void initControllers() {
+        expedientController = new ExpedientJpaController(emf);
+        documentController = new DocumentJpaController(emf);
+    }
+
     private void initExpedientTree() {
-        ArrayList namedExpedients = dataSource.getAllNamedExpedient();
+        List<Expedient> allExpedientsList = expedientController.findExpedientEntities();
         DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
-        for (Object namedExpedient : namedExpedients) {
-            DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(namedExpedient.toString());
-            metaExpedient.add(treeNode);
+        for (Expedient expedient : allExpedientsList) {
+            DefaultMutableTreeNode expedientNode = new DefaultMutableTreeNode(expedient.getName());
+            metaExpedient.add(expedientNode);
+            if (expedient.getDocumentCollection() != null && !expedient.getDocumentCollection().isEmpty()) {
+                for (Document document : expedient.getDocumentCollection()) {
+                    DefaultMutableTreeNode documentNode = new DefaultMutableTreeNode(document.getName());
+                    expedientNode.add(documentNode);
+                }
+            }
         }
         expedientTree.setModel(new DefaultTreeModel(metaExpedient));
+    }
+
+    private void initDocumentList() {
+        List<Document> documentList = documentController.findDocumentEntities();
+        mainDocumentList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        DefaultListModel model = new DefaultListModel();
+        int index = 0;
+        for (Document document : documentList) {
+            model.add(index, document.getName());
+        }
+        mainDocumentList.setModel(model);
     }
 
     private void activeExpedientCreationPanel() {
         mainOperationalPane.add(this.jPanel1);
         SwingUtilities.updateComponentTreeUI(this);
+    }
+
+    private void getNamedDocumentsList() {
+        mainDocumentList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+
+            public int getSize() {
+                return strings.length;
+            }
+
+            public Object getElementAt(int i) {
+                return strings[i];
+            }
+        });
     }
 
     private void desactiveExpedientCreationPanel() {
@@ -354,6 +433,40 @@ public class MainGui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_expedientNameTxtActionPerformed
 
+    private void CrearExpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearExpButtonActionPerformed
+
+        boolean validProcess = true;
+        if ("".equals(expedientNameTxt.getText().trim())) {
+            validProcess = false;
+        } else if ("".equals(expedientDescriptionTxt.getText().trim())) {
+            validProcess = false;
+        }
+        if (validProcess) {
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+            Expedient expedient = new Expedient();
+            expedient.setName(expedientNameTxt.getText().trim());
+            expedient.setDescription(expedientDescriptionTxt.getText().trim());
+
+            List<Document> selectedDocuments = new ArrayList<>();
+            List selectedNameDocumentsList = mainDocumentList.getSelectedValuesList();
+            if (selectedNameDocumentsList != null && !selectedNameDocumentsList.isEmpty()) {
+                for (Object selectedDocumentName : selectedNameDocumentsList) {
+                    Document selectedDocument = documentController.findByName(selectedDocumentName.toString());
+                    if (selectedDocument != null) {
+                        selectedDocuments.add(selectedDocument);
+                    }
+                }
+            }
+            expedient.setDocumentCollection(selectedDocuments);
+
+            expedientController.create(expedient);
+            em.getTransaction().commit();
+            initExpedientTree();
+
+        }
+    }//GEN-LAST:event_CrearExpButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CrearExpButton;
@@ -363,15 +476,18 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton limpiarExpButton;
     private javax.swing.JMenuBar mainBarMenu;
     private javax.swing.JMenu mainConsultOption;
+    private javax.swing.JList mainDocumentList;
     private javax.swing.JMenu mainDocumentOption;
     private javax.swing.JPanel mainOperationalPane;
     private javax.swing.JPanel mainPanelNavigation;

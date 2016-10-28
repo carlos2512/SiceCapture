@@ -1,6 +1,9 @@
 package run;
 
 import gui.MainGui;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.swing.UIManager;
 import org.apache.log4j.BasicConfigurator;
 
@@ -19,7 +22,8 @@ public class Main {
 
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-            new MainGui().setVisible(true);
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("SiceCapturePU");
+            new MainGui(emf).setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
         }

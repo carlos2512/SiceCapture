@@ -21,7 +21,6 @@ public class ScannerBackground  implements ScannerListener,Runnable  {
     private int index = 0;
     private boolean asds;
     private boolean active;
-    private DataSource dataSource;
 
     public ScannerBackground(Scanner scanner) {
         this.scanner = scanner;
@@ -39,8 +38,6 @@ public class ScannerBackground  implements ScannerListener,Runnable  {
     @Override
      public void run() {
         try {
-            dataSource = new DataSource();
-            dataSource.getAllNamedExpedient();
             logger.info("Starting ScannerBackground Process");
             scanner.acquire();
         } catch (ScannerIOException se) {
@@ -65,7 +62,7 @@ public class ScannerBackground  implements ScannerListener,Runnable  {
         } else if (type.equals(ScannerIOMetadata.NEGOTIATE)) {
             try {
                 logger.info("ScannerHandler: Setup settings");
-                sd.setShowUserInterface(true);
+                sd.setShowUserInterface(false);
                 sd.setResolution(100);
             } catch (ScannerIOException ex) {
                 sd.setCancel(true);
