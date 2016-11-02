@@ -38,6 +38,14 @@ public class DocumentDataJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
+    public List<DocumentData> findByDocument(Document fkDocument) {
+        EntityManager em = getEntityManager();
+         Query query = em.createNamedQuery("DocumentData.findByDocument", DocumentData.class);
+         query.setParameter("fkDocument", fkDocument);
+         List<DocumentData> documentDataList =  (List<DocumentData>) query.getResultList();
+         return documentDataList;
+    }
+
     public void create(DocumentData documentData) throws PreexistingEntityException, Exception {
         if (documentData.getClientDataCollection() == null) {
             documentData.setClientDataCollection(new ArrayList<ClientData>());
@@ -264,5 +272,5 @@ public class DocumentDataJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

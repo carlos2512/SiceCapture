@@ -48,6 +48,18 @@ public class Document implements Serializable {
     private String name;
     @Column(name = "description")
     private String description;
+    @Basic(optional = false)
+    @Column(name = "maxImageSize")
+    private int maxImageSize;
+    @Basic(optional = false)
+    @Column(name = "canRepeat")
+    private int canRepeat;
+    @Basic(optional = false)
+    @Column(name = "isRequired")
+    private int isRequired;
+    @Basic(optional = false)
+    @Column(name = "canExpire")
+    private int canExpire;
     @JoinTable(name = "document_expedient", joinColumns = {
         @JoinColumn(name = "fk_document", referencedColumnName = "idDocument")}, inverseJoinColumns = {
         @JoinColumn(name = "fk_expedient", referencedColumnName = "idExpedient")})
@@ -67,12 +79,16 @@ public class Document implements Serializable {
         this.idDocument = idDocument;
     }
 
-    public Document(Integer idDocument, String name) {
+    public Document(Integer idDocument, String name, int maxImageSize, int canRepeat, int isRequired, int canExpire) {
         this.idDocument = idDocument;
         this.name = name;
+        this.maxImageSize = maxImageSize;
+        this.canRepeat = canRepeat;
+        this.isRequired = isRequired;
+        this.canExpire = canExpire;
     }
 
-    public Integer getIdDocument() {
+  public Integer getIdDocument() {
         return idDocument;
     }
 
@@ -94,6 +110,38 @@ public class Document implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getMaxImageSize() {
+        return maxImageSize;
+    }
+
+    public void setMaxImageSize(int maxImageSize) {
+        this.maxImageSize = maxImageSize;
+    }
+
+    public int getCanRepeat() {
+        return canRepeat;
+    }
+
+    public void setCanRepeat(int canRepeat) {
+        this.canRepeat = canRepeat;
+    }
+
+    public int getIsRequired() {
+        return isRequired;
+    }
+
+    public void setIsRequired(int isRequired) {
+        this.isRequired = isRequired;
+    }
+
+    public int getCanExpire() {
+        return canExpire;
+    }
+
+    public void setCanExpire(int canExpire) {
+        this.canExpire = canExpire;
     }
 
     @XmlTransient
@@ -154,7 +202,7 @@ public class Document implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Document[ idDocument=" + idDocument + " ]";
+        return "asda.Document[ idDocument=" + idDocument + " ]";
     }
     
 }

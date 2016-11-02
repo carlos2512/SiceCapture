@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -31,23 +33,19 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "DocumentData.findAll", query = "SELECT d FROM DocumentData d"),
     @NamedQuery(name = "DocumentData.findByIdDocumentdata", query = "SELECT d FROM DocumentData d WHERE d.idDocumentdata = :idDocumentdata"),
-    @NamedQuery(name = "DocumentData.findByCode", query = "SELECT d FROM DocumentData d WHERE d.code = :code"),
+    @NamedQuery(name = "DocumentData.findByDocument", query = "SELECT d FROM DocumentData d WHERE d.fkDocument = :fkDocument"),
     @NamedQuery(name = "DocumentData.findByName", query = "SELECT d FROM DocumentData d WHERE d.name = :name"),
-    @NamedQuery(name = "DocumentData.findByDescription", query = "SELECT d FROM DocumentData d WHERE d.description = :description"),
     @NamedQuery(name = "DocumentData.findByRequired", query = "SELECT d FROM DocumentData d WHERE d.required = :required")})
 public class DocumentData implements Serializable {
     private static final long serialVersionUID = 1L;
+    
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idDocument_data")
     private Integer idDocumentdata;
-    @Basic(optional = false)
-    @Column(name = "code")
-    private String code;
     @Column(name = "name")
     private String name;
-    @Column(name = "description")
-    private String description;
     @Basic(optional = false)
     @Column(name = "required")
     private int required;
@@ -69,7 +67,6 @@ public class DocumentData implements Serializable {
 
     public DocumentData(Integer idDocumentdata, String code, int required) {
         this.idDocumentdata = idDocumentdata;
-        this.code = code;
         this.required = required;
     }
 
@@ -81,13 +78,6 @@ public class DocumentData implements Serializable {
         this.idDocumentdata = idDocumentdata;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getName() {
         return name;
@@ -97,13 +87,7 @@ public class DocumentData implements Serializable {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public int getRequired() {
         return required;

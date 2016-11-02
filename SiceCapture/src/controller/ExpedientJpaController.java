@@ -37,6 +37,14 @@ public class ExpedientJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
+    public Expedient findByName(String name) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Expedient.findByName", Expedient.class);
+        query.setParameter("name", name);
+        Expedient expedient = (Expedient) query.getSingleResult();
+        return expedient;
+    }
+
     public void create(Expedient expedient) {
         if (expedient.getDocumentCollection() == null) {
             expedient.setDocumentCollection(new ArrayList<Document>());
@@ -294,5 +302,5 @@ public class ExpedientJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }
