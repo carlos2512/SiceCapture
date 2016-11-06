@@ -5,6 +5,7 @@
  */
 package entities;
 
+
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -32,12 +33,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c"),
     @NamedQuery(name = "Client.findByIdUser", query = "SELECT c FROM Client c WHERE c.idUser = :idUser"),
     @NamedQuery(name = "Client.findByName", query = "SELECT c FROM Client c WHERE c.name = :name"),
-    @NamedQuery(name = "Client.findByLastname", query = "SELECT c FROM Client c WHERE c.lastname = :lastname"),
     @NamedQuery(name = "Client.findByIdentification", query = "SELECT c FROM Client c WHERE c.identification = :identification"),
     @NamedQuery(name = "Client.findByIdentificationType", query = "SELECT c FROM Client c WHERE c.identificationType = :identificationType"),
-    @NamedQuery(name = "Client.findByAddress", query = "SELECT c FROM Client c WHERE c.address = :address"),
-    @NamedQuery(name = "Client.findByEmail", query = "SELECT c FROM Client c WHERE c.email = :email"),
-    @NamedQuery(name = "Client.findByCellphone", query = "SELECT c FROM Client c WHERE c.cellphone = :cellphone")})
+    @NamedQuery(name = "Client.findByCountry", query = "SELECT c FROM Client c WHERE c.country = :country")})
 public class Client implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -49,23 +47,14 @@ public class Client implements Serializable {
     @Column(name = "name")
     private String name;
     @Basic(optional = false)
-    @Column(name = "lastname")
-    private String lastname;
-    @Basic(optional = false)
     @Column(name = "identification")
     private int identification;
     @Basic(optional = false)
     @Column(name = "identification_type")
     private String identificationType;
     @Basic(optional = false)
-    @Column(name = "address")
-    private String address;
-    @Basic(optional = false)
-    @Column(name = "email")
-    private String email;
-    @Basic(optional = false)
-    @Column(name = "cellphone")
-    private String cellphone;
+    @Column(name = "country")
+    private String country;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
     private Collection<ExpedientClient> expedientClientCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
@@ -80,15 +69,12 @@ public class Client implements Serializable {
         this.idUser = idUser;
     }
 
-    public Client(Integer idUser, String name, String lastname, int identification, String identificationType, String address, String email, String cellphone) {
+    public Client(Integer idUser, String name, String lastname, int identification, String identificationType, String country) {
         this.idUser = idUser;
         this.name = name;
-        this.lastname = lastname;
         this.identification = identification;
         this.identificationType = identificationType;
-        this.address = address;
-        this.email = email;
-        this.cellphone = cellphone;
+        this.country = country;
     }
 
     public Integer getIdUser() {
@@ -107,13 +93,7 @@ public class Client implements Serializable {
         this.name = name;
     }
 
-    public String getLastname() {
-        return lastname;
-    }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
 
     public int getIdentification() {
         return identification;
@@ -131,28 +111,12 @@ public class Client implements Serializable {
         this.identificationType = identificationType;
     }
 
-    public String getAddress() {
-        return address;
+    public String getCountry() {
+        return country;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCellphone() {
-        return cellphone;
-    }
-
-    public void setCellphone(String cellphone) {
-        this.cellphone = cellphone;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     @XmlTransient
@@ -204,7 +168,7 @@ public class Client implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Client[ idUser=" + idUser + " ]";
+        return "asd.Client[ idUser=" + idUser + " ]";
     }
     
 }

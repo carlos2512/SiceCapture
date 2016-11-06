@@ -56,7 +56,6 @@ public class ExpedientClient implements Serializable {
 
     public ExpedientClient(ExpedientClientPK expedientClientPK, Date lastModification) {
         this.expedientClientPK = expedientClientPK;
-        this.lastModification = lastModification;
     }
 
     public ExpedientClient(int fkExpedient, int fkClient) {

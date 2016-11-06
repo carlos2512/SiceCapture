@@ -845,8 +845,6 @@ public class MainGui extends javax.swing.JFrame {
         expedientTree.setModel(new DefaultTreeModel(metaExpedient));
     }
 
-
-
     private void initDocumentList() {
         List<Document> documentList = documentController.findDocumentEntities();
         ExpedientDocumentList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -933,6 +931,7 @@ public class MainGui extends javax.swing.JFrame {
 
     private void consultPersonMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultPersonMenuItemActionPerformed
         // TODO add your handling code here:
+
     }//GEN-LAST:event_consultPersonMenuItemActionPerformed
 
     // Variables declaration - do not modify  

@@ -1,21 +1,26 @@
 package gui;
 
+import controller.ClientJpaController;
 import controller.DataTypeJpaController;
 import controller.DocumentDataJpaController;
 import controller.DocumentJpaController;
+import controller.ExpedientClientJpaController;
 import controller.ExpedientJpaController;
 import uk.co.mmscomputing.device.scanner.Scanner;
 import core.ScannerBackground;
+import entities.Client;
 import entities.DataType;
 import entities.Document;
 import entities.DocumentData;
 import entities.Expedient;
+import entities.ExpedientClient;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.PatternSyntaxException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.swing.DefaultListCellRenderer;
@@ -25,8 +30,11 @@ import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
@@ -43,13 +51,16 @@ import javax.swing.tree.TreeSelectionModel;
 public class MainCustomGui extends javax.swing.JFrame {
 
     private final ScannerBackground scannerBackground;
-    private ExpedientJpaController expedientController;
     private Document selectedDocument;
     private DocumentData selectedDocumentData;
     private DocumentJpaController documentController;
+    private ExpedientJpaController expedientController;
+    private ExpedientClientJpaController expedientClientController;
+    private ClientJpaController clientController;
     private DocumentDataJpaController documentDataController;
     private DataTypeJpaController dataTypeController;
     private final EntityManagerFactory emf;
+    private TableRowSorter<TableModel> sorter;
 
     /**
      * Creates new form MainGui
@@ -64,7 +75,6 @@ public class MainCustomGui extends javax.swing.JFrame {
         desactiveDocumentDataParameterPane();
         setLocationRelativeTo(null);
         scannerBackground = new ScannerBackground(Scanner.getDevice());
-        JMenuItem item = new JMenuItem("Item Label");
     }
 
     private void desactiveDocumentParameterPane() {
@@ -143,6 +153,127 @@ public class MainCustomGui extends javax.swing.JFrame {
         popupExpedient.show(component, x, y);
     }
 
+    private void initComponentSearchPersonDialog(JDialog searchPersonDialog) {
+        infoSearchLabel = new javax.swing.JLabel();
+        idenTypeSearchLabel = new javax.swing.JLabel();
+        idenSearchLabel = new javax.swing.JLabel();
+        typeIdenSearchSelector = new javax.swing.JComboBox();
+        idenSearchTxt = new javax.swing.JTextField();
+        findSearchButton = new javax.swing.JButton();
+        cleanSearchButton = new javax.swing.JButton();
+        searchTableScrollPane = new javax.swing.JScrollPane();
+        searchTable = new javax.swing.JTable();
+        searchPersonDialog.setTitle("SICE CAPTURE/ BUSCAR EXPEDIENTES");
+        infoSearchLabel.setText("Seleccione el filtro que desee, para realizar la búsqueda ");
+        idenTypeSearchLabel.setText("Tipo de Identificación:");
+        idenSearchLabel.setText("Número de Identificación:");
+        typeIdenSearchSelector.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Pasaporte", "Documento de Identidad"}));
+        findSearchButton.setText("Buscar");
+        cleanSearchButton.setText("Limpiar");
+        List<ExpedientClient> expedientClientList = new ArrayList<>();
+        expedientClientList = expedientClientController.findExpedientClientEntities();
+        TableModelCustom tblModel = new TableModelCustom(expedientClientList);
+        sorter = new TableRowSorter<TableModel>(tblModel);
+        searchTable.setModel(new TableModelCustom(expedientClientList));
+        searchTable.setRowSorter(sorter);
+        searchTableScrollPane.setViewportView(searchTable);
+        if (searchTable.getColumnModel().getColumnCount() > 0) {
+            searchTable.getColumnModel().getColumn(0).setResizable(false);
+            searchTable.getColumnModel().getColumn(1).setResizable(false);
+            searchTable.getColumnModel().getColumn(2).setResizable(false);
+            searchTable.getColumnModel().getColumn(3).setResizable(false);
+            searchTable.getColumnModel().getColumn(4).setResizable(false);
+            searchTable.getColumnModel().getColumn(5).setResizable(false);
+        }
+
+        findSearchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String idenSearchTxtString = idenSearchTxt.getText();
+                String typeIdenSearchTxtString = (String) typeIdenSearchSelector.getSelectedItem();
+                if (idenSearchTxtString.length() == 0) {
+                    try {
+                        sorter.setRowFilter(
+                                RowFilter.regexFilter(typeIdenSearchTxtString));
+                    } catch (PatternSyntaxException pse) {
+                        System.err.println("Bad regex pattern");
+                    }
+                } else {
+                    try {
+                        ArrayList<RowFilter<Object, Object>> multipleFilters = new ArrayList<RowFilter<Object, Object>>();
+                        RowFilter<Object, Object> idenFilter = RowFilter.regexFilter(idenSearchTxtString);
+                        RowFilter<Object, Object> idenTypeFilter = RowFilter.regexFilter(typeIdenSearchTxtString);
+                        multipleFilters.add(idenFilter);
+                        multipleFilters.add(idenTypeFilter);
+                        sorter.setRowFilter(
+                                RowFilter.andFilter(multipleFilters));
+                    } catch (PatternSyntaxException pse) {
+                        System.err.println("Bad regex pattern");
+                    }
+                }
+            }
+        });
+        
+        cleanSearchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idenSearchTxt.setText("");
+                 sorter.setRowFilter(null);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(searchPersonDialog.getContentPane());
+        searchPersonDialog.getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(searchTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(infoSearchLabel)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(idenTypeSearchLabel)
+                                                                .addGap(35, 35, 35)
+                                                                .addComponent(typeIdenSearchSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(idenSearchLabel)
+                                                                .addGap(18, 18, 18)
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                        .addGroup(layout.createSequentialGroup()
+                                                                                .addComponent(cleanSearchButton)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                .addComponent(findSearchButton))
+                                                                        .addComponent(idenSearchTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(infoSearchLabel)
+                        .addGap(34, 34, 34)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(idenTypeSearchLabel)
+                                .addComponent(typeIdenSearchSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(idenSearchLabel)
+                                .addComponent(idenSearchTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(findSearchButton)
+                                .addComponent(cleanSearchButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                        .addComponent(searchTableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+        );
+        searchPersonDialog.setResizable(false);
+        searchPersonDialog.pack();
+        searchPersonDialog.setLocationRelativeTo(null);
+    }
+
     private void initComponentsRegistPersonDialog(JDialog registPersonDialog) {
         idenTypeSelectorLabel = new javax.swing.JLabel();
         identificationNumberLabel = new javax.swing.JLabel();
@@ -158,6 +289,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         registPersonTitle = new javax.swing.JLabel();
 
         registPersonDialog.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        registPersonDialog.setResizable(false);
         registPersonDialog.setTitle("Registrar Persona");
 
         idenTypeSelectorLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -178,13 +310,39 @@ public class MainCustomGui extends javax.swing.JFrame {
 
         registPersonButton.setText("Guardar");
 
+        registPersonButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boolean validProcess = true;
+                if ("".equalsIgnoreCase(identificacionNumberTxt.getText())) {
+                    validProcess = false;
+                } else if ("".equalsIgnoreCase(nameRegistPersonTxt.getText())) {
+                    validProcess = false;
+                }
+                if (validProcess) {
+                    EntityManager em = emf.createEntityManager();
+                    em.getTransaction().begin();
+                    Client client = new Client();
+                    client.setName(nameRegistPersonTxt.getText());
+                    client.setIdentificationType(idenTypeSelector.getSelectedItem().toString());
+                    client.setIdentification(Integer.valueOf(identificacionNumberTxt.getText()));
+                    client.setCountry(nationalityTxt.getSelectedItem().toString());
+                    try {
+                        clientController.create(client);
+                    } catch (Exception ex) {
+                        Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    em.getTransaction().commit();
+                }
+            }
+        });
+
         cleanRegistPersonButton.setText("Limpiar");
 
-        idenTypeSelector.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        idenTypeSelector.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Pasaporte", "Documento de Identidad"}));
 
         verifyDocumentButton.setText("Verificación de Documentos");
 
-        nationalityTxt.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        nationalityTxt.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Venezuela", "Colombia", "Costa Rica"}));
 
         registPersonTitle.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         registPersonTitle.setForeground(new java.awt.Color(153, 153, 153));
@@ -252,6 +410,8 @@ public class MainCustomGui extends javax.swing.JFrame {
         );
 
         registPersonDialog.pack();
+        registPersonDialog.setLocationRelativeTo(null);
+
     }
 
     /**
@@ -1202,8 +1362,10 @@ public class MainCustomGui extends javax.swing.JFrame {
 
     private void initControllers() {
         expedientController = new ExpedientJpaController(emf);
+        expedientClientController = new ExpedientClientJpaController(emf);
         documentController = new DocumentJpaController(emf);
         dataTypeController = new DataTypeJpaController(emf);
+        clientController = new ClientJpaController(emf);
         documentDataController = new DocumentDataJpaController(emf);
     }
 
@@ -1381,11 +1543,17 @@ public class MainCustomGui extends javax.swing.JFrame {
     }
 
     private void registPersonMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        JDialog registPersonDialog = new JDialog();
+        this.initComponentsRegistPersonDialog(registPersonDialog);
+        registPersonDialog.setModal(true);
+        registPersonDialog.setVisible(true);
     }
 
     private void consultPersonMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        JDialog searchPersonDialog = new JDialog();
+        initComponentSearchPersonDialog(searchPersonDialog);
+        searchPersonDialog.setModal(true);
+        searchPersonDialog.setVisible(true);
     }
 
     private void expedientTreeMouseClicked(java.awt.event.MouseEvent evt) {
@@ -1515,6 +1683,16 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JLabel registPersonTitle;
     private javax.swing.JButton verifyDocumentButton;
     private javax.swing.JCheckBox documentExpireCheckBox;
+    private javax.swing.JButton cleanSearchButton;
+    private javax.swing.JButton findSearchButton;
+    private javax.swing.JLabel idenSearchLabel;
+    private javax.swing.JTextField idenSearchTxt;
+    private javax.swing.JLabel idenTypeSearchLabel;
+    private javax.swing.JLabel infoSearchLabel;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable searchTable;
+    private javax.swing.JScrollPane searchTableScrollPane;
+    private javax.swing.JComboBox typeIdenSearchSelector;
     private javax.swing.JCheckBox documentRepeatCheckBox;
     private javax.swing.JLabel documentRepeatLabel;
     private javax.swing.JCheckBox documentRequeridedCheckBox;
