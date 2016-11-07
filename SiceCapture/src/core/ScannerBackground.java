@@ -1,30 +1,48 @@
 package core;
 
+import com.asprise.imaging.core.Imaging;
+import com.asprise.imaging.core.Request;
+import com.asprise.imaging.core.Result;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
-import uk.co.mmscomputing.device.scanner.Scanner;
-import uk.co.mmscomputing.device.scanner.ScannerDevice;
-import uk.co.mmscomputing.device.scanner.ScannerIOException;
-import uk.co.mmscomputing.device.scanner.ScannerIOMetadata;
-import uk.co.mmscomputing.device.scanner.ScannerListener;
 
 /**
  *
  * @author Carlos Romero
  */
-public class ScannerBackground  implements ScannerListener,Runnable  {
+public class ScannerBackground implements Runnable {
 
     final static Logger logger = Logger.getLogger(ScannerBackground.class);
-    private final Scanner scanner;
     private int index = 0;
     private boolean asds;
     private boolean active;
+    private final Imaging imaging;
+    private OutputStream output;
+    private Properties propScannerSelected;
+    private final Properties prop;
 
-    public ScannerBackground(Scanner scanner) {
-        this.scanner = scanner;
+    public ScannerBackground() {
+        prop = new Properties();
+        imaging = new Imaging("SiceCapture", 0);
+        try {
+            prop.load(ClassLoader.getSystemResourceAsStream("ascan_trans_es.properties"));
+            imaging.setI18n(prop);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(ScannerBackground.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+    
     
     private void saveImage(BufferedImage image) {
         try {
@@ -34,47 +52,61 @@ public class ScannerBackground  implements ScannerListener,Runnable  {
             logger.error("Error in storing process: " + e.getMessage());
         }
     }
-    
-    @Override
-     public void run() {
+
+    public boolean isScannerSelected() {
+        Properties property = new Properties();
+        boolean response = true;
+        InputStream input = null;
+        String scanner = null;
         try {
-            logger.info("Starting ScannerBackground Process");
-            scanner.acquire();
-        } catch (ScannerIOException se) {
-            logger.error("Error image adquisition: " + se.getMessage());
+            input = new FileInputStream("config.properties");
+            // load a properties file
+            property.load(input);
+        } catch (IOException ex) {
+            response = false;
+            java.util.logging.Logger.getLogger(ScannerBackground.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        scanner = property.getProperty("scanner");
+        if (input == null || scanner.equalsIgnoreCase("")) {
+            response = false;
+        }
+        if (response){
+            System.out.println(imaging.scanGetDefaultSourceName());
+        }
+        return response;
+    }
+
+    public void selectScanner() {
+        try {
+            output = new FileOutputStream("config.properties");
+            propScannerSelected = new Properties();
+            propScannerSelected.setProperty("scanner", imaging.scanSelectSource());
+            propScannerSelected.store(output, null);
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ScannerBackground.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(ScannerBackground.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     
-    /*
-     *Exit from any background process
-     */
-    public void close() throws ScannerIOException {
-        scanner.setCancel(true);
-        logger.info("Exit Background Process");
-    }
-    
+
     @Override
-    public void update(ScannerIOMetadata.Type type, ScannerIOMetadata metadata) {
-        ScannerDevice sd = metadata.getDevice();
-        if (type.equals(ScannerIOMetadata.ACQUIRED)) {
-            logger.info("ScannerHandler: Image");
-            saveImage(metadata.getImage());
-        } else if (type.equals(ScannerIOMetadata.NEGOTIATE)) {
-            try {
-                logger.info("ScannerHandler: Setup settings");
-                sd.setShowUserInterface(false);
-                sd.setResolution(100);
-            } catch (ScannerIOException ex) {
-                sd.setCancel(true);
-                logger.error("Error closing scanner default interface");
-            }
-        } else if (type.equals(ScannerIOMetadata.STATECHANGE)) {
-            if (metadata.isFinished()) {
-                System.exit(0);
-            }
-            logger.info("ScannerHandler: state has been changed" + metadata.getStateStr());
-        } else if (type.equals(ScannerIOMetadata.EXCEPTION)) {
-            metadata.getException().printStackTrace();
-        }
+    public void run() {
+
+        String JSON_REQUEST = "{\n"
+                + "  \"twain_cap_setting\" : {\n"
+                + "    \"ICAP_PIXELTYPE\" : \"TWPT_RGB\", \n"
+                + "    \"ICAP_XRESOLUTION\" : \"100\", \n"
+                + "    \"ICAP_YRESOLUTION\" : \"100\",\n"
+                + "    \"ICAP_SUPPORTEDSIZES\" : \"TWSS_USLETTER\"\n"
+                + "  },\n"
+                + "  \"output_settings\" : [ {\n"
+                + "    \"type\" : \"save\",\n"
+                + "    \"format\" : \"jpg\",\n"
+                + "    \"save_path\" : \"${TMP}\\\\${TMS}${EXT}\"\n"
+                + "  } ]\n"
+                + "}";
+        Result result = imaging.scan(JSON_REQUEST, "default", false, false);
+        System.out.println(result == null ? "(null)" : result.toJson(true));
     }
+
 }
