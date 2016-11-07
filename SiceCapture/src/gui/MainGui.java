@@ -371,10 +371,19 @@ public class MainGui extends javax.swing.JFrame {
         nameDataParameterPaneTxt = new javax.swing.JTextField();
         dataTypeDataParameterTxt = new javax.swing.JTextField();
         requiredDataParameterPaneCheckBox = new javax.swing.JCheckBox();
-        scannerPane = new javax.swing.JPanel();
+        scannerPaneUpLeft = new javax.swing.JPanel();
+        removeUpLeftButton = new javax.swing.JButton();
+        scannerPaneUpRight = new javax.swing.JPanel();
+        removeUpRightButton = new javax.swing.JButton();
+        scannerPaneDownRight = new javax.swing.JPanel();
+        removeDownRightButton = new javax.swing.JButton();
+        scannerPaneDownLeft = new javax.swing.JPanel();
+        removeDownLeftButton = new javax.swing.JButton();
         indexButton = new javax.swing.JButton();
         scannerLabel = new javax.swing.JLabel();
         indexLabel = new javax.swing.JLabel();
+        uploadImageButton = new javax.swing.JButton();
+        uploadImageLabel = new javax.swing.JLabel();
         mainBarMenu = new javax.swing.JMenuBar();
         mainTemplateOption = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -509,7 +518,7 @@ public class MainGui extends javax.swing.JFrame {
                         .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(documentParameterPaneLayout.createSequentialGroup()
                                 .addComponent(titleDocumentPaneLabel)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addGap(0, 348, Short.MAX_VALUE))
                             .addGroup(documentParameterPaneLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(nameDocumentPaneLabel)
@@ -519,7 +528,7 @@ public class MainGui extends javax.swing.JFrame {
                     .addGroup(documentParameterPaneLayout.createSequentialGroup()
                         .addComponent(genericDocumentPaneLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(upSeparatorDocumentPane))
+                        .addComponent(upSeparatorDocumentPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(documentParameterPaneLayout.createSequentialGroup()
                         .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(documentParameterPaneLayout.createSequentialGroup()
@@ -649,42 +658,173 @@ public class MainGui extends javax.swing.JFrame {
                 .addContainerGap(274, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout scannerPaneLayout = new javax.swing.GroupLayout(scannerPane);
-        scannerPane.setLayout(scannerPaneLayout);
-        scannerPaneLayout.setHorizontalGroup(
-            scannerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 476, Short.MAX_VALUE)
+        scannerPaneUpLeft.setMaximumSize(new java.awt.Dimension(240, 259));
+        scannerPaneUpLeft.setMinimumSize(new java.awt.Dimension(240, 259));
+        scannerPaneUpLeft.setPreferredSize(new java.awt.Dimension(240, 259));
+        scannerPaneUpLeft.setRequestFocusEnabled(false);
+
+        removeUpLeftButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove.png"))); // NOI18N
+        removeUpLeftButton.setBorder(null);
+
+        javax.swing.GroupLayout scannerPaneUpLeftLayout = new javax.swing.GroupLayout(scannerPaneUpLeft);
+        scannerPaneUpLeft.setLayout(scannerPaneUpLeftLayout);
+        scannerPaneUpLeftLayout.setHorizontalGroup(
+            scannerPaneUpLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpLeftLayout.createSequentialGroup()
+                .addGap(0, 183, Short.MAX_VALUE)
+                .addComponent(removeUpLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        scannerPaneLayout.setVerticalGroup(
-            scannerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 524, Short.MAX_VALUE)
+        scannerPaneUpLeftLayout.setVerticalGroup(
+            scannerPaneUpLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(scannerPaneUpLeftLayout.createSequentialGroup()
+                .addComponent(removeUpLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 220, Short.MAX_VALUE))
+        );
+
+        scannerPaneUpRight.setMaximumSize(new java.awt.Dimension(240, 259));
+        scannerPaneUpRight.setMinimumSize(new java.awt.Dimension(240, 259));
+        scannerPaneUpRight.setPreferredSize(new java.awt.Dimension(240, 259));
+
+        removeUpRightButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove.png"))); // NOI18N
+        removeUpRightButton.setMaximumSize(new java.awt.Dimension(39, 39));
+        removeUpRightButton.setMinimumSize(new java.awt.Dimension(39, 39));
+        removeUpRightButton.setPreferredSize(new java.awt.Dimension(39, 39));
+        removeUpRightButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeUpRightButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout scannerPaneUpRightLayout = new javax.swing.GroupLayout(scannerPaneUpRight);
+        scannerPaneUpRight.setLayout(scannerPaneUpRightLayout);
+        scannerPaneUpRightLayout.setHorizontalGroup(
+            scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 240, Short.MAX_VALUE)
+            .addGroup(scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpRightLayout.createSequentialGroup()
+                    .addGap(0, 197, Short.MAX_VALUE)
+                    .addComponent(removeUpRightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        scannerPaneUpRightLayout.setVerticalGroup(
+            scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 259, Short.MAX_VALUE)
+            .addGroup(scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(scannerPaneUpRightLayout.createSequentialGroup()
+                    .addComponent(removeUpRightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 227, Short.MAX_VALUE)))
+        );
+
+        scannerPaneDownRight.setMaximumSize(new java.awt.Dimension(240, 259));
+        scannerPaneDownRight.setMinimumSize(new java.awt.Dimension(240, 259));
+        scannerPaneDownRight.setPreferredSize(new java.awt.Dimension(240, 259));
+
+        removeDownRightButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove3.png"))); // NOI18N
+        removeDownRightButton.setMaximumSize(new java.awt.Dimension(39, 39));
+        removeDownRightButton.setMinimumSize(new java.awt.Dimension(39, 39));
+        removeDownRightButton.setPreferredSize(new java.awt.Dimension(39, 39));
+
+        javax.swing.GroupLayout scannerPaneDownRightLayout = new javax.swing.GroupLayout(scannerPaneDownRight);
+        scannerPaneDownRight.setLayout(scannerPaneDownRightLayout);
+        scannerPaneDownRightLayout.setHorizontalGroup(
+            scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 240, Short.MAX_VALUE)
+            .addGroup(scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownRightLayout.createSequentialGroup()
+                    .addGap(0, 176, Short.MAX_VALUE)
+                    .addComponent(removeDownRightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        scannerPaneDownRightLayout.setVerticalGroup(
+            scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 259, Short.MAX_VALUE)
+            .addGroup(scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(scannerPaneDownRightLayout.createSequentialGroup()
+                    .addComponent(removeDownRightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 220, Short.MAX_VALUE)))
+        );
+
+        scannerPaneDownLeft.setMaximumSize(new java.awt.Dimension(240, 259));
+        scannerPaneDownLeft.setMinimumSize(new java.awt.Dimension(240, 259));
+        scannerPaneDownLeft.setPreferredSize(new java.awt.Dimension(240, 259));
+
+        removeDownLeftButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove.png"))); // NOI18N
+        removeDownLeftButton.setBorder(null);
+        removeDownLeftButton.setPreferredSize(new java.awt.Dimension(39, 39));
+
+        javax.swing.GroupLayout scannerPaneDownLeftLayout = new javax.swing.GroupLayout(scannerPaneDownLeft);
+        scannerPaneDownLeft.setLayout(scannerPaneDownLeftLayout);
+        scannerPaneDownLeftLayout.setHorizontalGroup(
+            scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 240, Short.MAX_VALUE)
+            .addGroup(scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownLeftLayout.createSequentialGroup()
+                    .addGap(0, 185, Short.MAX_VALUE)
+                    .addComponent(removeDownLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        scannerPaneDownLeftLayout.setVerticalGroup(
+            scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 259, Short.MAX_VALUE)
+            .addGroup(scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(scannerPaneDownLeftLayout.createSequentialGroup()
+                    .addComponent(removeDownLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 220, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layeredOperationalPaneLayout = new javax.swing.GroupLayout(layeredOperationalPane);
         layeredOperationalPane.setLayout(layeredOperationalPaneLayout);
         layeredOperationalPaneLayout.setHorizontalGroup(
             layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 476, Short.MAX_VALUE)
+            .addGap(0, 481, Short.MAX_VALUE)
             .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(documentParameterPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(dataParameterPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(scannerPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layeredOperationalPaneLayout.createSequentialGroup()
+                    .addComponent(scannerPaneUpLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 241, Short.MAX_VALUE)))
+            .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredOperationalPaneLayout.createSequentialGroup()
+                    .addGap(0, 235, Short.MAX_VALUE)
+                    .addComponent(scannerPaneUpRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredOperationalPaneLayout.createSequentialGroup()
+                    .addGap(0, 188, Short.MAX_VALUE)
+                    .addComponent(scannerPaneDownRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layeredOperationalPaneLayout.createSequentialGroup()
+                    .addComponent(scannerPaneDownLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 188, Short.MAX_VALUE)))
         );
         layeredOperationalPaneLayout.setVerticalGroup(
             layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 524, Short.MAX_VALUE)
+            .addGap(0, 545, Short.MAX_VALUE)
             .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(documentParameterPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(dataParameterPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(scannerPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layeredOperationalPaneLayout.createSequentialGroup()
+                    .addComponent(scannerPaneUpLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 279, Short.MAX_VALUE)))
+            .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layeredOperationalPaneLayout.createSequentialGroup()
+                    .addComponent(scannerPaneUpRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 286, Short.MAX_VALUE)))
+            .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredOperationalPaneLayout.createSequentialGroup()
+                    .addGap(0, 206, Short.MAX_VALUE)
+                    .addComponent(scannerPaneDownRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredOperationalPaneLayout.createSequentialGroup()
+                    .addGap(0, 207, Short.MAX_VALUE)
+                    .addComponent(scannerPaneDownLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layeredOperationalPane.setLayer(documentParameterPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredOperationalPane.setLayer(dataParameterPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        layeredOperationalPane.setLayer(scannerPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        layeredOperationalPane.setLayer(scannerPaneUpLeft, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        layeredOperationalPane.setLayer(scannerPaneUpRight, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        layeredOperationalPane.setLayer(scannerPaneDownRight, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        layeredOperationalPane.setLayer(scannerPaneDownLeft, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/index.png"))); // NOI18N
 
@@ -695,6 +835,12 @@ public class MainGui extends javax.swing.JFrame {
         indexLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         indexLabel.setForeground(new java.awt.Color(153, 153, 153));
         indexLabel.setText("Indexar");
+
+        uploadImageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/upload.png"))); // NOI18N
+
+        uploadImageLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        uploadImageLabel.setForeground(new java.awt.Color(153, 153, 153));
+        uploadImageLabel.setText("Subir Imagen");
 
         mainTemplateOption.setBorder(null);
         mainTemplateOption.setText("Expedientes");
@@ -788,27 +934,34 @@ public class MainGui extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(scannerButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(expedientFormTitleLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(scannerLabel)
-                        .addGap(63, 63, 63)
-                        .addComponent(indexLabel)
-                        .addGap(25, 25, 25)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(uploadImageLabel)
+                                .addGap(53, 53, 53)
+                                .addComponent(scannerLabel)
+                                .addGap(63, 63, 63)
+                                .addComponent(indexLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(uploadImageButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(scannerButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(uploadImageButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
@@ -817,7 +970,8 @@ public class MainGui extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(scannerLabel)
-                            .addComponent(indexLabel))))
+                            .addComponent(indexLabel)
+                            .addComponent(uploadImageLabel))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -980,6 +1134,10 @@ public class MainGui extends javax.swing.JFrame {
 
     }//GEN-LAST:event_consultPersonMenuItemActionPerformed
 
+    private void removeUpRightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeUpRightButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removeUpRightButtonActionPerformed
+
     // Variables declaration - do not modify  
     private javax.swing.JList ExpedientDocumentList;
     private javax.swing.JButton cleanExpedientButton;
@@ -1040,6 +1198,10 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JLabel nameDocumentPaneLabel;
     private javax.swing.JTextField nameDocumentPaneTxt;
     private javax.swing.JMenuItem registPersonMenuItem;
+    private javax.swing.JButton removeDownLeftButton;
+    private javax.swing.JButton removeDownRightButton;
+    private javax.swing.JButton removeUpLeftButton;
+    private javax.swing.JButton removeUpRightButton;
     private javax.swing.JCheckBox repeatDocumentPaneCheckBox;
     private javax.swing.JLabel repeatDocumentPaneLabel;
     private javax.swing.JLabel requeridDataParameterPaneLabel;
@@ -1049,8 +1211,13 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JLabel rulesDocumentPaneLabel;
     private javax.swing.JButton scannerButton;
     private javax.swing.JLabel scannerLabel;
-    private javax.swing.JPanel scannerPane;
+    private javax.swing.JPanel scannerPaneDownLeft;
+    private javax.swing.JPanel scannerPaneDownRight;
+    private javax.swing.JPanel scannerPaneUpLeft;
+    private javax.swing.JPanel scannerPaneUpRight;
     private javax.swing.JLabel titleDocumentPaneLabel;
     private javax.swing.JSeparator upSeparatorDocumentPane;
+    private javax.swing.JButton uploadImageButton;
+    private javax.swing.JLabel uploadImageLabel;
     // End of variables declaration//GEN-END:variables
 }
