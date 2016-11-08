@@ -13,6 +13,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import entities.Client;
+import entities.Document;
 import entities.Expedient;
 import entities.ExpedientClient;
 import entities.ExpedientClientPK;
@@ -131,6 +132,14 @@ public class ExpedientClientJpaController implements Serializable {
         }
     }
 
+   public List<ExpedientClient> findExpedientClientByClient(Client fkClient){
+       EntityManager em = getEntityManager();
+       Query query = em.createNamedQuery("ExpedientClient.findByFkClient", ExpedientClient.class);
+       query.setParameter("fkClient", fkClient);
+       List<ExpedientClient> expedientClientList = (List<ExpedientClient>) query.getResultList();
+       return expedientClientList;
+   }
+
     public void destroy(ExpedientClientPK id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -207,5 +216,5 @@ public class ExpedientClientJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

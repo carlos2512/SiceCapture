@@ -42,6 +42,7 @@ public class TableModelCustom extends AbstractTableModel {
     public String getColumnName(int column) {
         return columnNames[column];
     }
+    
 
     @Override
     public boolean isCellEditable(int row, int column) {

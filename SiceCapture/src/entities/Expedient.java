@@ -150,10 +150,8 @@ public class Expedient implements Serializable {
         }
         return true;
     }
-
     @Override
     public String toString() {
-        return "entities.Expedient[ idExpedient=" + idExpedient + " ]";
+        return name;
     }
-    
 }

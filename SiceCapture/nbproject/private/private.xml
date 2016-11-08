@@ -3,7 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Usuario/repositorio/Sice/SiceCapture/src/gui/MainCustomGui.java</file>
+            <file>file:/C:/Users/intec/Documents/NetBeansProjects/Sice/SiceCapture/src/gui/MainCustomGui.java</file>
+            <file>file:/C:/Users/intec/Documents/NetBeansProjects/Sice/SiceCapture/src/gui/TableModelCustom.java</file>
+            <file>file:/C:/Users/intec/Documents/NetBeansProjects/Sice/SiceCapture/src/entities/ExpedientClient.java</file>
+            <file>file:/C:/Users/intec/Documents/NetBeansProjects/Sice/SiceCapture/src/controller/ExpedientClientJpaController.java</file>
+            <file>file:/C:/Users/intec/Documents/NetBeansProjects/Sice/SiceCapture/src/entities/Expedient.java</file>
+            <file>file:/C:/Users/intec/Documents/NetBeansProjects/Sice/SiceCapture/src/controller/DocumentJpaController.java</file>
+            <file>file:/C:/Users/intec/Documents/NetBeansProjects/Sice/SiceCapture/src/controller/ExpedientJpaController.java</file>
+            <file>file:/C:/Users/intec/Documents/NetBeansProjects/Sice/SiceCapture/src/gui/MainGui.java</file>
+            <file>file:/C:/Users/intec/Documents/NetBeansProjects/Sice/SiceCapture/src/gui/DefaultMutableTreeNodeCustom.java</file>
         </group>
     </open-files>
 </project-private>

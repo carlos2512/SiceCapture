@@ -384,6 +384,15 @@ public class MainGui extends javax.swing.JFrame {
         indexLabel = new javax.swing.JLabel();
         uploadImageButton = new javax.swing.JButton();
         uploadImageLabel = new javax.swing.JLabel();
+        receptionLayoutCardPane = new javax.swing.JPanel();
+        receptionContainerPane = new javax.swing.JPanel();
+        receptionDocumentLabel = new javax.swing.JLabel();
+        receptionNameLabel = new javax.swing.JLabel();
+        documentReceptionNameClient = new javax.swing.JLabel();
+        receptionIcon = new javax.swing.JLabel();
+        selectExpedientLabel = new javax.swing.JLabel();
+        expedientSelectorReception = new javax.swing.JComboBox();
+        jPanel1 = new javax.swing.JPanel();
         mainBarMenu = new javax.swing.JMenuBar();
         mainTemplateOption = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -842,6 +851,87 @@ public class MainGui extends javax.swing.JFrame {
         uploadImageLabel.setForeground(new java.awt.Color(153, 153, 153));
         uploadImageLabel.setText("Subir Imagen");
 
+        receptionLayoutCardPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        receptionLayoutCardPane.setMaximumSize(new java.awt.Dimension(407, 114));
+        receptionLayoutCardPane.setMinimumSize(new java.awt.Dimension(407, 114));
+        receptionLayoutCardPane.setPreferredSize(new java.awt.Dimension(407, 114));
+        receptionLayoutCardPane.setLayout(new java.awt.CardLayout());
+
+        receptionDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        receptionDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
+        receptionDocumentLabel.setText("Recepción de Documentos");
+
+        receptionNameLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        receptionNameLabel.setForeground(new java.awt.Color(153, 153, 153));
+        receptionNameLabel.setText("Nombre:");
+
+        documentReceptionNameClient.setText("Nombre Cliente");
+
+        receptionIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/docReception.png"))); // NOI18N
+
+        selectExpedientLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        selectExpedientLabel.setForeground(new java.awt.Color(153, 153, 153));
+        selectExpedientLabel.setText("Seleccionar Expediente:");
+
+        expedientSelectorReception.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        javax.swing.GroupLayout receptionContainerPaneLayout = new javax.swing.GroupLayout(receptionContainerPane);
+        receptionContainerPane.setLayout(receptionContainerPaneLayout);
+        receptionContainerPaneLayout.setHorizontalGroup(
+            receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                .addGroup(receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                                .addComponent(selectExpedientLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(expedientSelectorReception, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                                .addComponent(receptionNameLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(documentReceptionNameClient))))
+                    .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                        .addComponent(receptionIcon)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(receptionDocumentLabel)
+                        .addGap(0, 153, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        receptionContainerPaneLayout.setVerticalGroup(
+            receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                .addGroup(receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(receptionIcon)
+                    .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(receptionDocumentLabel)))
+                .addGap(7, 7, 7)
+                .addGroup(receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                        .addGroup(receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(receptionNameLabel)
+                            .addComponent(documentReceptionNameClient))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(expedientSelectorReception, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(selectExpedientLabel))
+                .addGap(0, 12, Short.MAX_VALUE))
+        );
+
+        receptionLayoutCardPane.add(receptionContainerPane, "card2");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
         mainTemplateOption.setBorder(null);
         mainTemplateOption.setText("Expedientes");
         mainTemplateOption.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -929,14 +1019,16 @@ public class MainGui extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(mainPanelNavigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(expedientFormTitleLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(expedientFormTitleLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(36, 36, 36)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
@@ -950,29 +1042,36 @@ public class MainGui extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(scannerButton)
                                 .addGap(18, 18, 18)
-                                .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(mainPanelNavigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 4, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(uploadImageButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(expedientFormTitleLabel))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(uploadImageButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(scannerLabel)
                             .addComponent(indexLabel)
-                            .addComponent(uploadImageLabel))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(uploadImageLabel)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(expedientFormTitleLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(mainPanelNavigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1171,8 +1270,10 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JLabel dataTypeFieldParameterPaneLabel;
     private javax.swing.JMenuItem deleteDocumentItemMenuButton;
     private javax.swing.JPanel documentParameterPane;
+    private javax.swing.JLabel documentReceptionNameClient;
     private javax.swing.JSeparator downSeparatorDocumentPane;
     private javax.swing.JLabel expedientFormTitleLabel;
+    private javax.swing.JComboBox expedientSelectorReception;
     private javax.swing.JTree expedientTree;
     private javax.swing.JCheckBox expireDocumentPaneCheckBox;
     private javax.swing.JLabel expireDocumentPaneLabel;
@@ -1182,6 +1283,7 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLayeredPane layeredOperationalPane;
     private javax.swing.JMenuBar mainBarMenu;
@@ -1197,6 +1299,11 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JTextField nameDataParameterPaneTxt;
     private javax.swing.JLabel nameDocumentPaneLabel;
     private javax.swing.JTextField nameDocumentPaneTxt;
+    private javax.swing.JPanel receptionContainerPane;
+    private javax.swing.JLabel receptionDocumentLabel;
+    private javax.swing.JLabel receptionIcon;
+    private javax.swing.JPanel receptionLayoutCardPane;
+    private javax.swing.JLabel receptionNameLabel;
     private javax.swing.JMenuItem registPersonMenuItem;
     private javax.swing.JButton removeDownLeftButton;
     private javax.swing.JButton removeDownRightButton;
@@ -1215,6 +1322,7 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JPanel scannerPaneDownRight;
     private javax.swing.JPanel scannerPaneUpLeft;
     private javax.swing.JPanel scannerPaneUpRight;
+    private javax.swing.JLabel selectExpedientLabel;
     private javax.swing.JLabel titleDocumentPaneLabel;
     private javax.swing.JSeparator upSeparatorDocumentPane;
     private javax.swing.JButton uploadImageButton;

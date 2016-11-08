@@ -260,7 +260,7 @@ public class ExpedientJpaController implements Serializable {
     public List<Expedient> findExpedientEntities() {
         return findExpedientEntities(true, -1, -1);
     }
-
+    
     public List<Expedient> findExpedientEntities(int maxResults, int firstResult) {
         return findExpedientEntities(false, maxResults, firstResult);
     }

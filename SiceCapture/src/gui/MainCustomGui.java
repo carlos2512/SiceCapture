@@ -17,6 +17,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -29,8 +31,10 @@ import java.util.logging.Logger;
 import java.util.regex.PatternSyntaxException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -42,6 +46,8 @@ import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -70,6 +76,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private ClientJpaController clientController;
     private DocumentDataJpaController documentDataController;
     private DataTypeJpaController dataTypeController;
+    private boolean indexProcessIsActive;
     private final String expedientIconPath = "../resources/img/expedientIcon.png";
     private final String expedientIconPath2 = "../resources/img/expedientIcon2.png";
     private final String documentIconPath = "../resources/img/doc.png";
@@ -79,6 +86,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private final String metaIconPath = "../resources/img/meta.png";
     private final String DATE_DATA_TYPE_CODE = "type.date";
     private final String VALUE_DATA_TYPE_CODE = "type.data";
+    private javax.swing.JLabel documentValidationLabel;
     private final EntityManagerFactory emf;
     private TableRowSorter<TableModel> sorter;
 
@@ -181,7 +189,67 @@ public class MainCustomGui extends javax.swing.JFrame {
         popupExpedient.show(component, x, y);
     }
 
-    private void initComponentSearchPersonDialog(JDialog searchPersonDialog) {
+    public void displayDocumentByExpedient(Expedient expedient) {
+        DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
+        DefaultMutableTreeNodeCustom expedientNode = new DefaultMutableTreeNodeCustom(expedient);
+        if (expedient.getDocumentCollection() != null && !expedient.getDocumentCollection().isEmpty()) {
+            for (Document document : expedient.getDocumentCollection()) {
+                DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
+                List<DocumentData> documentDataList = documentDataController.findByDocument(document);
+                if (documentDataList != null && !documentDataList.isEmpty()) {
+                    for (DocumentData documentData : documentDataList) {
+                        DefaultMutableTreeNodeCustom documentDataNode = new DefaultMutableTreeNodeCustom(documentData);
+                        documentNode.add(documentDataNode);
+                    }
+                }
+                expedientNode.add(documentNode);
+            }
+        }
+        metaExpedient.add(expedientNode);
+        expedientTree.setModel(new DefaultTreeModel(metaExpedient));
+    }
+
+    public void displayExpedientClientTree(List<Expedient> expedientList) {
+        DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
+        for (Expedient expedient : expedientList) {
+            DefaultMutableTreeNodeCustom expedientNode = new DefaultMutableTreeNodeCustom(expedient);
+            if (expedient.getDocumentCollection() != null && !expedient.getDocumentCollection().isEmpty()) {
+                for (Document document : expedient.getDocumentCollection()) {
+                    DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
+                    List<DocumentData> documentDataList = documentDataController.findByDocument(document);
+                    if (documentDataList != null && !documentDataList.isEmpty()) {
+                        for (DocumentData documentData : documentDataList) {
+                            DefaultMutableTreeNodeCustom documentDataNode = new DefaultMutableTreeNodeCustom(documentData);
+                            documentNode.add(documentDataNode);
+                        }
+                    }
+                    expedientNode.add(documentNode);
+                }
+            }
+            metaExpedient.add(expedientNode);
+            expedientTree.setModel(new DefaultTreeModel(metaExpedient));
+        }
+    }
+
+    private void initDocumentVerification(ExpedientClient expedientClient) {
+        List<ExpedientClient> allExpedientsListOfClient = expedientClientController.findExpedientClientByClient(expedientClient.getClient());
+        List<Expedient> expedientList = new ArrayList<>();
+        for (ExpedientClient expedientC : allExpedientsListOfClient) {
+            expedientList.add(expedientC.getExpedient());
+        }
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        for (Object arrayExpedient1 : expedientList) {
+            model.addElement(arrayExpedient1);
+        }
+        documentReceptionNameClient.setText(expedientClient.getClient().getName());
+        expedientSelectorReception.setModel(model);
+        receptionLayoutCardPane.setVisible(true);
+        Expedient expedient = (Expedient) expedientSelectorReception.getSelectedItem();
+        displayDocumentByExpedient(expedient);
+        indexButton.setEnabled(true);
+    }
+
+    private void initComponentSearchPersonDialog(final JDialog searchPersonDialog) {
         infoSearchLabel = new javax.swing.JLabel();
         idenTypeSearchLabel = new javax.swing.JLabel();
         idenSearchLabel = new javax.swing.JLabel();
@@ -213,6 +281,22 @@ public class MainCustomGui extends javax.swing.JFrame {
             searchTable.getColumnModel().getColumn(4).setResizable(false);
             searchTable.getColumnModel().getColumn(5).setResizable(false);
         }
+
+        searchTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        searchTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                if (!searchTable.getSelectionModel().isSelectionEmpty()) {
+                    TableModelCustom tableModel = (TableModelCustom) searchTable.getModel();
+                    int selectedRow = searchTable.getSelectionModel().getMinSelectionIndex();
+                    ExpedientClient expedientClient = tableModel.getExpedientClient(selectedRow);
+                    System.out.println(expedientClient);
+                    searchPersonDialog.setVisible(false);
+                    initDocumentVerification(expedientClient);
+                }
+            }
+        });
 
         findSearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -798,11 +882,20 @@ public class MainCustomGui extends javax.swing.JFrame {
     private void initComponents() {
         mainPanelNavigation = new javax.swing.JPanel();
         scannerLabel = new javax.swing.JLabel();
+        receptionContainerPane = new javax.swing.JPanel();
         removeUpLeftButton = new javax.swing.JButton();
+        receptionDocumentLabel = new javax.swing.JLabel();
         uploadImageLabel = new javax.swing.JLabel();
+        documentReceptionNameClient = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
+        receptionIcon = new javax.swing.JLabel();
+        selectExpedientLabel = new javax.swing.JLabel();
+        documentReceptionLabel = new javax.swing.JLabel();
+        receptionLayoutCardPane = new javax.swing.JPanel();
+        expedientSelectorReception = new javax.swing.JComboBox();
         removeUpRightButton = new javax.swing.JButton();
         expedientTree = new javax.swing.JTree();
+        documentValidationLabel = new javax.swing.JLabel();
         uploadImageButton = new javax.swing.JButton();
         removeDownRightButton = new javax.swing.JButton();
         removeDownLeftButton = new javax.swing.JButton();
@@ -853,11 +946,19 @@ public class MainCustomGui extends javax.swing.JFrame {
         modifyDocumentItemMenuButton = new javax.swing.JMenuItem();
         deleteDocumentItemMenuButton = new javax.swing.JMenuItem();
         mainConsultOption = new javax.swing.JMenu();
+        receptionNameLabel = new javax.swing.JLabel();
         registPersonMenuItem = new javax.swing.JMenuItem();
         consultPersonMenuItem = new javax.swing.JMenuItem();
+        indexProcessIsActive = false;
         setTitle("Sice Capture Demo");
         setResizable(false);
+
+        selectExpedientLabel.setText("Expediente Seleccionado:");
         mainPanelNavigation.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        documentReceptionLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        documentReceptionLabel.setForeground(new java.awt.Color(153, 153, 153));
+        documentReceptionLabel.setText("Recepción de Documentos");
+        documentReceptionLabel.setVisible(false);
         List<Expedient> allExpedientsList = expedientController.findExpedientEntities();
         DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
         for (Expedient expedient : allExpedientsList) {
@@ -886,6 +987,12 @@ public class MainCustomGui extends javax.swing.JFrame {
         });
         assingIconsToBussinesTree(expedientTree);
         jScrollPane1.setViewportView(expedientTree);
+
+        expedientSelectorReception.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                expedientClientSelectorAction(e);
+            }
+        });
 
         javax.swing.GroupLayout mainPanelNavigationLayout = new javax.swing.GroupLayout(mainPanelNavigation);
         mainPanelNavigation.setLayout(mainPanelNavigationLayout);
@@ -1279,8 +1386,14 @@ public class MainCustomGui extends javax.swing.JFrame {
         layeredOperationalPane.setLayer(scannerPaneDownRight, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredOperationalPane.setLayer(scannerPaneDownLeft, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/index.png"))); // NOI18N
+        indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/index1.png"))); // NOI18N
         indexButton.setEnabled(false);
+        indexButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                indexProcessAction(evt);
+            }
+        });
+
         scannerLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         scannerLabel.setForeground(new java.awt.Color(153, 153, 153));
         scannerLabel.setText("Digitalizar");
@@ -1299,6 +1412,76 @@ public class MainCustomGui extends javax.swing.JFrame {
         uploadImageLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         uploadImageLabel.setForeground(new java.awt.Color(153, 153, 153));
         uploadImageLabel.setText("Subir Imagen");
+
+        receptionLayoutCardPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        receptionLayoutCardPane.setMaximumSize(new java.awt.Dimension(407, 114));
+        receptionLayoutCardPane.setMinimumSize(new java.awt.Dimension(407, 114));
+        receptionLayoutCardPane.setPreferredSize(new java.awt.Dimension(407, 114));
+        receptionLayoutCardPane.setLayout(new java.awt.CardLayout());
+
+        receptionDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        receptionDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
+        receptionDocumentLabel.setText("Recepción de Documentos");
+
+        receptionNameLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        receptionNameLabel.setForeground(new java.awt.Color(153, 153, 153));
+        receptionNameLabel.setText("Nombre:");
+
+        documentReceptionNameClient.setText("Nombre Cliente");
+
+        receptionIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/docReception.png"))); // NOI18N
+
+        selectExpedientLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        selectExpedientLabel.setForeground(new java.awt.Color(153, 153, 153));
+        selectExpedientLabel.setText("Seleccionar Expediente:");
+
+        expedientSelectorReception.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+
+        javax.swing.GroupLayout receptionContainerPaneLayout = new javax.swing.GroupLayout(receptionContainerPane);
+        receptionContainerPane.setLayout(receptionContainerPaneLayout);
+        receptionContainerPaneLayout.setHorizontalGroup(
+                receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                        .addGroup(receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                                                        .addComponent(selectExpedientLabel)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(expedientSelectorReception, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                                                        .addComponent(receptionNameLabel)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(documentReceptionNameClient))))
+                                .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                                        .addComponent(receptionIcon)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(receptionDocumentLabel)
+                                        .addGap(0, 153, Short.MAX_VALUE)))
+                        .addContainerGap())
+        );
+        receptionContainerPaneLayout.setVerticalGroup(
+                receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                        .addGroup(receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(receptionIcon)
+                                .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(receptionDocumentLabel)))
+                        .addGap(7, 7, 7)
+                        .addGroup(receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(receptionContainerPaneLayout.createSequentialGroup()
+                                        .addGroup(receptionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(receptionNameLabel)
+                                                .addComponent(documentReceptionNameClient))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(expedientSelectorReception, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(selectExpedientLabel))
+                        .addGap(0, 12, Short.MAX_VALUE))
+        );
+
+        receptionLayoutCardPane.add(receptionContainerPane, "card2");
 
         mainTemplateOption.setBorder(null);
         mainTemplateOption.setText("Expedientes");
@@ -1387,6 +1570,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                 consultPersonMenuItemActionPerformed(evt);
             }
         });
+
         mainConsultOption.add(consultPersonMenuItem);
 
         mainBarMenu.add(mainConsultOption);
@@ -1399,57 +1583,66 @@ public class MainCustomGui extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                        .addComponent(mainPanelNavigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(expedientFormTitleLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(expedientFormTitleLabel)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(178, 178, 178)))
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(layout.createSequentialGroup()
                                                         .addGap(8, 8, 8)
                                                         .addComponent(uploadImageLabel)
-                                                        .addGap(47, 47, 47)
+                                                        .addGap(50, 50, 50)
                                                         .addComponent(scannerLabel)
-                                                        .addGap(57, 57, 57)
+                                                        .addGap(58, 58, 58)
                                                         .addComponent(indexLabel))
                                                 .addGroup(layout.createSequentialGroup()
                                                         .addComponent(uploadImageButton)
                                                         .addGap(18, 18, 18)
                                                         .addComponent(scannerButton)
-                                                        .addGap(18, 18, 18)
-                                                        .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                                        .addGap(15, 15, 15)
+                                                        .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(layout.createSequentialGroup()
+                                        .addComponent(mainPanelNavigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(uploadImageButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                        .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(14, 14, 14)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
-                                        .addGap(19, 19, 19)
-                                        .addComponent(expedientFormTitleLabel))
-                                .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(uploadImageButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                                        .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                 .addComponent(scannerLabel)
                                                 .addComponent(indexLabel)
-                                                .addComponent(uploadImageLabel))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(uploadImageLabel))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createSequentialGroup()
+                                        .addComponent(expedientFormTitleLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(11, 11, 11)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(mainPanelNavigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
         );
+
+        receptionLayoutCardPane.setVisible(false);
         Dimension mainPanesDimension = new Dimension(480, 518);
-        Dimension mainWindow = new Dimension(915, 710);
+        Dimension mainWindow = new Dimension(915, 750);
         layeredOperationalPane.setMaximumSize(mainPanesDimension);
         layeredOperationalPane.setMinimumSize(mainPanesDimension);
         layeredOperationalPane.setPreferredSize(mainPanesDimension);
@@ -1618,9 +1811,12 @@ public class MainCustomGui extends javax.swing.JFrame {
     }// </editor-fold>  
 
     private void scannerButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        if (scannerBackground.isScannerSelected()) {
-            System.out.println("Escaner Seleccionado");
-        }
+
+    }
+
+    private void expedientClientSelectorAction(java.awt.event.ActionEvent evt) {
+        Expedient expedientClient = (Expedient) this.expedientSelectorReception.getSelectedItem();
+        displayDocumentByExpedient(expedientClient);
     }
 
     public void assingIconsToBussinesTree(JTree bussinesTree) {
@@ -1846,6 +2042,31 @@ public class MainCustomGui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
+    private void indexProcessAction(java.awt.event.ActionEvent evt) {
+        indexProcessIsActive = !indexProcessIsActive;
+        if (indexProcessIsActive) {
+            indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/indexout.png"))); // NOI18N
+            scannerButton.setEnabled(true);
+            uploadImageButton.setEnabled(true);
+            indexButton.repaint();
+            indexLabel.setText("Finalizar");
+        } else {
+            indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/index1.png"))); // NOI18N
+            indexButton.repaint();
+            scannerPaneDownLeft.setVisible(false);
+            scannerPaneDownLeft.removeImage();
+            scannerPaneUpRight.setVisible(false);
+            scannerPaneUpRight.removeImage();
+            scannerPaneUpLeft.removeImage();
+            scannerPaneUpLeft.setVisible(false);
+            scannerPaneDownRight.setVisible(false);
+            scannerPaneDownRight.removeImage();
+            scannerButton.setEnabled(false);
+            uploadImageButton.setEnabled(false);
+            indexLabel.setText("Indexar");
+        }
+    }
+
     private void uploadImageAction(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         JFileChooser fileChooser = new JFileChooser();
@@ -1996,6 +2217,8 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JList ExpedientList;
     private javax.swing.JButton uploadImageButton;
     private javax.swing.JButton cleanDocumentButton;
+    private javax.swing.JLabel documentReceptionLabel;
+    private javax.swing.JLabel selectExpedientLabel;
     private javax.swing.JButton createDocumentButton;
     private javax.swing.JLabel createDocumentTitleLabel;
     private javax.swing.JPanel creationDocumentPane;
@@ -2028,6 +2251,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JCheckBox expireDocumentPaneCheckBox;
     private javax.swing.JLabel scannerLabel;
     private javax.swing.JLabel expireDocumentPaneLabel;
+    private javax.swing.JLabel documentReceptionNameClient;
     private javax.swing.JLabel genericDocumentPaneLabel;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem menuItemScannerSelection;
@@ -2045,10 +2269,12 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JTextField maxSizeDocumentPaneTxt;
     private javax.swing.JSeparator middleSeparatorDocumentPane;
     private javax.swing.JMenuItem modifyDocumentItemMenuButton;
+    private javax.swing.JComboBox expedientSelectorReception;
     private javax.swing.JLabel nameDataParameterPaneLabel;
     private javax.swing.JTextField nameDataParameterPaneTxt;
     private javax.swing.JLabel nameDocumentPaneLabel;
     private javax.swing.JTextField nameDocumentPaneTxt;
+    private javax.swing.JPanel receptionLayoutCardPane;
     private javax.swing.JMenuItem registPersonMenuItem;
     private javax.swing.JCheckBox repeatDocumentPaneCheckBox;
     private javax.swing.JLabel repeatDocumentPaneLabel;
@@ -2069,6 +2295,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JTextField nameRegistPersonTxt;
     private javax.swing.JLabel nationSelectorRegistPersonLabel;
     private javax.swing.JComboBox nationalityTxt;
+    private javax.swing.JLabel receptionDocumentLabel;
     private javax.swing.JButton registPersonButton;
     private javax.swing.JLabel registPersonTitle;
     private javax.swing.JButton verifyDocumentButton;
@@ -2093,6 +2320,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JButton cleanDataButton;
     private javax.swing.JButton createDataButton;
     private javax.swing.JLabel createDataTitleLabel;
+    private javax.swing.JLabel receptionIcon;
     private javax.swing.JPanel creationDataPane;
     private javax.swing.JLabel dataDocumentLabel;
     private javax.swing.JLabel dataTypeLabel;
@@ -2101,6 +2329,8 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JLabel isRequiredDataLabel;
     private javax.swing.JLabel nameDataField;
     private javax.swing.JButton removeDownRightButton;
+    private javax.swing.JPanel receptionContainerPane;
     private javax.swing.JTextField nameDataTxt;
+    private javax.swing.JLabel receptionNameLabel;
     private javax.swing.JLabel selectedDocumentLabel;
 }
