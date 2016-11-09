@@ -26,20 +26,34 @@ public class PaintedPane extends JPanel {
     private BufferedImage img;
     private Rectangle drawRectangle;
     private boolean highlight = false;
+    private boolean imageSelected = false;
 
     public void removeImage() {
         this.setVisible(false);
+        imageSelected = false;
         img = null;
     }
 
     public PaintedPane() {
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                if (!getBorder().equals(javax.swing.BorderFactory.createLineBorder(Color.BLUE))) {
-                    setBorder(javax.swing.BorderFactory.createLineBorder(Color.BLUE));
-                }
+                Color color = new Color(57, 105, 138);
+                setBorder(javax.swing.BorderFactory.createLineBorder(color,3));
+                imageSelected = true;
             }
         });
+    }
+
+    public boolean isImageSelected() {
+        return imageSelected;
+    }
+
+    public boolean imageSelected() {
+        boolean response = false;
+        if (getBorder().equals(javax.swing.BorderFactory.createLineBorder(Color.BLUE))) {
+            response = true;
+        }
+        return response;
     }
 
     public void setHighlight(boolean highlight) {

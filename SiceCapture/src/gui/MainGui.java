@@ -384,6 +384,7 @@ public class MainGui extends javax.swing.JFrame {
         indexLabel = new javax.swing.JLabel();
         uploadImageButton = new javax.swing.JButton();
         uploadImageLabel = new javax.swing.JLabel();
+        infoProcessLayeredPane = new javax.swing.JLayeredPane();
         receptionLayoutCardPane = new javax.swing.JPanel();
         receptionContainerPane = new javax.swing.JPanel();
         receptionDocumentLabel = new javax.swing.JLabel();
@@ -392,7 +393,14 @@ public class MainGui extends javax.swing.JFrame {
         receptionIcon = new javax.swing.JLabel();
         selectExpedientLabel = new javax.swing.JLabel();
         expedientSelectorReception = new javax.swing.JComboBox();
-        jPanel1 = new javax.swing.JPanel();
+        indextionLayoutCardPane = new javax.swing.JPanel();
+        indextionContainerPane = new javax.swing.JPanel();
+        indexDocumentIconProcess = new javax.swing.JLabel();
+        indexDocumentLabel = new javax.swing.JLabel();
+        indexDocumentHelpLebel = new javax.swing.JLabel();
+        indexDocumentButtonProcess = new javax.swing.JButton();
+        nameExpedientIndexLabel = new javax.swing.JLabel();
+        idenClientIndexLabel = new javax.swing.JLabel();
         mainBarMenu = new javax.swing.JMenuBar();
         mainTemplateOption = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -537,7 +545,7 @@ public class MainGui extends javax.swing.JFrame {
                     .addGroup(documentParameterPaneLayout.createSequentialGroup()
                         .addComponent(genericDocumentPaneLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(upSeparatorDocumentPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(upSeparatorDocumentPane, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(documentParameterPaneLayout.createSequentialGroup()
                         .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(documentParameterPaneLayout.createSequentialGroup()
@@ -851,11 +859,16 @@ public class MainGui extends javax.swing.JFrame {
         uploadImageLabel.setForeground(new java.awt.Color(153, 153, 153));
         uploadImageLabel.setText("Subir Imagen");
 
+        infoProcessLayeredPane.setPreferredSize(new java.awt.Dimension(407, 114));
+
         receptionLayoutCardPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         receptionLayoutCardPane.setMaximumSize(new java.awt.Dimension(407, 114));
         receptionLayoutCardPane.setMinimumSize(new java.awt.Dimension(407, 114));
         receptionLayoutCardPane.setPreferredSize(new java.awt.Dimension(407, 114));
         receptionLayoutCardPane.setLayout(new java.awt.CardLayout());
+
+        receptionContainerPane.setMaximumSize(new java.awt.Dimension(403, 110));
+        receptionContainerPane.setMinimumSize(new java.awt.Dimension(403, 110));
 
         receptionDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         receptionDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
@@ -896,7 +909,7 @@ public class MainGui extends javax.swing.JFrame {
                         .addComponent(receptionIcon)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(receptionDocumentLabel)
-                        .addGap(0, 153, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         receptionContainerPaneLayout.setVerticalGroup(
@@ -921,16 +934,95 @@ public class MainGui extends javax.swing.JFrame {
 
         receptionLayoutCardPane.add(receptionContainerPane, "card2");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+        indextionLayoutCardPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        indextionLayoutCardPane.setLayout(new java.awt.CardLayout());
+
+        indexDocumentIconProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/indextionProcess.png"))); // NOI18N
+
+        indexDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        indexDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
+        indexDocumentLabel.setText("Indexación de Documentos");
+
+        indexDocumentHelpLebel.setText("Seleccione las imágenes a indexar");
+
+        indexDocumentButtonProcess.setText("Indexar Imágenes");
+
+        nameExpedientIndexLabel.setText("Nombre Expediente");
+
+        idenClientIndexLabel.setText("Identificación del cliente");
+
+        javax.swing.GroupLayout indextionContainerPaneLayout = new javax.swing.GroupLayout(indextionContainerPane);
+        indextionContainerPane.setLayout(indextionContainerPaneLayout);
+        indextionContainerPaneLayout.setHorizontalGroup(
+            indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                .addComponent(indexDocumentIconProcess)
+                .addGap(45, 45, 45)
+                .addComponent(indexDocumentLabel)
+                .addGap(0, 61, Short.MAX_VALUE))
+            .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                        .addComponent(nameExpedientIndexLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                        .addGroup(indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(indexDocumentHelpLebel)
+                            .addComponent(idenClientIndexLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(indexDocumentButtonProcess)))
+                .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+        indextionContainerPaneLayout.setVerticalGroup(
+            indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                .addGroup(indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(indexDocumentIconProcess)
+                    .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(indexDocumentLabel)))
+                .addGap(8, 8, 8)
+                .addComponent(nameExpedientIndexLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                        .addComponent(indexDocumentHelpLebel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(idenClientIndexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(indexDocumentButtonProcess)))
+                .addContainerGap())
         );
+
+        indextionLayoutCardPane.add(indextionContainerPane, "card2");
+
+        javax.swing.GroupLayout infoProcessLayeredPaneLayout = new javax.swing.GroupLayout(infoProcessLayeredPane);
+        infoProcessLayeredPane.setLayout(infoProcessLayeredPaneLayout);
+        infoProcessLayeredPaneLayout.setHorizontalGroup(
+            infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(infoProcessLayeredPaneLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(indextionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        infoProcessLayeredPaneLayout.setVerticalGroup(
+            infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(infoProcessLayeredPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(infoProcessLayeredPaneLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(indextionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        infoProcessLayeredPane.setLayer(receptionLayoutCardPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        infoProcessLayeredPane.setLayer(indextionLayoutCardPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         mainTemplateOption.setBorder(null);
         mainTemplateOption.setText("Expedientes");
@@ -1025,10 +1117,8 @@ public class MainGui extends javax.swing.JFrame {
                                 .addComponent(expedientFormTitleLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(36, 36, 36)))
+                                .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
@@ -1047,7 +1137,7 @@ public class MainGui extends javax.swing.JFrame {
                         .addComponent(mainPanelNavigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 4, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1069,9 +1159,8 @@ public class MainGui extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(expedientFormTitleLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                        .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(mainPanelNavigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1278,12 +1367,19 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JCheckBox expireDocumentPaneCheckBox;
     private javax.swing.JLabel expireDocumentPaneLabel;
     private javax.swing.JLabel genericDocumentPaneLabel;
+    private javax.swing.JLabel idenClientIndexLabel;
     private javax.swing.JButton indexButton;
+    private javax.swing.JButton indexDocumentButtonProcess;
+    private javax.swing.JLabel indexDocumentHelpLebel;
+    private javax.swing.JLabel indexDocumentIconProcess;
+    private javax.swing.JLabel indexDocumentLabel;
     private javax.swing.JLabel indexLabel;
+    private javax.swing.JPanel indextionContainerPane;
+    private javax.swing.JPanel indextionLayoutCardPane;
+    private javax.swing.JLayeredPane infoProcessLayeredPane;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLayeredPane layeredOperationalPane;
     private javax.swing.JMenuBar mainBarMenu;
@@ -1299,6 +1395,7 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JTextField nameDataParameterPaneTxt;
     private javax.swing.JLabel nameDocumentPaneLabel;
     private javax.swing.JTextField nameDocumentPaneTxt;
+    private javax.swing.JLabel nameExpedientIndexLabel;
     private javax.swing.JPanel receptionContainerPane;
     private javax.swing.JLabel receptionDocumentLabel;
     private javax.swing.JLabel receptionIcon;

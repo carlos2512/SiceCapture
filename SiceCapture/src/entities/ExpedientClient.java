@@ -116,7 +116,7 @@ public class ExpedientClient implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.ExpedientClient[ expedientClientPK=" + expedientClientPK + " ]";
+        return expedient.getName();
     }
     
 }

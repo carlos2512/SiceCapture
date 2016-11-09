@@ -13,9 +13,14 @@ import entities.Document;
 import entities.DocumentData;
 import entities.Expedient;
 import entities.ExpedientClient;
+import static gui.CaptureDataDialogCustom.listOfTextFields;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,20 +39,25 @@ import javax.persistence.EntityManagerFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -70,13 +80,18 @@ public class MainCustomGui extends javax.swing.JFrame {
     private final ScannerBackground scannerBackground;
     private Document selectedDocument;
     private DocumentData selectedDocumentData;
+    private ExpedientClient expedientClientInProcess;
     private DocumentJpaController documentController;
     private ExpedientJpaController expedientController;
     private ExpedientClientJpaController expedientClientController;
     private ClientJpaController clientController;
     private DocumentDataJpaController documentDataController;
     private DataTypeJpaController dataTypeController;
+    private List<JTextField> textFieldList;
     private boolean indexProcessIsActive;
+    private Expedient selectedExpedientFromTree;
+    private List<DocumentData> documentDataListCurrentCaptureProcess;
+    private Document selectedDocumentFromTree;
     private final String expedientIconPath = "../resources/img/expedientIcon.png";
     private final String expedientIconPath2 = "../resources/img/expedientIcon2.png";
     private final String documentIconPath = "../resources/img/doc.png";
@@ -87,6 +102,8 @@ public class MainCustomGui extends javax.swing.JFrame {
     private final String DATE_DATA_TYPE_CODE = "type.date";
     private final String VALUE_DATA_TYPE_CODE = "type.data";
     private javax.swing.JLabel documentValidationLabel;
+    private boolean creationExpedientState;
+    private boolean documentsReceptionState;
     private final EntityManagerFactory emf;
     private TableRowSorter<TableModel> sorter;
 
@@ -189,11 +206,11 @@ public class MainCustomGui extends javax.swing.JFrame {
         popupExpedient.show(component, x, y);
     }
 
-    public void displayDocumentByExpedient(Expedient expedient) {
+    public void displayDocumentByExpedient(ExpedientClient expedientClient) {
         DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
-        DefaultMutableTreeNodeCustom expedientNode = new DefaultMutableTreeNodeCustom(expedient);
-        if (expedient.getDocumentCollection() != null && !expedient.getDocumentCollection().isEmpty()) {
-            for (Document document : expedient.getDocumentCollection()) {
+        DefaultMutableTreeNodeCustom expedientNode = new DefaultMutableTreeNodeCustom(expedientClient.getExpedient());
+        if (expedientClient.getExpedient().getDocumentCollection() != null && !expedientClient.getExpedient().getDocumentCollection().isEmpty()) {
+            for (Document document : expedientClient.getExpedient().getDocumentCollection()) {
                 DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
                 List<DocumentData> documentDataList = documentDataController.findByDocument(document);
                 if (documentDataList != null && !documentDataList.isEmpty()) {
@@ -232,20 +249,18 @@ public class MainCustomGui extends javax.swing.JFrame {
     }
 
     private void initDocumentVerification(ExpedientClient expedientClient) {
+        creationExpedientState = false;
+        documentsReceptionState = true;
         List<ExpedientClient> allExpedientsListOfClient = expedientClientController.findExpedientClientByClient(expedientClient.getClient());
-        List<Expedient> expedientList = new ArrayList<>();
-        for (ExpedientClient expedientC : allExpedientsListOfClient) {
-            expedientList.add(expedientC.getExpedient());
-        }
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        for (Object arrayExpedient1 : expedientList) {
+        for (Object arrayExpedient1 : allExpedientsListOfClient) {
             model.addElement(arrayExpedient1);
         }
         documentReceptionNameClient.setText(expedientClient.getClient().getName());
         expedientSelectorReception.setModel(model);
         receptionLayoutCardPane.setVisible(true);
-        Expedient expedient = (Expedient) expedientSelectorReception.getSelectedItem();
-        displayDocumentByExpedient(expedient);
+        ExpedientClient expedientClientTemp = (ExpedientClient) expedientSelectorReception.getSelectedItem();
+        displayDocumentByExpedient(expedientClientTemp);
         indexButton.setEnabled(true);
     }
 
@@ -293,6 +308,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                     ExpedientClient expedientClient = tableModel.getExpedientClient(selectedRow);
                     System.out.println(expedientClient);
                     searchPersonDialog.setVisible(false);
+                    expedientClientInProcess = expedientClient;
                     initDocumentVerification(expedientClient);
                 }
             }
@@ -880,12 +896,23 @@ public class MainCustomGui extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
+        creationExpedientState = true;
+        documentsReceptionState = false;
+        indexDocumentIconProcess = new javax.swing.JLabel();
+        indexDocumentLabel = new javax.swing.JLabel();
+        indextionContainerPane = new javax.swing.JPanel();
+        infoProcessLayeredPane = new javax.swing.JLayeredPane();
         mainPanelNavigation = new javax.swing.JPanel();
         scannerLabel = new javax.swing.JLabel();
         receptionContainerPane = new javax.swing.JPanel();
         removeUpLeftButton = new javax.swing.JButton();
+        indexDocumentHelpLebel = new javax.swing.JLabel();
+        indexDocumentButtonProcess = new javax.swing.JButton();
+        nameExpedientIndexLabel = new javax.swing.JLabel();
+        idenClientIndexLabel = new javax.swing.JLabel();
         receptionDocumentLabel = new javax.swing.JLabel();
         uploadImageLabel = new javax.swing.JLabel();
+        indextionLayoutCardPane = new javax.swing.JPanel();
         documentReceptionNameClient = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         receptionIcon = new javax.swing.JLabel();
@@ -959,6 +986,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         documentReceptionLabel.setForeground(new java.awt.Color(153, 153, 153));
         documentReceptionLabel.setText("Recepción de Documentos");
         documentReceptionLabel.setVisible(false);
+        indextionLayoutCardPane.setVisible(false);
         List<Expedient> allExpedientsList = expedientController.findExpedientEntities();
         DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
         for (Expedient expedient : allExpedientsList) {
@@ -978,15 +1006,42 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
             metaExpedient.add(expedientNode);
         }
-        expedientTree.setModel(new DefaultTreeModel(metaExpedient));
-        expedientTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+        expedientTree.addTreeSelectionListener(new TreeSelectionListener() {
+            public void valueChanged(TreeSelectionEvent evt) {
+                selectedExpedientFromTree = null;
+                selectedDocumentFromTree = null;
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) expedientTree.getLastSelectedPathComponent();
+                if (node != null) {
+                    if (node.getUserObject() instanceof Expedient) {
+                        selectedExpedientFromTree = (Expedient) node.getUserObject();
+                        System.out.println(selectedExpedientFromTree.getName());
+                    } else if (node.getUserObject() instanceof Document) {
+                        selectedDocumentFromTree = (Document) node.getUserObject();
+                    }
+                }
+            }
+        });
+
+        expedientTree.setModel(
+                new DefaultTreeModel(metaExpedient));
+        expedientTree.getSelectionModel()
+                .setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         expedientTree.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 expedientTreeMouseClicked(evt);
             }
-        });
+        }
+        );
         assingIconsToBussinesTree(expedientTree);
         jScrollPane1.setViewportView(expedientTree);
+
+        indexDocumentButtonProcess.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                indexImagesAction(e);
+            }
+        });
 
         expedientSelectorReception.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1419,7 +1474,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         receptionLayoutCardPane.setPreferredSize(new java.awt.Dimension(407, 114));
         receptionLayoutCardPane.setLayout(new java.awt.CardLayout());
 
-        receptionDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        receptionDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         receptionDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
         receptionDocumentLabel.setText("Recepción de Documentos");
 
@@ -1482,6 +1537,98 @@ public class MainCustomGui extends javax.swing.JFrame {
         );
 
         receptionLayoutCardPane.add(receptionContainerPane, "card2");
+
+        receptionLayoutCardPane.add(receptionContainerPane, "card2");
+
+        indextionLayoutCardPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        indextionLayoutCardPane.setLayout(new java.awt.CardLayout());
+
+        indexDocumentIconProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/indextionProcess.png"))); // NOI18N
+
+        indexDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        indexDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
+        indexDocumentLabel.setText("Indexación de Documentos");
+
+        indexDocumentHelpLebel.setText("Seleccione las imágenes a indexar");
+
+        indexDocumentButtonProcess.setText("Indexar Imágenes");
+
+        nameExpedientIndexLabel.setText("Nombre Expediente");
+
+        idenClientIndexLabel.setText("Identificación del cliente");
+
+        javax.swing.GroupLayout indextionContainerPaneLayout = new javax.swing.GroupLayout(indextionContainerPane);
+        indextionContainerPane.setLayout(indextionContainerPaneLayout);
+        indextionContainerPaneLayout.setHorizontalGroup(
+                indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                        .addComponent(indexDocumentIconProcess)
+                        .addGap(45, 45, 45)
+                        .addComponent(indexDocumentLabel)
+                        .addGap(0, 61, Short.MAX_VALUE))
+                .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                                        .addComponent(nameExpedientIndexLabel)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                                        .addGroup(indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(indexDocumentHelpLebel)
+                                                .addComponent(idenClientIndexLabel))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(indexDocumentButtonProcess)))
+                        .addContainerGap())
+        );
+        indextionContainerPaneLayout.setVerticalGroup(
+                indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                        .addGroup(indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(indexDocumentIconProcess)
+                                .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(indexDocumentLabel)))
+                        .addGap(8, 8, 8)
+                        .addComponent(nameExpedientIndexLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(indextionContainerPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                                        .addComponent(indexDocumentHelpLebel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(idenClientIndexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(indextionContainerPaneLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(indexDocumentButtonProcess)))
+                        .addContainerGap())
+        );
+
+        indextionLayoutCardPane.add(indextionContainerPane, "card2");
+
+        javax.swing.GroupLayout infoProcessLayeredPaneLayout = new javax.swing.GroupLayout(infoProcessLayeredPane);
+        infoProcessLayeredPane.setLayout(infoProcessLayeredPaneLayout);
+        infoProcessLayeredPaneLayout.setHorizontalGroup(
+                infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(infoProcessLayeredPaneLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(indextionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        infoProcessLayeredPaneLayout.setVerticalGroup(
+                infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(infoProcessLayeredPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                .addGroup(infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(infoProcessLayeredPaneLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(indextionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        infoProcessLayeredPane.setLayer(receptionLayoutCardPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        infoProcessLayeredPane.setLayer(indextionLayoutCardPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         mainTemplateOption.setBorder(null);
         mainTemplateOption.setText("Expedientes");
@@ -1570,11 +1717,8 @@ public class MainCustomGui extends javax.swing.JFrame {
                 consultPersonMenuItemActionPerformed(evt);
             }
         });
-
         mainConsultOption.add(consultPersonMenuItem);
-
         mainBarMenu.add(mainConsultOption);
-
         setJMenuBar(mainBarMenu);
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1589,21 +1733,21 @@ public class MainCustomGui extends javax.swing.JFrame {
                                                         .addComponent(expedientFormTitleLabel)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                                 .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGap(178, 178, 178)))
+                                                        .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(layout.createSequentialGroup()
-                                                        .addGap(8, 8, 8)
+                                                        .addGap(10, 10, 10)
                                                         .addComponent(uploadImageLabel)
-                                                        .addGap(50, 50, 50)
+                                                        .addGap(53, 53, 53)
                                                         .addComponent(scannerLabel)
-                                                        .addGap(58, 58, 58)
+                                                        .addGap(63, 63, 63)
                                                         .addComponent(indexLabel))
                                                 .addGroup(layout.createSequentialGroup()
                                                         .addComponent(uploadImageButton)
                                                         .addGap(18, 18, 18)
                                                         .addComponent(scannerButton)
-                                                        .addGap(15, 15, 15)
+                                                        .addGap(18, 18, 18)
                                                         .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGroup(layout.createSequentialGroup()
                                         .addComponent(mainPanelNavigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1627,19 +1771,17 @@ public class MainCustomGui extends javax.swing.JFrame {
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                 .addComponent(scannerLabel)
                                                 .addComponent(indexLabel)
-                                                .addComponent(uploadImageLabel))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addComponent(uploadImageLabel)))
                                 .addGroup(layout.createSequentialGroup()
                                         .addComponent(expedientFormTitleLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(receptionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(11, 11, 11)))
+                                        .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(layeredOperationalPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(mainPanelNavigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
         );
-
         receptionLayoutCardPane.setVisible(false);
         Dimension mainPanesDimension = new Dimension(480, 518);
         Dimension mainWindow = new Dimension(915, 750);
@@ -1814,9 +1956,81 @@ public class MainCustomGui extends javax.swing.JFrame {
 
     }
 
+    private void captureProcessAction(java.awt.event.ActionEvent evt) {
+        for (JTextField textField : textFieldList) {
+            Integer id = (Integer) textField.getClientProperty("id");
+            System.out.println(textField.getText());
+            System.out.println("Id de la data: " + textField.getText());
+        }
+    }
+
+    private void initCreationCaptureDataDialog(JDialog dialog, List<JTextField> textFieldList, List<JLabel> listLabel) {
+        JPanel form = new JPanel();
+        dialog.getContentPane().setLayout(new BorderLayout());
+        dialog.getContentPane().add(form, BorderLayout.NORTH);
+        // Set the form panel's layout to GridBagLayout
+        // and create a FormUtility to add things to it.
+        form.setLayout(new GridBagLayout());
+        FormUtility formUtility = new FormUtility();
+        int counter = 0;
+        JButton captureButton = new JButton("Guardar");
+        captureButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                captureProcessAction(evt);
+            }
+        });
+        for (JTextField textFieldList1 : textFieldList) {
+            formUtility.addLabel(listLabel.get(counter), form);
+            formUtility.addLastField(new JTextField(), form);
+            formUtility.addMiddleField(captureButton, form);
+            counter++;
+        }
+        dialog.setPreferredSize(new Dimension(380, 200));
+        dialog.pack();
+        dialog.setResizable(false);
+        dialog.setTitle("Capturar Datos");
+        dialog.setLocationRelativeTo(null);
+    }
+
     private void expedientClientSelectorAction(java.awt.event.ActionEvent evt) {
-        Expedient expedientClient = (Expedient) this.expedientSelectorReception.getSelectedItem();
+        ExpedientClient expedientClient = (ExpedientClient) this.expedientSelectorReception.getSelectedItem();
+        this.expedientClientInProcess = expedientClient;
         displayDocumentByExpedient(expedientClient);
+    }
+
+    private void indexImagesAction(java.awt.event.ActionEvent evt) {
+        //You have to choose one image at least
+        boolean firstCondition = true;
+
+        boolean secondCondition = true;
+
+        if (!this.scannerPaneDownLeft.isImageSelected() && !scannerPaneDownRight.isImageSelected() && !scannerPaneUpRight.isImageSelected() && !scannerPaneUpLeft.isImageSelected()) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar almenos una Imagen para indexar");
+            firstCondition = false;
+        } else if (this.selectedDocumentFromTree == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar el documento donde se quiere indexar las imagenes");
+            secondCondition = false;
+        }
+
+        if (firstCondition && secondCondition) {
+            JDialog captureDataDialog = new JDialog();
+            documentDataListCurrentCaptureProcess = documentDataController.findByDocument(selectedDocumentFromTree);
+            textFieldList = new ArrayList<>();
+            List<JLabel> labelList = new ArrayList<>();
+            for (DocumentData documentData : documentDataListCurrentCaptureProcess) {
+                JTextField textField = new JTextField();
+                textFieldList.add(textField);
+                labelList.add(new JLabel(documentData.getName()));
+            }
+            int counter = 0;
+            for (JTextField textField : textFieldList) {
+                textField.putClientProperty("id", documentDataListCurrentCaptureProcess.get(counter).getIdDocumentdata());
+                counter++;
+            }
+            captureDataDialog.setModal(true);
+            initCreationCaptureDataDialog(captureDataDialog, textFieldList, labelList);
+            captureDataDialog.setVisible(true);
+        }
     }
 
     public void assingIconsToBussinesTree(JTree bussinesTree) {
@@ -2048,6 +2262,13 @@ public class MainCustomGui extends javax.swing.JFrame {
             indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/indexout.png"))); // NOI18N
             scannerButton.setEnabled(true);
             uploadImageButton.setEnabled(true);
+            creationExpedientState = false;
+            documentsReceptionState = false;
+            this.nameExpedientIndexLabel.setText(expedientClientInProcess.getExpedient().getName());
+            indexDocumentHelpLebel.setText(expedientClientInProcess.getClient().getName());
+            idenClientIndexLabel.setText(String.valueOf(expedientClientInProcess.getClient().getIdentification()));
+            this.receptionLayoutCardPane.setVisible(false);
+            this.indextionLayoutCardPane.setVisible(true);
             indexButton.repaint();
             indexLabel.setText("Finalizar");
         } else {
@@ -2055,6 +2276,8 @@ public class MainCustomGui extends javax.swing.JFrame {
             indexButton.repaint();
             scannerPaneDownLeft.setVisible(false);
             scannerPaneDownLeft.removeImage();
+            this.receptionLayoutCardPane.setVisible(true);
+            this.indextionLayoutCardPane.setVisible(false);
             scannerPaneUpRight.setVisible(false);
             scannerPaneUpRight.removeImage();
             scannerPaneUpLeft.removeImage();
@@ -2127,8 +2350,10 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
             try {
                 documentDataController.create(dataDocument);
+
             } catch (Exception ex) {
-                Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MainCustomGui.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
             em.getTransaction().commit();
             refreshExpedientTree();
@@ -2158,7 +2383,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             int row = expedientTree.getClosestRowForLocation(evt.getX(), evt.getY());
             expedientTree.setSelectionRow(row);
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) expedientTree.getLastSelectedPathComponent();
-            if (node != null) {
+            if (node != null && creationExpedientState) {
                 if (node.getUserObject() instanceof Expedient) {
                     this.desactiveDocumentDataParameterPane();
                     this.desactiveDocumentParameterPane();
@@ -2179,7 +2404,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         } else if (SwingUtilities.isLeftMouseButton(evt)) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) expedientTree.getLastSelectedPathComponent();
-            if (node != null) {
+            if (node != null && creationExpedientState) {
                 if (node.getUserObject() instanceof Expedient) {
                     this.desactiveDocumentDataParameterPane();
                     this.desactiveDocumentParameterPane();
@@ -2242,6 +2467,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JPanel documentParameterPane;
     private javax.swing.JSeparator downSeparatorDocumentPane;
     private javax.swing.JLabel expedientFormTitleLabel;
+    private javax.swing.JLabel indexDocumentIconProcess;
     private javax.swing.JButton indexButton;
     private PaintedPane scannerPaneDownLeft;
     private PaintedPane scannerPaneDownRight;
@@ -2259,6 +2485,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLayeredPane layeredOperationalPane;
+    private javax.swing.JLayeredPane infoProcessLayeredPane;
     private javax.swing.JMenuBar mainBarMenu;
     private javax.swing.JMenu mainConsultOption;
     private javax.swing.JMenu mainDocumentOption;
@@ -2307,6 +2534,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JLabel idenTypeSearchLabel;
     private javax.swing.JLabel infoSearchLabel;
     private javax.swing.JTable jTable1;
+    private javax.swing.JPanel indextionLayoutCardPane;
     private javax.swing.JTable searchTable;
     private javax.swing.JScrollPane searchTableScrollPane;
     private javax.swing.JComboBox typeIdenSearchSelector;
@@ -2327,8 +2555,14 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JComboBox dataTypeSelector;
     private javax.swing.JCheckBox isRequiredDataCheckBox;
     private javax.swing.JLabel isRequiredDataLabel;
+    private javax.swing.JLabel indexDocumentHelpLebel;
+    private javax.swing.JButton indexDocumentButtonProcess;
+    private javax.swing.JLabel nameExpedientIndexLabel;
+    private javax.swing.JLabel idenClientIndexLabel;
     private javax.swing.JLabel nameDataField;
+    private javax.swing.JLabel indexDocumentLabel;
     private javax.swing.JButton removeDownRightButton;
+    private javax.swing.JPanel indextionContainerPane;
     private javax.swing.JPanel receptionContainerPane;
     private javax.swing.JTextField nameDataTxt;
     private javax.swing.JLabel receptionNameLabel;
