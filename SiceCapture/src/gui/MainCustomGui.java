@@ -1,5 +1,7 @@
 package gui;
 
+import com.toedter.calendar.JDateChooser;
+import controller.ClientDataJpaController;
 import controller.ClientJpaController;
 import controller.DataTypeJpaController;
 import controller.DocumentDataJpaController;
@@ -8,6 +10,8 @@ import controller.ExpedientClientJpaController;
 import controller.ExpedientJpaController;
 import core.ScannerBackground;
 import entities.Client;
+import entities.ClientData;
+import entities.ClientDataPK;
 import entities.DataType;
 import entities.Document;
 import entities.DocumentData;
@@ -21,6 +25,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,8 +33,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,6 +73,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -87,7 +100,8 @@ public class MainCustomGui extends javax.swing.JFrame {
     private ClientJpaController clientController;
     private DocumentDataJpaController documentDataController;
     private DataTypeJpaController dataTypeController;
-    private List<JTextField> textFieldList;
+    private List componentList;
+    private ClientDataJpaController clientDataController;
     private boolean indexProcessIsActive;
     private Expedient selectedExpedientFromTree;
     private List<DocumentData> documentDataListCurrentCaptureProcess;
@@ -102,6 +116,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private final String DATE_DATA_TYPE_CODE = "type.date";
     private final String VALUE_DATA_TYPE_CODE = "type.data";
     private javax.swing.JLabel documentValidationLabel;
+    private JDialog captureDataDialog;
     private boolean creationExpedientState;
     private boolean documentsReceptionState;
     private final EntityManagerFactory emf;
@@ -1957,39 +1972,81 @@ public class MainCustomGui extends javax.swing.JFrame {
     }
 
     private void captureProcessAction(java.awt.event.ActionEvent evt) {
-        for (JTextField textField : textFieldList) {
-            Integer id = (Integer) textField.getClientProperty("id");
-            System.out.println(textField.getText());
-            System.out.println("Id de la data: " + textField.getText());
+        Date currentDate = Calendar.getInstance().getTime();
+        SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+        for (Object object : componentList) {
+            String value = null;
+            Integer id = 0;
+            if (object instanceof JTextField) {
+                JTextField textField = (JTextField) object;
+                id = (Integer) textField.getClientProperty("id");
+                value = textField.getText();
+            } else if (object instanceof JDateChooser) {
+                JDateChooser dataChooser = (JDateChooser) object;
+                id = (Integer) dataChooser.getClientProperty("id");
+                value = dt.format(dataChooser.getDate());
+            }
+            DocumentData data = documentDataController.findDocumentData(id);
+//            ClientData duplicateControl = clientDataController.findClientData(clientDataPk);
+//            duplicateControl.setValue(value);
+//            duplicateControl.setLastModification(currentDate);
+//            try {
+//                clientDataController.edit(duplicateControl);
+//            } catch (Exception ex) {
+//                Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+            ClientDataPK clientDataPK = new ClientDataPK();
+            clientDataPK.setFkClient(expedientClientInProcess.getClient().getIdUser());
+            clientDataPK.setFkDocumentData(data.getIdDocumentdata());
+            ClientData clientData = new ClientData();
+            clientData.setClientDataPK(clientDataPK);
+            clientData.setClient(expedientClientInProcess.getClient());
+            clientData.setLastModification(currentDate);
+            clientData.setValue(value);
+            clientData.setDocumentData(data);
+            try {
+                clientDataController.create(clientData);
+            } catch (Exception ex) {
+                Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            em.getTransaction().commit();
         }
     }
 
-    private void initCreationCaptureDataDialog(JDialog dialog, List<JTextField> textFieldList, List<JLabel> listLabel) {
+    private void initCreationCaptureDataDialog(JDialog dialog, List componentList, Map<Integer, JLabel> jLabelMap) {
         JPanel form = new JPanel();
         dialog.getContentPane().setLayout(new BorderLayout());
-        dialog.getContentPane().add(form, BorderLayout.NORTH);
-        // Set the form panel's layout to GridBagLayout
-        // and create a FormUtility to add things to it.
+        dialog.setContentPane(form);
         form.setLayout(new GridBagLayout());
         FormUtility formUtility = new FormUtility();
-        int counter = 0;
-        JButton captureButton = new JButton("Guardar");
-        captureButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                captureProcessAction(evt);
+        for (Object object : componentList) {
+            if (object instanceof JTextField) {
+                JTextField textField = (JTextField) object;
+                Integer idData = Integer.valueOf(textField.getClientProperty("id").toString());
+                formUtility.addLabel(jLabelMap.get(idData), form);
+                formUtility.addLastField(textField, form);
+            } else if (object instanceof JDateChooser) {
+                JDateChooser dataChooser = (JDateChooser) object;
+                Integer idData = Integer.valueOf(dataChooser.getClientProperty("id").toString());
+                formUtility.addLabel(jLabelMap.get(idData), form);
+                formUtility.addLastField(dataChooser, form);
             }
-        });
-        for (JTextField textFieldList1 : textFieldList) {
-            formUtility.addLabel(listLabel.get(counter), form);
-            formUtility.addLastField(new JTextField(), form);
-            formUtility.addMiddleField(captureButton, form);
-            counter++;
+
         }
+        JButton captureButton = new JButton("Guardar");
+        formUtility.addLastField(captureButton, form);
         dialog.setPreferredSize(new Dimension(380, 200));
         dialog.pack();
         dialog.setResizable(false);
         dialog.setTitle("Capturar Datos");
         dialog.setLocationRelativeTo(null);
+        captureButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                captureProcessAction(evt);
+            }
+        });
     }
 
     private void expedientClientSelectorAction(java.awt.event.ActionEvent evt) {
@@ -2001,9 +2058,8 @@ public class MainCustomGui extends javax.swing.JFrame {
     private void indexImagesAction(java.awt.event.ActionEvent evt) {
         //You have to choose one image at least
         boolean firstCondition = true;
-
+        //You have to choose one document
         boolean secondCondition = true;
-
         if (!this.scannerPaneDownLeft.isImageSelected() && !scannerPaneDownRight.isImageSelected() && !scannerPaneUpRight.isImageSelected() && !scannerPaneUpLeft.isImageSelected()) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar almenos una Imagen para indexar");
             firstCondition = false;
@@ -2011,24 +2067,26 @@ public class MainCustomGui extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Debe seleccionar el documento donde se quiere indexar las imagenes");
             secondCondition = false;
         }
-
         if (firstCondition && secondCondition) {
-            JDialog captureDataDialog = new JDialog();
+            captureDataDialog = new JDialog();
             documentDataListCurrentCaptureProcess = documentDataController.findByDocument(selectedDocumentFromTree);
-            textFieldList = new ArrayList<>();
-            List<JLabel> labelList = new ArrayList<>();
+            componentList = new ArrayList<>();
+            Map<Integer, JLabel> labelMap = new HashMap<>();
             for (DocumentData documentData : documentDataListCurrentCaptureProcess) {
-                JTextField textField = new JTextField();
-                textFieldList.add(textField);
-                labelList.add(new JLabel(documentData.getName()));
-            }
-            int counter = 0;
-            for (JTextField textField : textFieldList) {
-                textField.putClientProperty("id", documentDataListCurrentCaptureProcess.get(counter).getIdDocumentdata());
-                counter++;
+                if (documentData.getFkDataType().getCode().equalsIgnoreCase(VALUE_DATA_TYPE_CODE)) {
+                    JTextField textField = new JTextField();
+                    textField.putClientProperty("id", documentData.getIdDocumentdata());
+                    componentList.add(textField);
+                } else if (documentData.getFkDataType().getCode().equalsIgnoreCase(DATE_DATA_TYPE_CODE)) {
+                    JDateChooser dataChooser = new JDateChooser();
+                    dataChooser.setDateFormatString("dd/MM/yyyy");
+                    dataChooser.putClientProperty("id", documentData.getIdDocumentdata());
+                    componentList.add(dataChooser);
+                }
+                labelMap.put(documentData.getIdDocumentdata(), new JLabel(documentData.getName()));
             }
             captureDataDialog.setModal(true);
-            initCreationCaptureDataDialog(captureDataDialog, textFieldList, labelList);
+            initCreationCaptureDataDialog(captureDataDialog, componentList, labelMap);
             captureDataDialog.setVisible(true);
         }
     }
@@ -2102,6 +2160,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         documentController = new DocumentJpaController(emf);
         dataTypeController = new DataTypeJpaController(emf);
         clientController = new ClientJpaController(emf);
+        clientDataController = new ClientDataJpaController(emf);
         documentDataController = new DocumentDataJpaController(emf);
     }
 
