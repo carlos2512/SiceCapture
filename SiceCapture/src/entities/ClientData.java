@@ -7,7 +7,6 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -37,14 +36,12 @@ public class ClientData implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected ClientDataPK clientDataPK;
-    @Basic(optional = false)
     @Column(name = "value")
     private String value;
-    @Basic(optional = false)
     @Column(name = "last_modification")
     @Temporal(TemporalType.DATE)
     private Date lastModification;
-    @JoinColumn(name = "fk_document_data", referencedColumnName = "fk_document", insertable = false, updatable = false)
+    @JoinColumn(name = "fk_document_data", referencedColumnName = "idDocument_data", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private DocumentData documentData;
     @JoinColumn(name = "fk_client", referencedColumnName = "idUser", insertable = false, updatable = false)
@@ -56,12 +53,6 @@ public class ClientData implements Serializable {
 
     public ClientData(ClientDataPK clientDataPK) {
         this.clientDataPK = clientDataPK;
-    }
-
-    public ClientData(ClientDataPK clientDataPK, String value, Date lastModification) {
-        this.clientDataPK = clientDataPK;
-        this.value = value;
-        this.lastModification = lastModification;
     }
 
     public ClientData(int fkClient, int fkDocumentData) {
@@ -130,7 +121,7 @@ public class ClientData implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.ClientData[ clientDataPK=" + clientDataPK + " ]";
+        return "asd.ClientData[ clientDataPK=" + clientDataPK + " ]";
     }
     
 }

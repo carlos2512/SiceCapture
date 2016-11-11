@@ -5,8 +5,6 @@
  */
 package controller;
 
-import controller.exceptions.NonexistentEntityException;
-import controller.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -16,6 +14,8 @@ import entities.DocumentData;
 import entities.Client;
 import entities.ClientData;
 import entities.ClientDataPK;
+import controller.exceptions.NonexistentEntityException;
+import controller.exceptions.PreexistingEntityException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

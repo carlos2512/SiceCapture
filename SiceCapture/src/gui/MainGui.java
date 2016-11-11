@@ -379,6 +379,9 @@ public class MainGui extends javax.swing.JFrame {
         removeDownRightButton = new javax.swing.JButton();
         scannerPaneDownLeft = new javax.swing.JPanel();
         removeDownLeftButton = new javax.swing.JButton();
+        captureDataShowPane = new javax.swing.JPanel();
+        captureDataScrollPane = new javax.swing.JScrollPane();
+        captureDataShowDocumentNameLabel = new javax.swing.JLabel();
         indexButton = new javax.swing.JButton();
         scannerLabel = new javax.swing.JLabel();
         indexLabel = new javax.swing.JLabel();
@@ -786,6 +789,33 @@ public class MainGui extends javax.swing.JFrame {
                     .addGap(0, 220, Short.MAX_VALUE)))
         );
 
+        captureDataShowDocumentNameLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        captureDataShowDocumentNameLabel.setForeground(new java.awt.Color(153, 153, 153));
+        captureDataShowDocumentNameLabel.setText("Nombre Documento");
+
+        javax.swing.GroupLayout captureDataShowPaneLayout = new javax.swing.GroupLayout(captureDataShowPane);
+        captureDataShowPane.setLayout(captureDataShowPaneLayout);
+        captureDataShowPaneLayout.setHorizontalGroup(
+            captureDataShowPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(captureDataShowPaneLayout.createSequentialGroup()
+                .addContainerGap(102, Short.MAX_VALUE)
+                .addComponent(captureDataScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(99, 99, 99))
+            .addGroup(captureDataShowPaneLayout.createSequentialGroup()
+                .addGap(148, 148, 148)
+                .addComponent(captureDataShowDocumentNameLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        captureDataShowPaneLayout.setVerticalGroup(
+            captureDataShowPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, captureDataShowPaneLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(captureDataShowDocumentNameLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addComponent(captureDataScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(95, 95, 95))
+        );
+
         javax.swing.GroupLayout layeredOperationalPaneLayout = new javax.swing.GroupLayout(layeredOperationalPane);
         layeredOperationalPane.setLayout(layeredOperationalPaneLayout);
         layeredOperationalPaneLayout.setHorizontalGroup(
@@ -811,6 +841,8 @@ public class MainGui extends javax.swing.JFrame {
                 .addGroup(layeredOperationalPaneLayout.createSequentialGroup()
                     .addComponent(scannerPaneDownLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 188, Short.MAX_VALUE)))
+            .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(captureDataShowPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layeredOperationalPaneLayout.setVerticalGroup(
             layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -835,6 +867,8 @@ public class MainGui extends javax.swing.JFrame {
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredOperationalPaneLayout.createSequentialGroup()
                     .addGap(0, 207, Short.MAX_VALUE)
                     .addComponent(scannerPaneDownLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(layeredOperationalPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(captureDataShowPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layeredOperationalPane.setLayer(documentParameterPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredOperationalPane.setLayer(dataParameterPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -842,6 +876,7 @@ public class MainGui extends javax.swing.JFrame {
         layeredOperationalPane.setLayer(scannerPaneUpRight, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredOperationalPane.setLayer(scannerPaneDownRight, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredOperationalPane.setLayer(scannerPaneDownLeft, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        layeredOperationalPane.setLayer(captureDataShowPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/index.png"))); // NOI18N
 
@@ -1113,12 +1148,9 @@ public class MainGui extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(expedientFormTitleLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(expedientFormTitleLabel)
+                            .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
@@ -1351,6 +1383,9 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JTextField nameDocumentTxt;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel alertDocumentPaneLabel;
+    private javax.swing.JScrollPane captureDataScrollPane;
+    private javax.swing.JLabel captureDataShowDocumentNameLabel;
+    private javax.swing.JPanel captureDataShowPane;
     private javax.swing.JMenuItem consultPersonMenuItem;
     private javax.swing.JMenuItem createNewDocumentItemMenuButton;
     private javax.swing.JPanel dataParameterPane;
