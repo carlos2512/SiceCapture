@@ -27,6 +27,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Label;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,7 +54,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -62,6 +62,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
@@ -74,7 +75,6 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -280,6 +280,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             metaExpedient.add(expedientNode);
             expedientTree.setModel(new DefaultTreeModel(metaExpedient));
         }
+
     }
 
     private void refreshExpedientsOfClient(ExpedientClient expedientClient) {
@@ -292,6 +293,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     }
 
     private void initDocumentVerification(ExpedientClient expedientClient) {
+        CheckTreeManager checkTreeManager = new CheckTreeManager(expedientTree);
         creationExpedientState = false;
         documentsReceptionState = true;
         List<ExpedientClient> allExpedientsListOfClient = expedientClientController.findExpedientClientByClient(expedientClient.getClient());
@@ -301,6 +303,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         }
         documentReceptionNameClient.setText(expedientClient.getClient().getName());
         expedientSelectorReception.setModel(model);
+
         receptionLayoutCardPane.setVisible(true);
         ExpedientClient expedientClientTemp = (ExpedientClient) expedientSelectorReception.getSelectedItem();
         displayDocumentByExpedient(expedientClientTemp);
@@ -342,10 +345,13 @@ public class MainCustomGui extends javax.swing.JFrame {
 
         searchTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        searchTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        searchTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void valueChanged(ListSelectionEvent event) {
-                if (!searchTable.getSelectionModel().isSelectionEmpty()) {
+            public void mousePressed(MouseEvent me) {
+                JTable table = (JTable) me.getSource();
+                Point p = me.getPoint();
+                int row = table.rowAtPoint(p);
+                if (me.getClickCount() == 2) {
                     TableModelCustom tableModel = (TableModelCustom) searchTable.getModel();
                     int selectedRow = searchTable.getSelectionModel().getMinSelectionIndex();
                     ExpedientClient expedientClient = tableModel.getExpedientClient(selectedRow);
@@ -951,8 +957,10 @@ public class MainCustomGui extends javax.swing.JFrame {
         documentsReceptionState = false;
         indexDocumentIconProcess = new javax.swing.JLabel();
         indexDocumentLabel = new javax.swing.JLabel();
+        dataCaptureTable = new javax.swing.JTable();
         captureDataScrollPane = new javax.swing.JScrollPane();
         indextionContainerPane = new javax.swing.JPanel();
+        dataCaptureScrollPane = new javax.swing.JScrollPane();
         infoProcessLayeredPane = new javax.swing.JLayeredPane();
         captureDataShowPane = new javax.swing.JPanel();
         mainPanelNavigation = new javax.swing.JPanel();
@@ -1442,27 +1450,30 @@ public class MainCustomGui extends javax.swing.JFrame {
         captureDataShowDocumentNameLabel.setForeground(new java.awt.Color(153, 153, 153));
         captureDataShowDocumentNameLabel.setText("Nombre Documento");
 
+        dataCaptureScrollPane.setViewportView(dataCaptureTable);
+
         javax.swing.GroupLayout captureDataShowPaneLayout = new javax.swing.GroupLayout(captureDataShowPane);
         captureDataShowPane.setLayout(captureDataShowPaneLayout);
         captureDataShowPaneLayout.setHorizontalGroup(
                 captureDataShowPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(captureDataShowPaneLayout.createSequentialGroup()
-                        .addContainerGap(102, Short.MAX_VALUE)
-                        .addComponent(captureDataScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(99, 99, 99))
-                .addGroup(captureDataShowPaneLayout.createSequentialGroup()
-                        .addGap(97, 97, 97)
-                        .addComponent(captureDataShowDocumentNameLabel)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(17, Short.MAX_VALUE)
+                        .addGroup(captureDataShowPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, captureDataShowPaneLayout.createSequentialGroup()
+                                        .addComponent(dataCaptureScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap())
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, captureDataShowPaneLayout.createSequentialGroup()
+                                        .addComponent(captureDataShowDocumentNameLabel)
+                                        .addGap(148, 148, 148))))
         );
         captureDataShowPaneLayout.setVerticalGroup(
                 captureDataShowPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, captureDataShowPaneLayout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addComponent(captureDataShowDocumentNameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                        .addComponent(captureDataScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(95, 95, 95))
+                        .addGap(18, 18, 18)
+                        .addComponent(dataCaptureScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layeredOperationalPaneLayout = new javax.swing.GroupLayout(layeredOperationalPane);
@@ -2192,53 +2203,24 @@ public class MainCustomGui extends javax.swing.JFrame {
     }
 
     private void initShowCaptureData() {
+        documentDataListCurrentCaptureProcess = new ArrayList<>();
         documentDataListCurrentCaptureProcess = documentDataController.findByDocument(selectedDocumentFromTree);
-        componentList = new ArrayList<>();
-        Map<Integer, JLabel> labelMap = new HashMap<>();
-        SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+        List<ClientData> clientDataList = new ArrayList<>();
         for (DocumentData documentData : documentDataListCurrentCaptureProcess) {
             ClientDataPK clientDataPK = new ClientDataPK();
             clientDataPK.setFkClient(expedientClientInProcess.getClient().getIdUser());
             clientDataPK.setFkDocumentData(documentData.getIdDocumentdata());
             ClientData duplicateControl = clientDataController.findClientData(clientDataPK);
             if (duplicateControl != null) {
-                if (documentData.getFkDataType().getCode().equalsIgnoreCase(VALUE_DATA_TYPE_CODE)) {
-                    JTextField textField = new JTextField();
-                    textField.setText(duplicateControl.getValue());
-                    textField.putClientProperty("id", documentData.getIdDocumentdata());
-                    componentList.add(textField);
-                } else if (documentData.getFkDataType().getCode().equalsIgnoreCase(DATE_DATA_TYPE_CODE)) {
-                    JDateChooser dataChooser = new JDateChooser();
-                    Date dateValue = null;
-                    try {
-                        dateValue = dt.parse(duplicateControl.getValue());
-                    } catch (ParseException ex) {
-                        Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    dataChooser.setDateFormatString("dd/MM/yyyy");
-                    dataChooser.setDate(dateValue);
-                    dataChooser.putClientProperty("id", documentData.getIdDocumentdata());
-                    componentList.add(dataChooser);
-                }
+                clientDataList.add(duplicateControl);
             }
-            labelMap.put(documentData.getIdDocumentdata(), new JLabel(documentData.getName()));
         }
-        if (!componentList.isEmpty()) {
-            captureDataShowPane.setLayout(new GridBagLayout());
-            FormUtility formUtility = new FormUtility();
-            for (Object object : componentList) {
-                if (object instanceof JTextField) {
-                    JTextField textField = (JTextField) object;
-                    Integer idData = Integer.valueOf(textField.getClientProperty("id").toString());
-                    formUtility.addLabel(labelMap.get(idData), captureDataShowPane);
-                    formUtility.addLastField(textField, captureDataShowPane);
-                } else if (object instanceof JDateChooser){
-                    JDateChooser dataChooser = (JDateChooser) object;
-                    Integer idData = Integer.valueOf(dataChooser.getClientProperty("id").toString());
-                    formUtility.addLabel(labelMap.get(idData), captureDataShowPane);
-                    formUtility.addLastField(dataChooser, captureDataShowPane);
-                }
-            }
+        if (!clientDataList.isEmpty()) {
+            TableModelCustomClientData tblModelClientData = new TableModelCustomClientData(clientDataList);
+            sorter = new TableRowSorter<TableModel>(tblModelClientData);
+            dataCaptureTable.setModel(tblModelClientData);
+            dataCaptureTable.setRowSorter(sorter);
+            dataCaptureScrollPane.setViewportView(dataCaptureTable);
             captureDataShowPane.setVisible(true);
         } else {
             captureDataShowPane.setVisible(false);
@@ -2304,7 +2286,6 @@ public class MainCustomGui extends javax.swing.JFrame {
             componentList = new ArrayList<>();
             Map<Integer, JLabel> labelMap = new HashMap<>();
             for (DocumentData documentData : documentDataListCurrentCaptureProcess) {
-
                 ClientDataPK clientDataPK = new ClientDataPK();
                 clientDataPK.setFkClient(expedientClientInProcess.getClient().getIdUser());
                 clientDataPK.setFkDocumentData(documentData.getIdDocumentdata());
@@ -2575,6 +2556,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private void indexProcessAction(java.awt.event.ActionEvent evt) {
         indexProcessIsActive = !indexProcessIsActive;
         if (indexProcessIsActive) {
+            this.desactiveCaptureDataShowPane();
             this.desactiveDocumentDataParameterPane();
             this.desactiveDocumentParameterPane();
             indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/indexout.png"))); // NOI18N
@@ -2752,7 +2734,6 @@ public class MainCustomGui extends javax.swing.JFrame {
                     this.desactiveDocumentParameterPane();
                     captureDataShowDocumentNameLabel.setText(selectedDocument.getName());
                     initShowCaptureData();
-                    this.activeCaptureDataShowPane();
                 }
             }
         }
@@ -2763,6 +2744,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JButton cleanExpedientButton;
     private javax.swing.JButton createExpedientButton;
     private javax.swing.JButton removeUpLeftButton;
+    private javax.swing.JScrollPane dataCaptureScrollPane;
     private javax.swing.JPanel creationExpedientPane;
     private javax.swing.JLabel descriptionExpedientLabel;
     private javax.swing.JTextField descriptionExpedientTxt;
@@ -2828,6 +2810,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JMenu mainMenuConfiguration;
     private javax.swing.JLabel maxSizeDocumentPaneLabel;
     private javax.swing.JTextField maxSizeDocumentPaneTxt;
+    private javax.swing.JTable dataCaptureTable;
     private javax.swing.JSeparator middleSeparatorDocumentPane;
     private javax.swing.JMenuItem modifyDocumentItemMenuButton;
     private javax.swing.JComboBox expedientSelectorReception;

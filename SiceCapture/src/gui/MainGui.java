@@ -380,8 +380,9 @@ public class MainGui extends javax.swing.JFrame {
         scannerPaneDownLeft = new javax.swing.JPanel();
         removeDownLeftButton = new javax.swing.JButton();
         captureDataShowPane = new javax.swing.JPanel();
-        captureDataScrollPane = new javax.swing.JScrollPane();
         captureDataShowDocumentNameLabel = new javax.swing.JLabel();
+        dataCaptureScrollPane = new javax.swing.JScrollPane();
+        dataCaptureTable = new javax.swing.JTable();
         indexButton = new javax.swing.JButton();
         scannerLabel = new javax.swing.JLabel();
         indexLabel = new javax.swing.JLabel();
@@ -793,27 +794,49 @@ public class MainGui extends javax.swing.JFrame {
         captureDataShowDocumentNameLabel.setForeground(new java.awt.Color(153, 153, 153));
         captureDataShowDocumentNameLabel.setText("Nombre Documento");
 
+        dataCaptureTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Tipo de Dato", "Nombre", "Valor"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        dataCaptureScrollPane.setViewportView(dataCaptureTable);
+
         javax.swing.GroupLayout captureDataShowPaneLayout = new javax.swing.GroupLayout(captureDataShowPane);
         captureDataShowPane.setLayout(captureDataShowPaneLayout);
         captureDataShowPaneLayout.setHorizontalGroup(
             captureDataShowPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(captureDataShowPaneLayout.createSequentialGroup()
-                .addContainerGap(102, Short.MAX_VALUE)
-                .addComponent(captureDataScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(99, 99, 99))
-            .addGroup(captureDataShowPaneLayout.createSequentialGroup()
-                .addGap(148, 148, 148)
-                .addComponent(captureDataShowDocumentNameLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addGroup(captureDataShowPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, captureDataShowPaneLayout.createSequentialGroup()
+                        .addComponent(dataCaptureScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, captureDataShowPaneLayout.createSequentialGroup()
+                        .addComponent(captureDataShowDocumentNameLabel)
+                        .addGap(148, 148, 148))))
         );
         captureDataShowPaneLayout.setVerticalGroup(
             captureDataShowPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, captureDataShowPaneLayout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(captureDataShowDocumentNameLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addComponent(captureDataScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(95, 95, 95))
+                .addGap(18, 18, 18)
+                .addComponent(dataCaptureScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layeredOperationalPaneLayout = new javax.swing.GroupLayout(layeredOperationalPane);
@@ -1383,11 +1406,12 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JTextField nameDocumentTxt;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel alertDocumentPaneLabel;
-    private javax.swing.JScrollPane captureDataScrollPane;
     private javax.swing.JLabel captureDataShowDocumentNameLabel;
     private javax.swing.JPanel captureDataShowPane;
     private javax.swing.JMenuItem consultPersonMenuItem;
     private javax.swing.JMenuItem createNewDocumentItemMenuButton;
+    private javax.swing.JScrollPane dataCaptureScrollPane;
+    private javax.swing.JTable dataCaptureTable;
     private javax.swing.JPanel dataParameterPane;
     private javax.swing.JLabel dataTypeDataParameterPaneLabel;
     private javax.swing.JTextField dataTypeDataParameterTxt;
