@@ -37,9 +37,11 @@ public class RegistPersonDialog extends javax.swing.JDialog {
         identificacionNumberTxt = new javax.swing.JTextField();
         idenTypeSelector = new javax.swing.JComboBox();
         nameRegistPersonTxt = new javax.swing.JTextField();
-        verifyDocumentButton = new javax.swing.JButton();
         nationalityTxt = new javax.swing.JComboBox();
         registPersonTitle = new javax.swing.JLabel();
+        expedientIncludeRegistLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        expedientIncludeList = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registrar Persona");
@@ -71,13 +73,22 @@ public class RegistPersonDialog extends javax.swing.JDialog {
             }
         });
 
-        verifyDocumentButton.setText("Verificación de Documentos");
-
         nationalityTxt.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         registPersonTitle.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         registPersonTitle.setForeground(new java.awt.Color(153, 153, 153));
         registPersonTitle.setText("Registro de Persona");
+
+        expedientIncludeRegistLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        expedientIncludeRegistLabel.setForeground(new java.awt.Color(153, 153, 153));
+        expedientIncludeRegistLabel.setText("Inlcuir Expediente:");
+
+        expedientIncludeList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(expedientIncludeList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -86,29 +97,33 @@ public class RegistPersonDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGap(114, 114, 114)
+                        .addComponent(registPersonTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(verifyDocumentButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                                .addComponent(cleanRegistPersonButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(registPersonButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(idenTypeSelectorLabel)
-                                    .addComponent(identificationNumberLabel)
-                                    .addComponent(nameRegistPersonLabel)
-                                    .addComponent(nationSelectorRegistPersonLabel))
-                                .addGap(51, 51, 51)
+                                .addComponent(idenTypeSelectorLabel)
+                                .addGap(113, 113, 113)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(identificacionNumberTxt)
                                     .addComponent(idenTypeSelector, 0, 147, Short.MAX_VALUE)
                                     .addComponent(nameRegistPersonTxt)
-                                    .addComponent(nationalityTxt, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(114, 114, 114)
-                        .addComponent(registPersonTitle)))
+                                    .addComponent(nationalityTxt, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane1)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(identificationNumberLabel)
+                                            .addComponent(nameRegistPersonLabel)
+                                            .addComponent(nationSelectorRegistPersonLabel)
+                                            .addComponent(expedientIncludeRegistLabel))
+                                        .addGap(18, 18, 18))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(cleanRegistPersonButton)
+                                        .addGap(30, 30, 30)))
+                                .addComponent(registPersonButton, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -117,27 +132,37 @@ public class RegistPersonDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(registPersonTitle)
                 .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(idenTypeSelectorLabel)
-                    .addComponent(idenTypeSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(idenTypeSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(idenTypeSelectorLabel))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(identificationNumberLabel)
                     .addComponent(identificacionNumberTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameRegistPersonLabel)
-                    .addComponent(nameRegistPersonTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nationSelectorRegistPersonLabel)
-                    .addComponent(nationalityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(registPersonButton)
-                    .addComponent(cleanRegistPersonButton)
-                    .addComponent(verifyDocumentButton))
-                .addGap(25, 25, 25))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nameRegistPersonLabel)
+                            .addComponent(nameRegistPersonTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nationSelectorRegistPersonLabel)
+                            .addComponent(nationalityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addComponent(expedientIncludeRegistLabel)))
+                        .addGap(25, 77, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cleanRegistPersonButton)
+                            .addComponent(registPersonButton))
+                        .addContainerGap())))
         );
 
         pack();
@@ -191,16 +216,18 @@ public class RegistPersonDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cleanRegistPersonButton;
+    private javax.swing.JList expedientIncludeList;
+    private javax.swing.JLabel expedientIncludeRegistLabel;
     private javax.swing.JComboBox idenTypeSelector;
     private javax.swing.JLabel idenTypeSelectorLabel;
     private javax.swing.JTextField identificacionNumberTxt;
     private javax.swing.JLabel identificationNumberLabel;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel nameRegistPersonLabel;
     private javax.swing.JTextField nameRegistPersonTxt;
     private javax.swing.JLabel nationSelectorRegistPersonLabel;
     private javax.swing.JComboBox nationalityTxt;
     private javax.swing.JButton registPersonButton;
     private javax.swing.JLabel registPersonTitle;
-    private javax.swing.JButton verifyDocumentButton;
     // End of variables declaration//GEN-END:variables
 }

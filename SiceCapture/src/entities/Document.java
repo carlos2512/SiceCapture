@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Document.findAll", query = "SELECT d FROM Document d"),
     @NamedQuery(name = "Document.findByIdDocument", query = "SELECT d FROM Document d WHERE d.idDocument = :idDocument"),
-    @NamedQuery(name = "Document.findByName", query = "SELECT d FROM Document d WHERE d.name = :name"),
+    @NamedQuery(name = "Document.findByName", query = "SELECT d FROM Document d WHERE UPPER(d.name) = :name"),
     @NamedQuery(name = "Document.findByDescription", query = "SELECT d FROM Document d WHERE d.description = :description")})
 public class Document implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -202,7 +202,7 @@ public class Document implements Serializable {
 
     @Override
     public String toString() {
-        return "asda.Document[ idDocument=" + idDocument + " ]";
+        return name;
     }
     
 }

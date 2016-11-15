@@ -9,6 +9,7 @@ import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import controller.exceptions.PreexistingEntityException;
 import entities.DataType;
+import entities.Document;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -194,6 +195,14 @@ public class DataTypeJpaController implements Serializable {
         }
     }
 
+    public DataType findByCode(String code) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("DataType.findByCode", DataType.class);
+        query.setParameter("code", code);
+        DataType dataType = (DataType) query.getSingleResult();
+        return dataType;
+    }
+
     public int getDataTypeCount() {
         EntityManager em = getEntityManager();
         try {
@@ -206,5 +215,5 @@ public class DataTypeJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

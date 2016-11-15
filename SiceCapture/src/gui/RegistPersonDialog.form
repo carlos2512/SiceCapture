@@ -26,36 +26,43 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="verifyDocumentButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="54" max="32767" attributes="0"/>
-                              <Component id="cleanRegistPersonButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="registPersonButton" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="idenTypeSelectorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="identificationNumberLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="nameRegistPersonLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="nationSelectorRegistPersonLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="114" max="-2" attributes="0"/>
+                      <Component id="registPersonTitle" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="idenTypeSelectorLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="113" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="identificacionNumberTxt" max="32767" attributes="0"/>
                                   <Component id="idenTypeSelector" pref="147" max="32767" attributes="0"/>
                                   <Component id="nameRegistPersonTxt" max="32767" attributes="0"/>
                                   <Component id="nationalityTxt" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="identificationNumberLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="nameRegistPersonLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="nationSelectorRegistPersonLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="expedientIncludeRegistLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="cleanRegistPersonButton" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="registPersonButton" min="-2" pref="116" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="114" max="-2" attributes="0"/>
-                      <Component id="registPersonTitle" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -68,32 +75,48 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="registPersonTitle" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="idenTypeSelectorLabel" min="-2" max="-2" attributes="0"/>
-                  <Component id="idenTypeSelector" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="idenTypeSelector" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="idenTypeSelectorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="identificationNumberLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="identificacionNumberTxt" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="nameRegistPersonLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="nameRegistPersonTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="nameRegistPersonLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="nameRegistPersonTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="nationSelectorRegistPersonLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="nationalityTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                              <Component id="expedientIncludeRegistLabel" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="25" pref="77" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cleanRegistPersonButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="registPersonButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="nationSelectorRegistPersonLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="nationalityTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="39" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="registPersonButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cleanRegistPersonButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="verifyDocumentButton" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -172,11 +195,6 @@
     </Component>
     <Component class="javax.swing.JTextField" name="nameRegistPersonTxt">
     </Component>
-    <Component class="javax.swing.JButton" name="verifyDocumentButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Verificaci&#xf3;n de Documentos"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JComboBox" name="nationalityTxt">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
@@ -200,5 +218,38 @@
         <Property name="text" type="java.lang.String" value="Registro de Persona"/>
       </Properties>
     </Component>
+    <Component class="javax.swing.JLabel" name="expedientIncludeRegistLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="14" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="99" green="99" red="99" type="rgb"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Inlcuir Expediente:"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JList" name="expedientIncludeList">
+          <Properties>
+            <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
+              <StringArray count="5">
+                <StringItem index="0" value="Item 1"/>
+                <StringItem index="1" value="Item 2"/>
+                <StringItem index="2" value="Item 3"/>
+                <StringItem index="3" value="Item 4"/>
+                <StringItem index="4" value="Item 5"/>
+              </StringArray>
+            </Property>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

@@ -405,6 +405,11 @@ public class MainGui extends javax.swing.JFrame {
         indexDocumentButtonProcess = new javax.swing.JButton();
         nameExpedientIndexLabel = new javax.swing.JLabel();
         idenClientIndexLabel = new javax.swing.JLabel();
+        templateCreationLayoutCardPane = new javax.swing.JPanel();
+        templateContainerCardPane = new javax.swing.JPanel();
+        templateCreationIcon = new javax.swing.JLabel();
+        templateCreationLabel = new javax.swing.JLabel();
+        templateCreationInfo = new javax.swing.JLabel();
         mainBarMenu = new javax.swing.JMenuBar();
         mainTemplateOption = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -1056,6 +1061,54 @@ public class MainGui extends javax.swing.JFrame {
 
         indextionLayoutCardPane.add(indextionContainerPane, "card2");
 
+        templateCreationLayoutCardPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        templateCreationLayoutCardPane.setLayout(new java.awt.CardLayout());
+
+        templateContainerCardPane.setMaximumSize(new java.awt.Dimension(403, 110));
+        templateContainerCardPane.setMinimumSize(new java.awt.Dimension(403, 110));
+        templateContainerCardPane.setPreferredSize(new java.awt.Dimension(403, 110));
+
+        templateCreationIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/template.png"))); // NOI18N
+
+        templateCreationLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        templateCreationLabel.setForeground(new java.awt.Color(153, 153, 153));
+        templateCreationLabel.setText("Creación de plantillas");
+
+        templateCreationInfo.setText("Utilice esta modalidad para crear las plantillas de expedientes");
+        templateCreationInfo.setMaximumSize(new java.awt.Dimension(403, 14));
+        templateCreationInfo.setMinimumSize(new java.awt.Dimension(403, 14));
+        templateCreationInfo.setPreferredSize(new java.awt.Dimension(403, 14));
+
+        javax.swing.GroupLayout templateContainerCardPaneLayout = new javax.swing.GroupLayout(templateContainerCardPane);
+        templateContainerCardPane.setLayout(templateContainerCardPaneLayout);
+        templateContainerCardPaneLayout.setHorizontalGroup(
+            templateContainerCardPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(templateContainerCardPaneLayout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addComponent(templateCreationIcon)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(templateContainerCardPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(templateCreationInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(templateCreationLabel))
+                .addGap(0, 48, Short.MAX_VALUE))
+        );
+        templateContainerCardPaneLayout.setVerticalGroup(
+            templateContainerCardPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(templateContainerCardPaneLayout.createSequentialGroup()
+                .addGroup(templateContainerCardPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(templateContainerCardPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(templateCreationIcon))
+                    .addGroup(templateContainerCardPaneLayout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(templateCreationLabel)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(templateCreationInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
+        );
+
+        templateCreationLayoutCardPane.add(templateContainerCardPane, "card2");
+
         javax.swing.GroupLayout infoProcessLayeredPaneLayout = new javax.swing.GroupLayout(infoProcessLayeredPane);
         infoProcessLayeredPane.setLayout(infoProcessLayeredPaneLayout);
         infoProcessLayeredPaneLayout.setHorizontalGroup(
@@ -1066,6 +1119,8 @@ public class MainGui extends javax.swing.JFrame {
                     .addGap(0, 0, Short.MAX_VALUE)
                     .addComponent(indextionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(templateCreationLayoutCardPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         infoProcessLayeredPaneLayout.setVerticalGroup(
             infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1078,9 +1133,15 @@ public class MainGui extends javax.swing.JFrame {
                     .addGap(0, 0, Short.MAX_VALUE)
                     .addComponent(indextionLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(infoProcessLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(infoProcessLayeredPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(templateCreationLayoutCardPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(18, Short.MAX_VALUE)))
         );
         infoProcessLayeredPane.setLayer(receptionLayoutCardPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
         infoProcessLayeredPane.setLayer(indextionLayoutCardPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        infoProcessLayeredPane.setLayer(templateCreationLayoutCardPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         mainTemplateOption.setBorder(null);
         mainTemplateOption.setText("Expedientes");
@@ -1479,6 +1540,11 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JPanel scannerPaneUpLeft;
     private javax.swing.JPanel scannerPaneUpRight;
     private javax.swing.JLabel selectExpedientLabel;
+    private javax.swing.JPanel templateContainerCardPane;
+    private javax.swing.JLabel templateCreationIcon;
+    private javax.swing.JLabel templateCreationInfo;
+    private javax.swing.JLabel templateCreationLabel;
+    private javax.swing.JPanel templateCreationLayoutCardPane;
     private javax.swing.JLabel titleDocumentPaneLabel;
     private javax.swing.JSeparator upSeparatorDocumentPane;
     private javax.swing.JButton uploadImageButton;
