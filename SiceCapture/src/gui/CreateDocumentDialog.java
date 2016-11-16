@@ -46,8 +46,11 @@ public class CreateDocumentDialog extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         documentExpireCheckBox = new javax.swing.JCheckBox();
-        jLabel3 = new javax.swing.JLabel();
         documentRequeridedCheckBox = new javax.swing.JCheckBox();
+        resolutionLabel = new javax.swing.JLabel();
+        resolutionCheckBox = new javax.swing.JCheckBox();
+        resolutionTextArea = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -97,6 +100,10 @@ public class CreateDocumentDialog extends javax.swing.JDialog {
         jLabel2.setForeground(new java.awt.Color(153, 153, 153));
         jLabel2.setText("Documento Expira:");
 
+        resolutionLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        resolutionLabel.setForeground(new java.awt.Color(153, 153, 153));
+        resolutionLabel.setText("Resolución:");
+
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(153, 153, 153));
         jLabel3.setText("Documento Requerido:");
@@ -105,87 +112,99 @@ public class CreateDocumentDialog extends javax.swing.JDialog {
         creationDocumentPane.setLayout(creationDocumentPaneLayout);
         creationDocumentPaneLayout.setHorizontalGroup(
             creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, creationDocumentPaneLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(cleanDocumentButton)
-                .addGap(27, 27, 27)
-                .addComponent(createDocumentButton))
             .addGroup(creationDocumentPaneLayout.createSequentialGroup()
-                .addGap(145, 145, 145)
+                .addGap(134, 134, 134)
                 .addComponent(createDocumentTitleLabel)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(creationDocumentPaneLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, creationDocumentPaneLayout.createSequentialGroup()
+                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(creationDocumentPaneLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(creationDocumentPaneLayout.createSequentialGroup()
-                        .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(creationDocumentPaneLayout.createSequentialGroup()
-                                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(nameDocumentLabel)
-                                    .addComponent(descriptionNameLabel))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
-                                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(nameDocumentTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(descriptionDocumentTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(creationDocumentPaneLayout.createSequentialGroup()
-                                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(expedientIncludeLabel)
-                                    .addComponent(maxImageSizeLabel)
-                                    .addComponent(documentRepeatLabel))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(documentRepeatCheckBox)
-                                    .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(creationDocumentScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                                        .addComponent(maxImageSizeTxt))
-                                    .addComponent(documentExpireCheckBox)
-                                    .addComponent(documentRequeridedCheckBox))))
-                        .addGap(60, 60, 60))
+                        .addComponent(expedientIncludeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                        .addComponent(creationDocumentScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(creationDocumentPaneLayout.createSequentialGroup()
                         .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(descriptionNameLabel)
+                            .addComponent(nameDocumentLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameDocumentTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(descriptionDocumentTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(creationDocumentPaneLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cleanDocumentButton)
+                        .addGap(30, 30, 30)
+                        .addComponent(createDocumentButton))
+                    .addGroup(creationDocumentPaneLayout.createSequentialGroup()
+                        .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxImageSizeLabel)
+                            .addComponent(documentRepeatLabel)
+                            .addComponent(jLabel2)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addGroup(creationDocumentPaneLayout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addComponent(jLabel1))
+                            .addComponent(resolutionLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(resolutionCheckBox)
+                            .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(documentRepeatCheckBox)
+                                .addComponent(maxImageSizeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                                .addComponent(documentExpireCheckBox)
+                                .addComponent(documentRequeridedCheckBox)
+                                .addComponent(resolutionTextArea)))))
+                .addGap(60, 60, 60))
         );
         creationDocumentPaneLayout.setVerticalGroup(
             creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(creationDocumentPaneLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
                 .addComponent(createDocumentTitleLabel)
-                .addGap(45, 45, 45)
+                .addGap(24, 24, 24)
                 .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameDocumentLabel)
                     .addComponent(nameDocumentTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(descriptionDocumentTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(descriptionNameLabel))
-                .addGap(32, 32, 32)
+                    .addComponent(descriptionNameLabel)
+                    .addComponent(descriptionDocumentTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(expedientIncludeLabel)
                     .addComponent(creationDocumentScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(maxImageSizeLabel)
-                    .addComponent(maxImageSizeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
-                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(creationDocumentPaneLayout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(maxImageSizeLabel))
+                    .addGroup(creationDocumentPaneLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(maxImageSizeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(documentRepeatLabel)
                     .addComponent(documentRepeatCheckBox))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(documentExpireCheckBox))
-                .addGap(28, 28, 28)
-                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(documentRequeridedCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(creationDocumentPaneLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel3))
+                    .addGroup(creationDocumentPaneLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(documentRequeridedCheckBox)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(creationDocumentPaneLayout.createSequentialGroup()
+                        .addComponent(resolutionLabel)
+                        .addGap(64, 64, 64)
+                        .addComponent(jLabel1))
+                    .addGroup(creationDocumentPaneLayout.createSequentialGroup()
+                        .addComponent(resolutionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(resolutionTextArea, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(creationDocumentPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cleanDocumentButton)
                     .addComponent(createDocumentButton)))
@@ -198,7 +217,7 @@ public class CreateDocumentDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(creationDocumentPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(24, 24, 24))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,5 +298,8 @@ public class CreateDocumentDialog extends javax.swing.JDialog {
     private javax.swing.JTextField maxImageSizeTxt;
     private javax.swing.JLabel nameDocumentLabel;
     private javax.swing.JTextField nameDocumentTxt;
+    private javax.swing.JCheckBox resolutionCheckBox;
+    private javax.swing.JLabel resolutionLabel;
+    private javax.swing.JTextField resolutionTextArea;
     // End of variables declaration//GEN-END:variables
 }

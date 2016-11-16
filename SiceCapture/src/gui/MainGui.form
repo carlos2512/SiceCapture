@@ -137,14 +137,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="expedientFormTitleLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="infoProcessLayeredPane" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="48" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="expedientFormTitleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="infoProcessLayeredPane" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -199,11 +193,13 @@
                           <Component id="templateCreationButton" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="scannerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="indexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="uploadImageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="templateCreationButtonLabel" alignment="1" min="-2" pref="14" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="scannerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="indexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="uploadImageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
@@ -388,67 +384,62 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jSeparator3" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jSeparator2" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jScrollPane3" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Component id="titleDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="348" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="nameDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                              <Component id="nameDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" attributes="0">
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="maxSizeDocumentPaneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="alertDocumentPaneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace min="0" pref="37" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="nameDocumentPaneTxt" min="-2" pref="225" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="maxSizeDocumentPaneTxt" min="-2" pref="106" max="-2" attributes="0"/>
+                                          <Component id="nameDocumentPaneTxt" min="-2" pref="225" max="-2" attributes="0"/>
+                                          <Component id="repeatDocumentPaneCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Component id="genericDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="upSeparatorDocumentPane" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="maxSizeDocumentPaneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="repeatDocumentPaneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="repeatDocumentPaneCheckBox" min="-2" max="-2" attributes="0"/>
-                                          <Component id="maxSizeDocumentPaneTxt" min="-2" pref="106" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="alertDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="middleSeparatorDocumentPane" min="-2" pref="318" max="-2" attributes="0"/>
-                                  </Group>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="genericDocumentPaneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rulesDocumentPaneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="repeatDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="expireDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                                       <Component id="expireDocumentPaneCheckBox" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="rulesDocumentPaneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="requeridDocumentPaneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="resolutionShowLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
+                                      <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="downSeparatorDocumentPane" pref="267" max="32767" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                                              <Component id="requeridDocumentPaneCheckBox" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="0" pref="250" max="32767" attributes="0"/>
-                                          </Group>
+                                          <Component id="resolutionShowCheckBox" min="-2" max="-2" attributes="0"/>
+                                          <Component id="requeridDocumentPaneCheckBox" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -461,51 +452,62 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="middleSeparatorDocumentPane" min="-2" pref="10" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                               <Component id="titleDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                              <Component id="genericDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="nameDocumentPaneLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="nameDocumentPaneTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="nameDocumentPaneLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="genericDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="upSeparatorDocumentPane" min="-2" pref="10" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="maxSizeDocumentPaneLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="maxSizeDocumentPaneTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="repeatDocumentPaneCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="repeatDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="alertDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="expireDocumentPaneLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="expireDocumentPaneCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxSizeDocumentPaneTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxSizeDocumentPaneLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="repeatDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="rulesDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
-                          <Component id="downSeparatorDocumentPane" min="-2" pref="10" max="-2" attributes="0"/>
+                          <Component id="alertDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="repeatDocumentPaneCheckBox" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="expireDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="expireDocumentPaneCheckBox" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="requeridDocumentPaneCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="requeridDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="rulesDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jSeparator3" min="-2" pref="10" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="requeridDocumentPaneLabel" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="requeridDocumentPaneCheckBox" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="94" max="32767" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="resolutionShowLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="resolutionShowCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jScrollPane3" pref="127" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -546,8 +548,6 @@
                 <Property name="text" type="java.lang.String" value="Generales"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JSeparator" name="upSeparatorDocumentPane">
-            </Component>
             <Component class="javax.swing.JLabel" name="maxSizeDocumentPaneLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -585,8 +585,6 @@
                 <Property name="text" type="java.lang.String" value="Generaci&#xf3;n de Alarmas"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JSeparator" name="middleSeparatorDocumentPane">
-            </Component>
             <Component class="javax.swing.JLabel" name="expireDocumentPaneLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -611,8 +609,6 @@
                 <Property name="text" type="java.lang.String" value="Reglas documentos requeridos"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JSeparator" name="downSeparatorDocumentPane">
-            </Component>
             <Component class="javax.swing.JLabel" name="requeridDocumentPaneLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -625,6 +621,40 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="requeridDocumentPaneCheckBox">
+            </Component>
+            <Component class="javax.swing.JSeparator" name="jSeparator1">
+            </Component>
+            <Component class="javax.swing.JSeparator" name="jSeparator2">
+            </Component>
+            <Component class="javax.swing.JSeparator" name="jSeparator3">
+            </Component>
+            <Container class="javax.swing.JScrollPane" name="jScrollPane3">
+              <AuxValues>
+                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+              </AuxValues>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JTextArea" name="resolutionShowTextArea">
+                  <Properties>
+                    <Property name="columns" type="int" value="20"/>
+                    <Property name="rows" type="int" value="5"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Component class="javax.swing.JLabel" name="resolutionShowLabel">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Tahoma" size="14" style="1"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="99" green="99" red="99" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Resoluci&#xf3;n:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="resolutionShowCheckBox">
             </Component>
           </SubComponents>
         </Container>

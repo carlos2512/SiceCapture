@@ -350,19 +350,23 @@ public class MainGui extends javax.swing.JFrame {
         nameDocumentPaneLabel = new javax.swing.JLabel();
         nameDocumentPaneTxt = new javax.swing.JTextField();
         genericDocumentPaneLabel = new javax.swing.JLabel();
-        upSeparatorDocumentPane = new javax.swing.JSeparator();
         maxSizeDocumentPaneLabel = new javax.swing.JLabel();
         maxSizeDocumentPaneTxt = new javax.swing.JTextField();
         repeatDocumentPaneLabel = new javax.swing.JLabel();
         repeatDocumentPaneCheckBox = new javax.swing.JCheckBox();
         alertDocumentPaneLabel = new javax.swing.JLabel();
-        middleSeparatorDocumentPane = new javax.swing.JSeparator();
         expireDocumentPaneLabel = new javax.swing.JLabel();
         expireDocumentPaneCheckBox = new javax.swing.JCheckBox();
         rulesDocumentPaneLabel = new javax.swing.JLabel();
-        downSeparatorDocumentPane = new javax.swing.JSeparator();
         requeridDocumentPaneLabel = new javax.swing.JLabel();
         requeridDocumentPaneCheckBox = new javax.swing.JCheckBox();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        jSeparator3 = new javax.swing.JSeparator();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        resolutionShowTextArea = new javax.swing.JTextArea();
+        resolutionShowLabel = new javax.swing.JLabel();
+        resolutionShowCheckBox = new javax.swing.JCheckBox();
         dataParameterPane = new javax.swing.JPanel();
         dataTypeDataParameterPaneLabel = new javax.swing.JLabel();
         nameDataParameterPaneLabel = new javax.swing.JLabel();
@@ -535,99 +539,114 @@ public class MainGui extends javax.swing.JFrame {
         requeridDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         requeridDocumentPaneLabel.setText("Es requerido:");
 
+        resolutionShowTextArea.setColumns(20);
+        resolutionShowTextArea.setRows(5);
+        jScrollPane3.setViewportView(resolutionShowTextArea);
+
+        resolutionShowLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        resolutionShowLabel.setForeground(new java.awt.Color(153, 153, 153));
+        resolutionShowLabel.setText("Resolución:");
+
         javax.swing.GroupLayout documentParameterPaneLayout = new javax.swing.GroupLayout(documentParameterPane);
         documentParameterPane.setLayout(documentParameterPaneLayout);
         documentParameterPaneLayout.setHorizontalGroup(
             documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator3)
+            .addComponent(jSeparator2)
+            .addComponent(jSeparator1)
             .addGroup(documentParameterPaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(documentParameterPaneLayout.createSequentialGroup()
                         .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3)
                             .addGroup(documentParameterPaneLayout.createSequentialGroup()
                                 .addComponent(titleDocumentPaneLabel)
-                                .addGap(0, 348, Short.MAX_VALUE))
-                            .addGroup(documentParameterPaneLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(nameDocumentPaneLabel)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, documentParameterPaneLayout.createSequentialGroup()
+                                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(documentParameterPaneLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(nameDocumentPaneLabel))
+                                    .addGroup(documentParameterPaneLayout.createSequentialGroup()
+                                        .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(maxSizeDocumentPaneLabel)
+                                            .addComponent(alertDocumentPaneLabel))
+                                        .addGap(0, 37, Short.MAX_VALUE)))
                                 .addGap(18, 18, 18)
-                                .addComponent(nameDocumentPaneTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(maxSizeDocumentPaneTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(nameDocumentPaneTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(repeatDocumentPaneCheckBox))))
                         .addContainerGap())
                     .addGroup(documentParameterPaneLayout.createSequentialGroup()
-                        .addComponent(genericDocumentPaneLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(upSeparatorDocumentPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addGroup(documentParameterPaneLayout.createSequentialGroup()
-                        .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(documentParameterPaneLayout.createSequentialGroup()
-                                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(maxSizeDocumentPaneLabel)
-                                    .addComponent(repeatDocumentPaneLabel))
-                                .addGap(18, 18, 18)
-                                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(repeatDocumentPaneCheckBox)
-                                    .addComponent(maxSizeDocumentPaneTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(documentParameterPaneLayout.createSequentialGroup()
-                                .addComponent(alertDocumentPaneLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(middleSeparatorDocumentPane, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(genericDocumentPaneLabel)
+                            .addComponent(rulesDocumentPaneLabel)
+                            .addComponent(repeatDocumentPaneLabel)
                             .addGroup(documentParameterPaneLayout.createSequentialGroup()
                                 .addComponent(expireDocumentPaneLabel)
-                                .addGap(63, 63, 63)
+                                .addGap(100, 100, 100)
                                 .addComponent(expireDocumentPaneCheckBox))
                             .addGroup(documentParameterPaneLayout.createSequentialGroup()
                                 .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(rulesDocumentPaneLabel)
-                                    .addComponent(requeridDocumentPaneLabel))
+                                    .addComponent(requeridDocumentPaneLabel)
+                                    .addComponent(resolutionShowLabel))
+                                .addGap(140, 140, 140)
                                 .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(documentParameterPaneLayout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(downSeparatorDocumentPane, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE))
-                                    .addGroup(documentParameterPaneLayout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addComponent(requeridDocumentPaneCheckBox)
-                                        .addGap(0, 250, Short.MAX_VALUE)))))
+                                    .addComponent(resolutionShowCheckBox)
+                                    .addComponent(requeridDocumentPaneCheckBox))))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         documentParameterPaneLayout.setVerticalGroup(
             documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(documentParameterPaneLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(middleSeparatorDocumentPane, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(documentParameterPaneLayout.createSequentialGroup()
+                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, documentParameterPaneLayout.createSequentialGroup()
+                        .addGap(19, 19, 19)
                         .addComponent(titleDocumentPaneLabel)
-                        .addGap(62, 62, 62)
+                        .addGap(43, 43, 43)
+                        .addComponent(genericDocumentPaneLabel))
+                    .addGroup(documentParameterPaneLayout.createSequentialGroup()
+                        .addGap(61, 61, 61)
                         .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(nameDocumentPaneLabel)
-                            .addComponent(nameDocumentPaneTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(37, 37, 37)
-                        .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(genericDocumentPaneLabel)
-                            .addComponent(upSeparatorDocumentPane, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27)
-                        .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(maxSizeDocumentPaneLabel)
-                            .addComponent(maxSizeDocumentPaneTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(29, 29, 29)
-                        .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(repeatDocumentPaneCheckBox)
-                            .addComponent(repeatDocumentPaneLabel))
-                        .addGap(18, 18, 18)
-                        .addComponent(alertDocumentPaneLabel)))
-                .addGap(30, 30, 30)
+                            .addComponent(nameDocumentPaneTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nameDocumentPaneLabel))
+                        .addGap(30, 30, 30)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(maxSizeDocumentPaneTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxSizeDocumentPaneLabel))
+                .addGap(18, 18, 18)
+                .addComponent(repeatDocumentPaneLabel)
+                .addGap(9, 9, 9)
+                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(alertDocumentPaneLabel)
+                    .addComponent(repeatDocumentPaneCheckBox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(expireDocumentPaneLabel)
                     .addComponent(expireDocumentPaneCheckBox))
                 .addGap(18, 18, 18)
+                .addComponent(rulesDocumentPaneLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(rulesDocumentPaneLabel)
-                    .addComponent(downSeparatorDocumentPane, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(documentParameterPaneLayout.createSequentialGroup()
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(requeridDocumentPaneLabel))
+                    .addComponent(requeridDocumentPaneCheckBox))
                 .addGap(18, 18, 18)
-                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(requeridDocumentPaneCheckBox)
-                    .addComponent(requeridDocumentPaneLabel))
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(resolutionShowLabel)
+                    .addComponent(resolutionShowCheckBox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                .addGap(16, 16, 16))
         );
 
         dataTypeDataParameterPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -1240,12 +1259,8 @@ public class MainGui extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(expedientFormTitleLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(expedientFormTitleLabel)
+                            .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(57, 57, 57)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(templateCreationButton)
@@ -1287,11 +1302,12 @@ public class MainGui extends javax.swing.JFrame {
                                 .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(templateCreationButton, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(scannerLabel)
-                            .addComponent(indexLabel)
-                            .addComponent(uploadImageLabel)
-                            .addComponent(templateCreationButtonLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(templateCreationButtonLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(scannerLabel)
+                                .addComponent(indexLabel)
+                                .addComponent(uploadImageLabel))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(expedientFormTitleLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1500,7 +1516,6 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JMenuItem deleteDocumentItemMenuButton;
     private javax.swing.JPanel documentParameterPane;
     private javax.swing.JLabel documentReceptionNameClient;
-    private javax.swing.JSeparator downSeparatorDocumentPane;
     private javax.swing.JLabel expedientFormTitleLabel;
     private javax.swing.JComboBox expedientSelectorReception;
     private javax.swing.JTree expedientTree;
@@ -1521,6 +1536,10 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JLayeredPane layeredOperationalPane;
     private javax.swing.JMenuBar mainBarMenu;
     private javax.swing.JMenu mainConsultOption;
@@ -1529,7 +1548,6 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JMenu mainTemplateOption;
     private javax.swing.JLabel maxSizeDocumentPaneLabel;
     private javax.swing.JTextField maxSizeDocumentPaneTxt;
-    private javax.swing.JSeparator middleSeparatorDocumentPane;
     private javax.swing.JMenuItem modifyDocumentItemMenuButton;
     private javax.swing.JLabel nameDataParameterPaneLabel;
     private javax.swing.JTextField nameDataParameterPaneTxt;
@@ -1552,6 +1570,9 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JCheckBox requeridDocumentPaneCheckBox;
     private javax.swing.JLabel requeridDocumentPaneLabel;
     private javax.swing.JCheckBox requiredDataParameterPaneCheckBox;
+    private javax.swing.JCheckBox resolutionShowCheckBox;
+    private javax.swing.JLabel resolutionShowLabel;
+    private javax.swing.JTextArea resolutionShowTextArea;
     private javax.swing.JLabel rulesDocumentPaneLabel;
     private javax.swing.JButton scannerButton;
     private javax.swing.JLabel scannerLabel;
@@ -1568,7 +1589,6 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JLabel templateCreationLabel;
     private javax.swing.JPanel templateCreationLayoutCardPane;
     private javax.swing.JLabel titleDocumentPaneLabel;
-    private javax.swing.JSeparator upSeparatorDocumentPane;
     private javax.swing.JButton uploadImageButton;
     private javax.swing.JLabel uploadImageLabel;
     // End of variables declaration//GEN-END:variables

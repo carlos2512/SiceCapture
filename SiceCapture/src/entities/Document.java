@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Document.findByName", query = "SELECT d FROM Document d WHERE UPPER(d.name) = :name"),
     @NamedQuery(name = "Document.findByDescription", query = "SELECT d FROM Document d WHERE d.description = :description")})
 public class Document implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,6 +61,10 @@ public class Document implements Serializable {
     @Basic(optional = false)
     @Column(name = "canExpire")
     private int canExpire;
+    @Column(name = "hasResolution")
+    private Integer hasResolution;
+    @Column(name = "resolution")
+    private String resolution;
     @JoinTable(name = "document_expedient", joinColumns = {
         @JoinColumn(name = "fk_document", referencedColumnName = "idDocument")}, inverseJoinColumns = {
         @JoinColumn(name = "fk_expedient", referencedColumnName = "idExpedient")})
@@ -88,7 +93,23 @@ public class Document implements Serializable {
         this.canExpire = canExpire;
     }
 
-  public Integer getIdDocument() {
+    public Integer getHasResolution() {
+        return hasResolution;
+    }
+
+    public void setHasResolution(Integer hasResolution) {
+        this.hasResolution = hasResolution;
+    }
+
+    public String getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(String resolution) {
+        this.resolution = resolution;
+    }
+
+    public Integer getIdDocument() {
         return idDocument;
     }
 
@@ -204,5 +225,5 @@ public class Document implements Serializable {
     public String toString() {
         return name;
     }
-    
+
 }
