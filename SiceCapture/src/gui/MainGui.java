@@ -410,6 +410,8 @@ public class MainGui extends javax.swing.JFrame {
         templateCreationIcon = new javax.swing.JLabel();
         templateCreationLabel = new javax.swing.JLabel();
         templateCreationInfo = new javax.swing.JLabel();
+        templateCreationButton = new javax.swing.JButton();
+        templateCreationButtonLabel = new javax.swing.JLabel();
         mainBarMenu = new javax.swing.JMenuBar();
         mainTemplateOption = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -554,7 +556,7 @@ public class MainGui extends javax.swing.JFrame {
                     .addGroup(documentParameterPaneLayout.createSequentialGroup()
                         .addComponent(genericDocumentPaneLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(upSeparatorDocumentPane, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(upSeparatorDocumentPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(documentParameterPaneLayout.createSequentialGroup()
                         .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(documentParameterPaneLayout.createSequentialGroup()
@@ -1143,6 +1145,12 @@ public class MainGui extends javax.swing.JFrame {
         infoProcessLayeredPane.setLayer(indextionLayoutCardPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
         infoProcessLayeredPane.setLayer(templateCreationLayoutCardPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
+        templateCreationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/templateExpedientButton.png"))); // NOI18N
+
+        templateCreationButtonLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        templateCreationButtonLabel.setForeground(new java.awt.Color(153, 153, 153));
+        templateCreationButtonLabel.setText("Crear Plantillas");
+
         mainTemplateOption.setBorder(null);
         mainTemplateOption.setText("Expedientes");
         mainTemplateOption.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -1232,9 +1240,19 @@ public class MainGui extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(expedientFormTitleLabel)
-                            .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(expedientFormTitleLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(57, 57, 57)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(templateCreationButton)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(templateCreationButtonLabel)))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
@@ -1266,12 +1284,14 @@ public class MainGui extends javax.swing.JFrame {
                             .addComponent(uploadImageButton, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(templateCreationButton, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(scannerLabel)
                             .addComponent(indexLabel)
-                            .addComponent(uploadImageLabel)))
+                            .addComponent(uploadImageLabel)
+                            .addComponent(templateCreationButtonLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(expedientFormTitleLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1541,6 +1561,8 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JPanel scannerPaneUpRight;
     private javax.swing.JLabel selectExpedientLabel;
     private javax.swing.JPanel templateContainerCardPane;
+    private javax.swing.JButton templateCreationButton;
+    private javax.swing.JLabel templateCreationButtonLabel;
     private javax.swing.JLabel templateCreationIcon;
     private javax.swing.JLabel templateCreationInfo;
     private javax.swing.JLabel templateCreationLabel;

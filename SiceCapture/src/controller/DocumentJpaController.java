@@ -19,7 +19,10 @@ import java.util.Collection;
 import entities.DocumentParameter;
 import entities.DocumentData;
 import entities.Image;
+import gui.MainCustomGui;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -328,10 +331,15 @@ public class DocumentJpaController implements Serializable {
     }
 
     public Document findByName(String name) {
-        EntityManager em = getEntityManager();
-        Query query = em.createNamedQuery("Document.findByName", Document.class);
-        query.setParameter("name", name);
-        Document document = (Document) query.getSingleResult();
+        Document document = null;
+        try {
+            EntityManager em = getEntityManager();
+            Query query = em.createNamedQuery("Document.findByName", Document.class);
+            query.setParameter("name", name);
+            document = (Document) query.getSingleResult();
+        } catch (Exception e) {
+            Logger.getLogger(DocumentJpaController.class.getName()).log(Level.SEVERE, null, e);
+        }
         return document;
     }
 

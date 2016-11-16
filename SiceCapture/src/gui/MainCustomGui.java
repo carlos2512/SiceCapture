@@ -19,9 +19,7 @@ import entities.DocumentData;
 import entities.Expedient;
 import entities.ExpedientClient;
 import entities.ExpedientClientPK;
-import static gui.CaptureDataDialogCustom.listOfTextFields;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -92,7 +90,7 @@ import javax.swing.tree.TreeSelectionModel;
  * @author intec
  */
 public class MainCustomGui extends javax.swing.JFrame {
-    
+
     private final ScannerBackground scannerBackground;
     private Document selectedDocument;
     private DocumentData selectedDocumentData;
@@ -147,22 +145,22 @@ public class MainCustomGui extends javax.swing.JFrame {
         scannerBackground = new ScannerBackground();
         desactiveAllScannerPanes();
     }
-    
+
     private void desactiveDocumentParameterPane() {
         documentParameterPane.setVisible(false);
     }
-    
+
     private void desactiveAllScannerPanes() {
         scannerPaneDownLeft.setVisible(false);
         scannerPaneUpLeft.setVisible(false);
         scannerPaneUpRight.setVisible(false);
         scannerPaneDownRight.setVisible(false);
     }
-    
+
     private void desactiveDocumentDataParameterPane() {
         dataParameterPane.setVisible(false);
     }
-    
+
     private void activeDocumentDataParameterPane(DocumentData data) {
         this.nameDataParameterPaneTxt.setText(data.getName());
         this.dataTypeDataParameterTxt.setText(data.getFkDataType().getName());
@@ -176,7 +174,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         requiredDataParameterPaneCheckBox.setEnabled(false);
         dataParameterPane.setVisible(true);
     }
-    
+
     private void activeDocumentParameterPane(Document selectedDocument) {
         this.nameDocumentPaneTxt.setText(selectedDocument.getName());
         this.maxSizeDocumentPaneTxt.setText(String.valueOf(selectedDocument.getMaxImageSize()));
@@ -202,7 +200,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         nameDocumentPaneTxt.setEnabled(false);
         documentParameterPane.setVisible(true);
     }
-    
+
     private void openPopupDocument(Component component, int x, int y) {
         JPopupMenu popupDocument = new JPopupMenu();
         JMenuItem addDataLabel = new JMenuItem("Añadir Dato");
@@ -221,7 +219,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         popupDocument.add(deleteDocumentLabel);
         popupDocument.show(component, x, y);
     }
-    
+
     private void openPopupExpedient(Component component, int x, int y) {
         JPopupMenu popupExpedient = new JPopupMenu();
         JMenuItem modifyExpedientLabel = new JMenuItem("Modificar Expediente");
@@ -240,7 +238,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         popupExpedient.add(deleteExpedientLabel);
         popupExpedient.show(component, x, y);
     }
-    
+
     private void openPopupMetaExpedientDocumentReception(Component component, int x, int y) {
         JPopupMenu popupMetaExpedient = new JPopupMenu();
         JMenuItem expedientInclude = new JMenuItem("Incluir Expediente");
@@ -255,7 +253,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         popupMetaExpedient.add(expedientInclude);
         popupMetaExpedient.show(component, x, y);
     }
-    
+
     public void displayDocumentByExpedient(ExpedientClient expedientClient) {
         DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
         DefaultMutableTreeNodeCustom expedientNode = new DefaultMutableTreeNodeCustom(expedientClient.getExpedient());
@@ -275,7 +273,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         metaExpedient.add(expedientNode);
         expedientTree.setModel(new DefaultTreeModel(metaExpedient));
     }
-    
+
     public void displayExpedientClientTree(List<Expedient> expedientList) {
         DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
         for (Expedient expedient : expedientList) {
@@ -296,9 +294,9 @@ public class MainCustomGui extends javax.swing.JFrame {
             metaExpedient.add(expedientNode);
             expedientTree.setModel(new DefaultTreeModel(metaExpedient));
         }
-        
+
     }
-    
+
     private void refreshExpedientsOfClient(ExpedientClient expedientClient) {
         List<ExpedientClient> allExpedientsListOfClient = expedientClientController.findExpedientClientByClient(expedientClient.getClient());
         DefaultComboBoxModel model = new DefaultComboBoxModel();
@@ -307,12 +305,10 @@ public class MainCustomGui extends javax.swing.JFrame {
         }
         expedientSelectorReception.setModel(model);
     }
-    
+
     private void initDocumentVerification(ExpedientClient expedientClient) {
+        prepareDocumentReceptionReestrictions();
         expedientTree.setCellRenderer(null);
-        assingIconsToBussinesTree(expedientTree);
-        creationExpedientState = false;
-        documentsReceptionState = true;
         List<ExpedientClient> allExpedientsListOfClient = expedientClientController.findExpedientClientByClient(expedientClient.getClient());
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         for (Object arrayExpedient1 : allExpedientsListOfClient) {
@@ -324,14 +320,13 @@ public class MainCustomGui extends javax.swing.JFrame {
         }
         documentReceptionNameClient.setText(expedientClient.getClient().getName());
         expedientSelectorReception.setModel(model);
-        receptionLayoutCardPane.setVisible(true);
         ExpedientClient expedientClientTemp = (ExpedientClient) expedientSelectorReception.getSelectedItem();
         displayDocumentByExpedient(expedientClientTemp);
+        assingIconsToBussinesTree(expedientTree);
         checkTreeManager = new CheckTreeManager(expedientTree, expedientClient, emf);
         checkTreeManager.automaticSelectionByClient();
-        indexButton.setEnabled(true);
     }
-    
+
     private void initComponentSearchPersonDialog(final JDialog searchPersonDialog) {
         infoSearchLabel = new javax.swing.JLabel();
         idenTypeSearchLabel = new javax.swing.JLabel();
@@ -364,9 +359,9 @@ public class MainCustomGui extends javax.swing.JFrame {
             searchTable.getColumnModel().getColumn(4).setResizable(false);
             searchTable.getColumnModel().getColumn(5).setResizable(false);
         }
-        
+
         searchTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
+
         searchTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {
@@ -376,16 +371,15 @@ public class MainCustomGui extends javax.swing.JFrame {
                 if (me.getClickCount() == 2) {
                     TableModelCustom tableModel = (TableModelCustom) searchTable.getModel();
                     int selectedRow = searchTable.getSelectionModel().getMinSelectionIndex();
-                    ExpedientClient expedientClient = tableModel.getExpedientClient(selectedRow);
+                    ExpedientClient expedientClient = tableModel.getExpedientClientList().get(searchTable.convertRowIndexToModel(selectedRow));
                     searchPersonDialog.setVisible(false);
                     expedientClientInProcess = expedientClient;
                     expedientSelectorReception.setSelectedItem(expedientClientInProcess.getExpedient());
                     initDocumentVerification(expedientClient);
-                    
                 }
             }
         });
-        
+
         findSearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String idenSearchTxtString = idenSearchTxt.getText();
@@ -399,10 +393,11 @@ public class MainCustomGui extends javax.swing.JFrame {
                 } else {
                     try {
                         ArrayList<RowFilter<Object, Object>> multipleFilters = new ArrayList<RowFilter<Object, Object>>();
-                        RowFilter<Object, Object> idenFilter = RowFilter.regexFilter(idenSearchTxtString);
-                        RowFilter<Object, Object> idenTypeFilter = RowFilter.regexFilter(typeIdenSearchTxtString);
+                        RowFilter<Object, Object> idenFilter = RowFilter.regexFilter(idenSearchTxtString,1);
+                        RowFilter<Object, Object> idenTypeFilter = RowFilter.regexFilter(typeIdenSearchTxtString,0);
                         multipleFilters.add(idenFilter);
                         multipleFilters.add(idenTypeFilter);
+
                         sorter.setRowFilter(
                                 RowFilter.andFilter(multipleFilters));
                     } catch (PatternSyntaxException pse) {
@@ -411,14 +406,14 @@ public class MainCustomGui extends javax.swing.JFrame {
                 }
             }
         });
-        
+
         cleanSearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 idenSearchTxt.setText("");
                 sorter.setRowFilter(null);
             }
         });
-        
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(searchPersonDialog.getContentPane());
         searchPersonDialog.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -472,11 +467,11 @@ public class MainCustomGui extends javax.swing.JFrame {
         searchPersonDialog.pack();
         searchPersonDialog.setLocationRelativeTo(this);
     }
-    
+
     private void desactiveCaptureDataShowPane() {
         captureDataShowPane.setVisible(false);
     }
-    
+
     private void validateClientIdentificacionDocuments(String name, String value, Client client) {
         Document document = null;
         String upperName = name.toUpperCase();
@@ -524,13 +519,13 @@ public class MainCustomGui extends javax.swing.JFrame {
                 clientData.setClient(client);
                 clientData.setValue(value);
                 clientData.setLastModification(Calendar.getInstance().getTime());
-                
+
                 try {
                     clientDataController.create(clientData);
                 } catch (Exception ex) {
                     Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 em.getTransaction().commit();
             }
         } else {
@@ -550,7 +545,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             identificationNumberData.setFkDataType(dataType);
             identificationNumberData.setRequired(1);
             identificationNumberData.setFkDocument(document);
-            
+
             try {
                 documentDataController.create(identificationNumberData);
             } catch (Exception ex) {
@@ -563,22 +558,22 @@ public class MainCustomGui extends javax.swing.JFrame {
             clientData.setClient(client);
             clientData.setValue(value);
             clientData.setLastModification(Calendar.getInstance().getTime());
-            
+
             try {
                 clientDataController.create(clientData);
             } catch (Exception ex) {
                 Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             em.getTransaction().commit();
-            
+
         }
     }
-    
+
     private void activeCaptureDataShowPane() {
         captureDataShowPane.setVisible(true);
     }
-    
+
     private void initComponentsRegistPersonDialog(JDialog registPersonDialog) {
         expedientIncludeList = new javax.swing.JList();
         expedientIncludeRegistLabel = new javax.swing.JLabel();
@@ -594,51 +589,51 @@ public class MainCustomGui extends javax.swing.JFrame {
         verifyDocumentButton = new javax.swing.JButton();
         nationalityTxt = new javax.swing.JComboBox();
         registPersonTitle = new javax.swing.JLabel();
-        
+        jScrollPane1 = new javax.swing.JScrollPane();
         registPersonDialog.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         registPersonDialog.setResizable(false);
         registPersonDialog.setTitle("Registrar Persona");
-        
+
         idenTypeSelectorLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         idenTypeSelectorLabel.setForeground(new java.awt.Color(153, 153, 153));
         idenTypeSelectorLabel.setText("Tipo Identificación:");
-        
+
         identificationNumberLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         identificationNumberLabel.setForeground(new java.awt.Color(153, 153, 153));
         identificationNumberLabel.setText("Número de Identificación:");
-        
+
         nameRegistPersonLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         nameRegistPersonLabel.setForeground(new java.awt.Color(153, 153, 153));
         nameRegistPersonLabel.setText("Nombre:");
-        
+
         nationSelectorRegistPersonLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         nationSelectorRegistPersonLabel.setForeground(new java.awt.Color(153, 153, 153));
         nationSelectorRegistPersonLabel.setText("Nacionalidad:");
-        
+
         registPersonButton.setText("Guardar");
-        
+
         registPersonButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registPersonAction(evt);
             }
         });
-        
+
         cleanRegistPersonButton.setText("Limpiar");
-        
+
         idenTypeSelector.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Pasaporte", "Documento de Identidad"}));
-        
+
         verifyDocumentButton.setText("Verificación de Documentos");
-        
+
         nationalityTxt.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Venezuela", "Colombia", "Costa Rica"}));
-        
+
         registPersonTitle.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         registPersonTitle.setForeground(new java.awt.Color(153, 153, 153));
         registPersonTitle.setText("Registro de Persona");
-        
+
         expedientIncludeRegistLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         expedientIncludeRegistLabel.setForeground(new java.awt.Color(153, 153, 153));
         expedientIncludeRegistLabel.setText("Inlcuir Expediente:");
-        
+
         List<Expedient> expedientList = this.expedientController.findExpedientEntities();
         expedientIncludeList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         expedientIncludeList = new JList(new Vector<Expedient>(expedientList));
@@ -760,30 +755,30 @@ public class MainCustomGui extends javax.swing.JFrame {
         documentExpireCheckBox = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         documentRequeridedCheckBox = new javax.swing.JCheckBox();
-        
+
         creationDocumentDialog.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         creationDocumentDialog.setTitle("Crear Nuevo Documento");
-        
+
         createDocumentTitleLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         createDocumentTitleLabel.setForeground(new java.awt.Color(153, 153, 153));
         createDocumentTitleLabel.setText("Crear Nuevo Documento");
         createDocumentTitleLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         createDocumentTitleLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        
+
         nameDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         nameDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
         nameDocumentLabel.setText("Nombre:");
-        
+
         descriptionNameLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         descriptionNameLabel.setForeground(new java.awt.Color(153, 153, 153));
         descriptionNameLabel.setText("Descripción:");
-        
+
         expedientIncludeLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         expedientIncludeLabel.setForeground(new java.awt.Color(153, 153, 153));
         expedientIncludeLabel.setText("Incluir a Expediente:");
-        
+
         cleanDocumentButton.setText("Limpiar");
-        
+
         List<Expedient> expedientList = this.expedientController.findExpedientEntities();
         ExpedientList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         ExpedientList = new JList(new Vector<Expedient>(expedientList));
@@ -799,32 +794,32 @@ public class MainCustomGui extends javax.swing.JFrame {
                 return renderer;
             }
         });
-        
+
         creationDocumentScroll.setViewportView(ExpedientList);
-        
+
         createDocumentButton.setText("Crear");
         createDocumentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createDocumentButtonActionPerformed(evt);
             }
         });
-        
+
         maxImageSizeLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         maxImageSizeLabel.setForeground(new java.awt.Color(153, 153, 153));
         maxImageSizeLabel.setText("Tamaño Máximo de Imágen:");
-        
+
         documentRepeatLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         documentRepeatLabel.setForeground(new java.awt.Color(153, 153, 153));
         documentRepeatLabel.setText("Documento repetitivo:");
-        
+
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(153, 153, 153));
         jLabel2.setText("Documento Expira:");
-        
+
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(153, 153, 153));
         jLabel3.setText("Documento Requerido:");
-        
+
         javax.swing.GroupLayout creationDocumentPaneLayout = new javax.swing.GroupLayout(creationDocumentPane);
         creationDocumentPane.setLayout(creationDocumentPaneLayout);
         creationDocumentPaneLayout.setHorizontalGroup(
@@ -914,7 +909,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(cleanDocumentButton)
                                 .addComponent(createDocumentButton)))
         );
-        
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(creationDocumentDialog.getContentPane());
         creationDocumentDialog.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -931,10 +926,10 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addComponent(creationDocumentPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
         );
-        
+
         creationDocumentDialog.pack();
         creationDocumentDialog.setLocationRelativeTo(null);
-        
+
     }// </editor-fold>                        
 
     /**
@@ -956,28 +951,28 @@ public class MainCustomGui extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         ExpedientDocumentList = new javax.swing.JList();
         createExpedientButton = new javax.swing.JButton();
-        
+
         dialogCreationExpedient.setTitle("Crear Expediente");
         dialogCreationExpedient.setResizable(false);
-        
+
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(153, 153, 153));
         jLabel2.setText("Crear Nuevo Expediente");
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         jLabel2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        
+
         nameExpedientLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         nameExpedientLabel.setForeground(new java.awt.Color(153, 153, 153));
         nameExpedientLabel.setText("Nombre:");
-        
+
         descriptionExpedientLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         descriptionExpedientLabel.setForeground(new java.awt.Color(153, 153, 153));
         descriptionExpedientLabel.setText("Descripción:");
-        
+
         documentIncludeLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         documentIncludeLabel.setForeground(new java.awt.Color(153, 153, 153));
         documentIncludeLabel.setText("Incluir Documentos:");
-        
+
         cleanExpedientButton.setText("Limpiar");
         List<Document> documentList = documentController.findDocumentEntities();
         ExpedientDocumentList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -995,14 +990,14 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(ExpedientDocumentList);
-        
+
         createExpedientButton.setText("Crear");
         createExpedientButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createExpedientButtonActionPerformed(evt);
             }
         });
-        
+
         javax.swing.GroupLayout creationExpedientPaneLayout = new javax.swing.GroupLayout(creationExpedientPane);
         creationExpedientPane.setLayout(creationExpedientPaneLayout);
         creationExpedientPaneLayout.setHorizontalGroup(
@@ -1056,7 +1051,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(cleanExpedientButton)
                                 .addComponent(createExpedientButton)))
         );
-        
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(dialogCreationExpedient.getContentPane());
         dialogCreationExpedient.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1073,7 +1068,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addComponent(creationExpedientPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
         );
-        
+
         dialogCreationExpedient.pack();
         dialogCreationExpedient.setLocationRelativeTo(null);
     }// </editor-fold>                      
@@ -1088,7 +1083,8 @@ public class MainCustomGui extends javax.swing.JFrame {
     private void initComponents() {
         creationExpedientState = true;
         documentsReceptionState = false;
-        
+        templateCreationButton = new javax.swing.JButton();
+        templateCreationButtonLabel = new javax.swing.JLabel();
         templateCreationLayoutCardPane = new javax.swing.JPanel();
         templateContainerCardPane = new javax.swing.JPanel();
         templateCreationIcon = new javax.swing.JLabel();
@@ -1098,6 +1094,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         indexDocumentLabel = new javax.swing.JLabel();
         dataCaptureTable = new javax.swing.JTable();
         captureDataScrollPane = new javax.swing.JScrollPane();
+        jScrollPaneExpedientTree = new javax.swing.JScrollPane();
         indextionContainerPane = new javax.swing.JPanel();
         dataCaptureScrollPane = new javax.swing.JScrollPane();
         infoProcessLayeredPane = new javax.swing.JLayeredPane();
@@ -1115,7 +1112,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         uploadImageLabel = new javax.swing.JLabel();
         indextionLayoutCardPane = new javax.swing.JPanel();
         documentReceptionNameClient = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+
         receptionIcon = new javax.swing.JLabel();
         selectExpedientLabel = new javax.swing.JLabel();
         documentReceptionLabel = new javax.swing.JLabel();
@@ -1180,7 +1177,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         indexProcessIsActive = false;
         setTitle("Sice Capture Demo");
         setResizable(false);
-        
+
         selectExpedientLabel.setText("Expediente Seleccionado:");
         mainPanelNavigation.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         documentReceptionLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -1208,12 +1205,17 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
             metaExpedient.add(expedientNode);
         }
-        
+
+        this.templateCreationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                templateCreationButtonAction(evt);
+            }
+        });
         expedientTree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent evt) {
                 selectedExpedientFromTree = null;
                 selectedDocumentFromTree = null;
-                
+
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) expedientTree.getLastSelectedPathComponent();
                 if (node != null) {
                     if (node.getUserObject() instanceof Expedient) {
@@ -1224,54 +1226,54 @@ public class MainCustomGui extends javax.swing.JFrame {
                 }
             }
         });
-        
+
         expedientTree.setModel(
                 new DefaultTreeModel(metaExpedient));
         expedientTree.getSelectionModel()
                 .setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         expedientTree.addMouseListener(new java.awt.event.MouseAdapter() {
-            
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 expedientTreeMouseClicked(evt);
             }
         }
         );
         assingIconsToBussinesTree(expedientTree);
-        jScrollPane1.setViewportView(expedientTree);
-        
+        jScrollPaneExpedientTree.setViewportView(expedientTree);
+
         indexDocumentButtonProcess.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 indexImagesAction(e);
             }
         });
-        
+
         expedientSelectorReception.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 expedientClientSelectorAction(e);
             }
         });
-        
+
         javax.swing.GroupLayout mainPanelNavigationLayout = new javax.swing.GroupLayout(mainPanelNavigation);
         mainPanelNavigation.setLayout(mainPanelNavigationLayout);
         mainPanelNavigationLayout.setHorizontalGroup(
                 mainPanelNavigationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelNavigationLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPaneExpedientTree, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
         );
         mainPanelNavigationLayout.setVerticalGroup(
                 mainPanelNavigationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelNavigationLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPaneExpedientTree, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
         );
-        
+
         expedientFormTitleLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         expedientFormTitleLabel.setForeground(new java.awt.Color(153, 153, 153));
         expedientFormTitleLabel.setText("SiceCapture");
-        
+
         scannerButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/scnIco.png"))); // NOI18N
         scannerButton.setEnabled(false);
         scannerButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1279,45 +1281,45 @@ public class MainCustomGui extends javax.swing.JFrame {
                 scannerButtonActionPerformed(evt);
             }
         });
-        
+
         layeredOperationalPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        
+
         titleDocumentPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         titleDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         titleDocumentPaneLabel.setText("Documento");
-        
+
         nameDocumentPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         nameDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         nameDocumentPaneLabel.setText("Nombre:");
-        
+
         genericDocumentPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         genericDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         genericDocumentPaneLabel.setText("Generales");
-        
+
         maxSizeDocumentPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         maxSizeDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         maxSizeDocumentPaneLabel.setText("Tamaño Máximo Imágen:");
-        
+
         repeatDocumentPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         repeatDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         repeatDocumentPaneLabel.setText("Documento Repetitivo ");
-        
+
         alertDocumentPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         alertDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         alertDocumentPaneLabel.setText("Generación de Alarmas");
-        
+
         expireDocumentPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         expireDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         expireDocumentPaneLabel.setText("Documento Expira:");
-        
+
         rulesDocumentPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         rulesDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         rulesDocumentPaneLabel.setText("Reglas documentos requeridos");
-        
+
         requeridDocumentPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         requeridDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         requeridDocumentPaneLabel.setText("Es requerido:");
-        
+
         javax.swing.GroupLayout documentParameterPaneLayout = new javax.swing.GroupLayout(documentParameterPane);
         documentParameterPane.setLayout(documentParameterPaneLayout);
         documentParameterPaneLayout.setHorizontalGroup(
@@ -1412,23 +1414,23 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(requeridDocumentPaneLabel))
                         .addContainerGap(94, Short.MAX_VALUE))
         );
-        
+
         dataTypeDataParameterPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         dataTypeDataParameterPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         dataTypeDataParameterPaneLabel.setText("Tipo de Dato");
-        
+
         nameDataParameterPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         nameDataParameterPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         nameDataParameterPaneLabel.setText("Nombre:");
-        
+
         dataTypeFieldParameterPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         dataTypeFieldParameterPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         dataTypeFieldParameterPaneLabel.setText("Tipo de Dato:");
-        
+
         requeridDataParameterPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         requeridDataParameterPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         requeridDataParameterPaneLabel.setText("Es requerido:");
-        
+
         javax.swing.GroupLayout dataParameterPaneLayout = new javax.swing.GroupLayout(dataParameterPane);
         dataParameterPane.setLayout(dataParameterPaneLayout);
         dataParameterPaneLayout.setHorizontalGroup(
@@ -1468,11 +1470,11 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(requiredDataParameterPaneCheckBox))
                         .addContainerGap(274, Short.MAX_VALUE))
         );
-        
+
         scannerPaneUpLeft.setMaximumSize(new java.awt.Dimension(240, 259));
         scannerPaneUpLeft.setMinimumSize(new java.awt.Dimension(240, 259));
         scannerPaneUpLeft.setPreferredSize(new java.awt.Dimension(240, 259));
-        
+
         removeUpLeftButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove3.png"))); // NOI18N
         removeUpLeftButton.setBorder(null);
         removeUpLeftButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1480,7 +1482,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                 removeUpLeftButtonActionPerformed(evt);
             }
         });
-        
+
         javax.swing.GroupLayout scannerPaneUpLeftLayout = new javax.swing.GroupLayout(scannerPaneUpLeft);
         scannerPaneUpLeft.setLayout(scannerPaneUpLeftLayout);
         scannerPaneUpLeftLayout.setHorizontalGroup(
@@ -1498,7 +1500,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         scannerPaneUpRight.setMaximumSize(new java.awt.Dimension(240, 259));
         scannerPaneUpRight.setMinimumSize(new java.awt.Dimension(240, 259));
         scannerPaneUpRight.setPreferredSize(new java.awt.Dimension(240, 259));
-        
+
         removeUpRightButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove3.png"))); // NOI18N
         removeUpRightButton.setPreferredSize(new java.awt.Dimension(39, 39));
         removeUpRightButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1506,7 +1508,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                 removeUpRightButtonActionPerformed(evt);
             }
         });
-        
+
         javax.swing.GroupLayout scannerPaneUpRightLayout = new javax.swing.GroupLayout(scannerPaneUpRight);
         scannerPaneUpRight.setLayout(scannerPaneUpRightLayout);
         scannerPaneUpRightLayout.setHorizontalGroup(
@@ -1525,11 +1527,11 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(removeUpRightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 227, Short.MAX_VALUE)))
         );
-        
+
         scannerPaneDownRight.setMaximumSize(new java.awt.Dimension(240, 259));
         scannerPaneDownRight.setMinimumSize(new java.awt.Dimension(240, 259));
         scannerPaneDownRight.setPreferredSize(new java.awt.Dimension(240, 259));
-        
+
         removeDownRightButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove3.png"))); // NOI18N
         removeDownRightButton.setPreferredSize(new java.awt.Dimension(39, 39));
         removeDownRightButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1555,7 +1557,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(removeDownRightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 220, Short.MAX_VALUE)))
         );
-        
+
         scannerPaneDownLeft.setMaximumSize(new java.awt.Dimension(240, 259));
         scannerPaneDownLeft.setMinimumSize(new java.awt.Dimension(240, 259));
         scannerPaneDownLeft.setPreferredSize(new java.awt.Dimension(240, 259));
@@ -1585,13 +1587,13 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(removeDownLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 220, Short.MAX_VALUE)))
         );
-        
+
         captureDataShowDocumentNameLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         captureDataShowDocumentNameLabel.setForeground(new java.awt.Color(153, 153, 153));
         captureDataShowDocumentNameLabel.setText("Nombre Documento");
-        
+
         dataCaptureScrollPane.setViewportView(dataCaptureTable);
-        
+
         javax.swing.GroupLayout captureDataShowPaneLayout = new javax.swing.GroupLayout(captureDataShowPane);
         captureDataShowPane.setLayout(captureDataShowPaneLayout);
         captureDataShowPaneLayout.setHorizontalGroup(
@@ -1615,7 +1617,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addComponent(dataCaptureScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        
+
         javax.swing.GroupLayout layeredOperationalPaneLayout = new javax.swing.GroupLayout(layeredOperationalPane);
         layeredOperationalPane.setLayout(layeredOperationalPaneLayout);
         layeredOperationalPaneLayout.setHorizontalGroup(
@@ -1677,7 +1679,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         layeredOperationalPane.setLayer(scannerPaneDownRight, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredOperationalPane.setLayer(scannerPaneDownLeft, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredOperationalPane.setLayer(captureDataShowPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        
+
         indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/index1.png"))); // NOI18N
         indexButton.setEnabled(false);
         indexButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1685,15 +1687,15 @@ public class MainCustomGui extends javax.swing.JFrame {
                 indexProcessAction(evt);
             }
         });
-        
+
         scannerLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         scannerLabel.setForeground(new java.awt.Color(153, 153, 153));
         scannerLabel.setText("Digitalizar");
-        
+
         indexLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         indexLabel.setForeground(new java.awt.Color(153, 153, 153));
         indexLabel.setText("Indexar");
-        
+
         uploadImageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/upload.png"))); // NOI18N
         uploadImageButton.setEnabled(false);
         uploadImageButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1704,31 +1706,31 @@ public class MainCustomGui extends javax.swing.JFrame {
         uploadImageLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         uploadImageLabel.setForeground(new java.awt.Color(153, 153, 153));
         uploadImageLabel.setText("Subir Imagen");
-        
+
         receptionLayoutCardPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         receptionLayoutCardPane.setMaximumSize(new java.awt.Dimension(407, 114));
         receptionLayoutCardPane.setMinimumSize(new java.awt.Dimension(407, 114));
         receptionLayoutCardPane.setPreferredSize(new java.awt.Dimension(407, 114));
         receptionLayoutCardPane.setLayout(new java.awt.CardLayout());
-        
+
         receptionDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         receptionDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
         receptionDocumentLabel.setText("Recepción de Documentos");
-        
+
         receptionNameLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         receptionNameLabel.setForeground(new java.awt.Color(153, 153, 153));
         receptionNameLabel.setText("Nombre:");
-        
+
         documentReceptionNameClient.setText("Nombre Cliente");
-        
+
         receptionIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/docReception.png"))); // NOI18N
 
         selectExpedientLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         selectExpedientLabel.setForeground(new java.awt.Color(153, 153, 153));
         selectExpedientLabel.setText("Seleccionar Expediente:");
-        
+
         expedientSelectorReception.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
-        
+
         javax.swing.GroupLayout receptionContainerPaneLayout = new javax.swing.GroupLayout(receptionContainerPane);
         receptionContainerPane.setLayout(receptionContainerPaneLayout);
         receptionContainerPaneLayout.setHorizontalGroup(
@@ -1772,28 +1774,28 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(selectExpedientLabel))
                         .addGap(0, 12, Short.MAX_VALUE))
         );
-        
+
         receptionLayoutCardPane.add(receptionContainerPane, "card2");
-        
+
         receptionLayoutCardPane.add(receptionContainerPane, "card2");
-        
+
         indextionLayoutCardPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         indextionLayoutCardPane.setLayout(new java.awt.CardLayout());
-        
+
         indexDocumentIconProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/indextionProcess.png"))); // NOI18N
 
         indexDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         indexDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
         indexDocumentLabel.setText("Indexación de Documentos");
-        
+
         indexDocumentHelpLebel.setText("Seleccione las imágenes a indexar");
-        
+
         indexDocumentButtonProcess.setText("Indexar Imágenes");
-        
+
         nameExpedientIndexLabel.setText("Nombre Expediente");
-        
+
         idenClientIndexLabel.setText("Identificación del cliente");
-        
+
         javax.swing.GroupLayout indextionContainerPaneLayout = new javax.swing.GroupLayout(indextionContainerPane);
         indextionContainerPane.setLayout(indextionContainerPaneLayout);
         indextionContainerPaneLayout.setHorizontalGroup(
@@ -1838,24 +1840,24 @@ public class MainCustomGui extends javax.swing.JFrame {
                                         .addComponent(indexDocumentButtonProcess)))
                         .addContainerGap())
         );
-        
+
         indextionLayoutCardPane.add(indextionContainerPane, "card2");
-        
+
         templateCreationLayoutCardPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         templateCreationLayoutCardPane.setLayout(new java.awt.CardLayout());
-        
+
         templateContainerCardPane.setMaximumSize(new java.awt.Dimension(403, 110));
         templateContainerCardPane.setMinimumSize(new java.awt.Dimension(403, 110));
         templateContainerCardPane.setPreferredSize(new java.awt.Dimension(403, 110));
-        
+
         templateCreationIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/template.png"))); // NOI18N
 
-        templateCreationLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        templateCreationLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         templateCreationLabel.setForeground(new java.awt.Color(153, 153, 153));
         templateCreationLabel.setText("Creación de plantillas");
-        
+
         templateCreationInfo.setText("Utilice esta modalidad para crear expedientes");
-        
+
         javax.swing.GroupLayout templateContainerCardPaneLayout = new javax.swing.GroupLayout(templateContainerCardPane);
         templateContainerCardPane.setLayout(templateContainerCardPaneLayout);
         templateContainerCardPaneLayout.setHorizontalGroup(
@@ -1883,9 +1885,9 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addComponent(templateCreationInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(19, 19, 19))
         );
-        
+
         templateCreationLayoutCardPane.add(templateContainerCardPane, "card2");
-        
+
         javax.swing.GroupLayout infoProcessLayeredPaneLayout = new javax.swing.GroupLayout(infoProcessLayeredPane);
         infoProcessLayeredPane.setLayout(infoProcessLayeredPaneLayout);
         infoProcessLayeredPaneLayout.setHorizontalGroup(
@@ -1927,7 +1929,12 @@ public class MainCustomGui extends javax.swing.JFrame {
                 mainTemplateOptionActionPerformed(evt);
             }
         });
-        
+
+        templateCreationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/templateExpedientButton.png"))); // NOI18N
+        templateCreationButtonLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        templateCreationButtonLabel.setForeground(new java.awt.Color(153, 153, 153));
+        templateCreationButtonLabel.setText("Crear Plantillas");
+        templateCreationButton.setEnabled(false);
         this.mainMenuConfiguration.setBorder(null);
         mainMenuConfiguration.setText("Configuración");
         mainMenuConfiguration.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -1938,9 +1945,9 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
         mainMenuConfiguration.add(menuItemScannerSelection);
-        
+
         mainBarMenu.add(mainMenuConfiguration);
-        
+
         jMenuItem1.setText("Crear Nuevo");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1948,7 +1955,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
         mainTemplateOption.add(jMenuItem1);
-        
+
         jMenuItem2.setText("Modificar");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1956,7 +1963,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
         mainTemplateOption.add(jMenuItem2);
-        
+
         jMenuItem3.setText("Eliminar");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1964,9 +1971,9 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
         mainTemplateOption.add(jMenuItem3);
-        
+
         mainBarMenu.add(mainTemplateOption);
-        
+
         mainDocumentOption.setBorder(null);
         mainDocumentOption.setText("Documentos");
         mainDocumentOption.setFocusable(false);
@@ -1979,15 +1986,15 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
         mainDocumentOption.add(createNewDocumentItemMenuButton);
-        
+
         modifyDocumentItemMenuButton.setText("Modificar");
         mainDocumentOption.add(modifyDocumentItemMenuButton);
-        
+
         deleteDocumentItemMenuButton.setText("Eliminar");
         mainDocumentOption.add(deleteDocumentItemMenuButton);
-        
+
         mainBarMenu.add(mainDocumentOption);
-        
+
         mainConsultOption.setBorder(null);
         mainConsultOption.setText("Consultas & Reportes");
         mainConsultOption.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -1999,7 +2006,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
         mainConsultOption.add(registPersonMenuItem);
-        
+
         consultPersonMenuItem.setText("Consultar Personas");
         consultPersonMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2024,11 +2031,18 @@ public class MainCustomGui extends javax.swing.JFrame {
                                                 .addGroup(layout.createSequentialGroup()
                                                         .addComponent(infoProcessLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addGap(57, 57, 57)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(templateCreationButton)
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addGap(8, 8, 8)
+                                                        .addComponent(templateCreationButtonLabel)))
+                                        .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(layout.createSequentialGroup()
-                                                        .addGap(10, 10, 10)
+                                                        .addGap(8, 8, 8)
                                                         .addComponent(uploadImageLabel)
-                                                        .addGap(44, 44, 44)
+                                                        .addGap(45, 45, 45)
                                                         .addComponent(scannerLabel)
                                                         .addGap(55, 55, 55)
                                                         .addComponent(indexLabel))
@@ -2055,12 +2069,14 @@ public class MainCustomGui extends javax.swing.JFrame {
                                                 .addComponent(uploadImageButton, javax.swing.GroupLayout.Alignment.TRAILING)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                         .addComponent(indexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                                        .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                                        .addComponent(scannerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addComponent(templateCreationButton, javax.swing.GroupLayout.Alignment.TRAILING))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                 .addComponent(scannerLabel)
                                                 .addComponent(indexLabel)
-                                                .addComponent(uploadImageLabel)))
+                                                .addComponent(uploadImageLabel)
+                                                .addComponent(templateCreationButtonLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(layout.createSequentialGroup()
                                         .addComponent(expedientFormTitleLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -2071,6 +2087,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(mainPanelNavigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
         );
+
         receptionLayoutCardPane.setVisible(false);
         Dimension mainPanesDimension = new Dimension(480, 518);
         Dimension mainWindow = new Dimension(915, 780);
@@ -2092,7 +2109,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponentsCreationDataDialog(JDialog dialogCreationData) {
-        
+
         creationDataPane = new javax.swing.JPanel();
         createDataTitleLabel = new javax.swing.JLabel();
         dataDocumentLabel = new javax.swing.JLabel();
@@ -2111,44 +2128,44 @@ public class MainCustomGui extends javax.swing.JFrame {
         dialogCreationData.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         dialogCreationData.setTitle("Agregar Nuevo Dato");
         dialogCreationData.setResizable(false);
-        
+
         createDataTitleLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         createDataTitleLabel.setForeground(new java.awt.Color(153, 153, 153));
         createDataTitleLabel.setText("Agregar Nuevo Dato");
         createDataTitleLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         createDataTitleLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        
+
         dataDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         dataDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
         dataDocumentLabel.setText("Documento:");
-        
+
         nameDataField.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         nameDataField.setForeground(new java.awt.Color(153, 153, 153));
         nameDataField.setText("Nombre:");
-        
+
         dataTypeLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         dataTypeLabel.setForeground(new java.awt.Color(153, 153, 153));
         dataTypeLabel.setText("Tipo de dato:");
-        
+
         cleanDataButton.setText("Limpiar");
         cleanDataButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cleanDataButtonActionPerformed(evt);
             }
         });
-        
+
         createDataButton.setText("Crear");
         createDataButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createDataButtonActionPerformed(evt);
             }
         });
-        
+
         List<DataType> dataTypeList = dataTypeController.findDataTypeEntities();
         for (DataType dataType : dataTypeList) {
             dataTypeSelector.addItem(dataType);
         }
-        
+
         dataTypeSelector.setRenderer(new BasicComboBoxRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -2160,11 +2177,11 @@ public class MainCustomGui extends javax.swing.JFrame {
                 return renderer;
             }
         });
-        
+
         isRequiredDataLabel.setFont(new java.awt.Font("Tahoma", 1, 14));
         isRequiredDataLabel.setForeground(new java.awt.Color(153, 153, 153));
         isRequiredDataLabel.setText("Es requerido:");
-        
+
         javax.swing.GroupLayout creationDataPaneLayout = new javax.swing.GroupLayout(creationDataPane);
         creationDataPane.setLayout(creationDataPaneLayout);
         creationDataPaneLayout.setHorizontalGroup(
@@ -2220,7 +2237,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(cleanDataButton)
                                 .addComponent(createDataButton)))
         );
-        
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(dialogCreationData.getContentPane());
         dialogCreationData.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -2237,18 +2254,18 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addComponent(creationDataPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
         );
-        
+
         dialogCreationData.pack();
         dialogCreationData.setLocationRelativeTo(null);
     }// </editor-fold>  
 
     private void scannerButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        
+
     }
-    
+
     private void captureProcessAction(java.awt.event.ActionEvent evt) {
         boolean validProcess = true;
-        
+
         Date currentDate = Calendar.getInstance().getTime();
         SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
         for (Object object : componentList) {
@@ -2266,7 +2283,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             if (value == null || "".equals(value.trim())) {
                 validProcess = false;
             }
-            
+
             EntityManager em = emf.createEntityManager();
             DocumentData data = documentDataController.findDocumentData(id);
             ClientDataPK clientDataPK = new ClientDataPK();
@@ -2297,10 +2314,62 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
             em.getTransaction().commit();
             captureDataDialog.setVisible(false);
-            
+            checkTreeManager.automaticSelectionByClient();
+
         }
     }
-    
+
+    private void prepareTemplateCreationReestrictions() {
+        //Desactivamos y activamos botones
+        this.uploadImageButton.setEnabled(false);
+        this.scannerButton.setEnabled(false);
+        this.indexButton.setEnabled(false);
+        this.templateCreationButton.setEnabled(false);
+        indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/index1.png"))); // NOI18N
+        indexLabel.setText("Indexar");
+        //Desactivamos y activamos paneles de operacion
+        this.receptionLayoutCardPane.setVisible(false);
+        this.indextionLayoutCardPane.setVisible(false);
+        this.templateCreationLayoutCardPane.setVisible(true);
+        //Desactivamos y activamos estados del sistema
+        this.documentsReceptionState = false;
+        this.indexProcessIsActive = false;
+        this.creationExpedientState = true;
+        //Desactivamos paneles de la ventana de informacion (Esquina derecha)
+        this.captureDataShowPane.setVisible(false);
+        this.scannerPaneUpRight.setVisible(false);
+        this.scannerPaneDownLeft.setVisible(false);
+        this.scannerPaneDownRight.setVisible(false);
+        this.scannerPaneUpLeft.setVisible(false);
+        scannerPaneUpRight.removeImage();
+        scannerPaneDownLeft.removeImage();
+        scannerPaneDownRight.removeImage();
+        scannerPaneUpLeft.removeImage();
+    }
+
+    private void prepareDocumentReceptionReestrictions() {
+        //Desactivamos y activamos botones
+        this.uploadImageButton.setEnabled(false);
+        this.scannerButton.setEnabled(false);
+        this.indexButton.setEnabled(true);
+        this.templateCreationButton.setEnabled(true);
+        //Desactivamos y activamos paneles de operacion
+        this.receptionLayoutCardPane.setVisible(true);
+        this.indextionLayoutCardPane.setVisible(false);
+        this.templateCreationLayoutCardPane.setVisible(false);
+        //Desactivamos y activamos estados del sistema
+        this.documentsReceptionState = true;
+        this.indexProcessIsActive = false;
+        this.creationExpedientState = false;
+        //Desactivamos paneles de la ventana de informacion (Esquina derecha)
+        this.documentParameterPane.setVisible(false);
+        this.dataParameterPane.setVisible(false);
+        this.scannerPaneUpLeft.setVisible(false);
+        this.scannerPaneUpRight.setVisible(false);
+        this.scannerPaneDownLeft.setVisible(false);
+        this.scannerPaneDownRight.setVisible(false);
+    }
+
     private void initDocumentIncludeDialog() {
         inclusionExpedienteScrollpane = new javax.swing.JScrollPane();
         listExpedientInclusion = new javax.swing.JList();
@@ -2386,12 +2455,12 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addComponent(inclusionExpedientButton)
                         .addContainerGap())
         );
-        
+
         includeDocumentDialog.pack();
         includeDocumentDialog.setLocationRelativeTo(this);
-        
+
     }
-    
+
     private void initIncludeExpedientDialog() {
         inclusionExpedienteScrollpane = new javax.swing.JScrollPane();
         listExpedientInclusion = new javax.swing.JList();
@@ -2481,11 +2550,11 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addComponent(inclusionExpedientButton)
                         .addContainerGap())
         );
-        
+
         includeExpedientDialog.pack();
         includeExpedientDialog.setLocationRelativeTo(null);
     }
-    
+
     private void initShowCaptureData() {
         documentDataListCurrentCaptureProcess = new ArrayList<>();
         documentDataListCurrentCaptureProcess = documentDataController.findByDocument(selectedDocumentFromTree);
@@ -2510,7 +2579,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             captureDataShowPane.setVisible(false);
         }
     }
-    
+
     private void initCreationCaptureDataDialog(JDialog dialog, List componentList, Map<Integer, JLabel> jLabelMap) {
         JPanel form = new JPanel();
         dialog.getContentPane().setLayout(new BorderLayout());
@@ -2529,7 +2598,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                 formUtility.addLabel(jLabelMap.get(idData), form);
                 formUtility.addLastField(dataChooser, form);
             }
-            
+
         }
         JButton captureButton = new JButton("Guardar");
         formUtility.addLastField(captureButton, form);
@@ -2544,14 +2613,14 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void expedientClientSelectorAction(java.awt.event.ActionEvent evt) {
         ExpedientClient expedientClient = (ExpedientClient) this.expedientSelectorReception.getSelectedItem();
         this.expedientClientInProcess = expedientClient;
         displayDocumentByExpedient(expedientClient);
         checkTreeManager.automaticSelectionByClient();
     }
-    
+
     private void indexImagesAction(java.awt.event.ActionEvent evt) {
         //You have to choose one image at least
         boolean firstCondition = true;
@@ -2617,7 +2686,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         }
     }
-    
+
     public void assingIconsToBussinesTree(JTree bussinesTree) {
         bussinesTree.setCellRenderer(new DefaultTreeCellRenderer() {
             @Override
@@ -2665,7 +2734,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                             return null;
                         }
                     }
-                    
+
                 } else if (nodo.getUserObject() instanceof Document) {
                     java.net.URL imgURL = getClass().getResource(documentIconPath);
                     ImageIcon icon = new ImageIcon(imgURL, "Document Icon");
@@ -2680,7 +2749,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void initControllers() {
         expedientController = new ExpedientJpaController(emf);
         expedientClientController = new ExpedientClientJpaController(emf);
@@ -2690,7 +2759,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         clientDataController = new ClientDataJpaController(emf);
         documentDataController = new DocumentDataJpaController(emf);
     }
-    
+
     private void createExpedientButtonActionPerformed(java.awt.event.ActionEvent evt) {
         boolean validProcess = true;
         if ("".equals(nameExpedientTxt.getText().trim())) {
@@ -2711,7 +2780,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             refreshExpedientTree();
         }
     }
-    
+
     public void refreshExpedientTree() {
         List<Expedient> allExpedientsList = expedientController.findExpedientEntities();
         DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
@@ -2734,7 +2803,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         }
         expedientTree.setModel(new DefaultTreeModel(metaExpedient));
     }
-    
+
     private void initDocumentList() {
         List<Document> documentList = documentController.findDocumentEntities();
         ExpedientDocumentList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -2752,12 +2821,12 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void scannerSelectionAction(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         scannerBackground.selectScanner();
     }
-    
+
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         JDialog creationExpedientDialog = new JDialog();
@@ -2765,11 +2834,11 @@ public class MainCustomGui extends javax.swing.JFrame {
         creationExpedientDialog.setModal(true);
         creationExpedientDialog.setVisible(true);
     }
-    
+
     private void createDocumentButtonActionPerformed(java.awt.event.ActionEvent evt) {
         boolean validProcess = true;
         boolean validSize = true;
-        
+
         if ("".equals(nameDocumentTxt.getText().trim())) {
             validProcess = false;
         } else if ("".equals(descriptionDocumentTxt.getText().trim())) {
@@ -2777,7 +2846,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         } else if ("".equals(this.maxImageSizeTxt.getText().trim())) {
             validProcess = false;
         }
-        
+
         if (validProcess) {
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
@@ -2785,7 +2854,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             document.setName(nameDocumentTxt.getText().trim());
             document.setDescription(descriptionDocumentTxt.getText().trim());
             document.setMaxImageSize(Integer.parseInt(maxImageSizeTxt.getText()));
-            
+
             if (documentRepeatCheckBox.isSelected()) {
                 document.setCanRepeat(1);
             } else {
@@ -2801,7 +2870,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             } else {
                 document.setIsRequired(0);
             }
-            
+
             List<Expedient> selectedExpedients = new ArrayList<>();
             List selectedExpedientList = ExpedientList.getSelectedValuesList();
             if (selectedExpedientList != null && !selectedExpedientList.isEmpty()) {
@@ -2810,44 +2879,45 @@ public class MainCustomGui extends javax.swing.JFrame {
                     selectedExpedients.add(expedient);
                 }
             }
-            
+
             document.setExpedientCollection(selectedExpedients);
             documentController.create(document);
             em.getTransaction().commit();
             refreshExpedientTree();
         }
     }
-    
+
     private void removeUpRightButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.scannerPaneUpRight.removeImage();
     }
-    
+
     private void removeUpLeftButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.scannerPaneUpLeft.removeImage();
     }
-    
+
     private void removeDownRightButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.scannerPaneDownRight.removeImage();
     }
-    
+
     private void removeDownLeftButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.scannerPaneDownLeft.removeImage();
     }
-    
+
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-    
+
     private void mainTemplateOptionActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-    
+
     private void indexProcessAction(java.awt.event.ActionEvent evt) {
         indexProcessIsActive = !indexProcessIsActive;
         if (indexProcessIsActive) {
             this.desactiveCaptureDataShowPane();
             this.desactiveDocumentDataParameterPane();
             this.desactiveDocumentParameterPane();
+
             indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/indexout.png"))); // NOI18N
             scannerButton.setEnabled(true);
             uploadImageButton.setEnabled(true);
@@ -2862,26 +2932,17 @@ public class MainCustomGui extends javax.swing.JFrame {
             indexButton.repaint();
             indexLabel.setText("Finalizar");
         } else {
-            documentsReceptionState = true;
+            prepareDocumentReceptionReestrictions();
             indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/index1.png"))); // NOI18N
             indexButton.repaint();
-            scannerPaneDownLeft.setVisible(false);
             scannerPaneDownLeft.removeImage();
-            this.receptionLayoutCardPane.setVisible(true);
-            this.indextionLayoutCardPane.setVisible(false);
-            this.templateCreationLayoutCardPane.setVisible(false);
-            scannerPaneUpRight.setVisible(false);
             scannerPaneUpRight.removeImage();
             scannerPaneUpLeft.removeImage();
-            scannerPaneUpLeft.setVisible(false);
-            scannerPaneDownRight.setVisible(false);
             scannerPaneDownRight.removeImage();
-            scannerButton.setEnabled(false);
-            uploadImageButton.setEnabled(false);
             indexLabel.setText("Indexar");
         }
     }
-    
+
     private void uploadImageAction(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         JFileChooser fileChooser = new JFileChooser();
@@ -2906,15 +2967,15 @@ public class MainCustomGui extends javax.swing.JFrame {
                 scannerPaneDownRight.loadImage(file);
                 scannerPaneDownRight.setVisible(true);
                 scannerPaneDownRight.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-                
+
             }
         }
     }
-    
+
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-    
+
     private void createNewDocumentItemMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         JDialog creationDocumentDialog = new JDialog();
@@ -2922,18 +2983,21 @@ public class MainCustomGui extends javax.swing.JFrame {
         creationDocumentDialog.setModal(true);
         creationDocumentDialog.setVisible(true);
     }
-    
+
     private void registPersonAction(java.awt.event.ActionEvent evt) {
         boolean validProcess = true;
         if ("".equalsIgnoreCase(identificacionNumberTxt.getText())) {
+            JOptionPane.showMessageDialog(this, "Debe indicar un número de identificación");
             validProcess = false;
         } else if ("".equalsIgnoreCase(nameRegistPersonTxt.getText())) {
+            JOptionPane.showMessageDialog(this, "Debe indicar un nombre");
             validProcess = false;
         } else if (expedientIncludeList.getSelectedValue() == null) {
             JOptionPane.showMessageDialog(this, "Debe incluir almenos un expediente");
             validProcess = false;
         }
         if (validProcess) {
+            ExpedientClient expedientClient = null;
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
             Client client = new Client();
@@ -2946,6 +3010,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             } catch (Exception ex) {
                 Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
             }
+
             List selectedExpedientList = expedientIncludeList.getSelectedValuesList();
             if (selectedExpedientList != null && !selectedExpedientList.isEmpty()) {
                 for (Object expedientObject : selectedExpedientList) {
@@ -2953,7 +3018,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                     ExpedientClientPK expedientPK = new ExpedientClientPK();
                     expedientPK.setFkClient(client.getIdUser());
                     expedientPK.setFkExpedient(expedient.getIdExpedient());
-                    ExpedientClient expedientClient = new ExpedientClient();
+                    expedientClient = new ExpedientClient();
                     expedientClient.setClient(client);
                     expedientClient.setExpedient(expedient);
                     expedientClient.setExpedientClientPK(expedientPK);
@@ -2968,9 +3033,12 @@ public class MainCustomGui extends javax.swing.JFrame {
             em.getTransaction().commit();
             validateClientIdentificacionDocuments(idenTypeSelector.getSelectedItem().toString(), identificacionNumberTxt.getText(), client);
             registPersonDialog.setVisible(false);
+            expedientClientInProcess = expedientClient;
+            expedientSelectorReception.setSelectedItem(expedientClientInProcess.getExpedient());
+            initDocumentVerification(expedientClient);
         }
     }
-    
+
     private void createDataButtonActionPerformed(java.awt.event.ActionEvent evt) {
         boolean validProcess = true;
         if ("".equals(nameDataTxt.getText().trim())) {
@@ -2990,7 +3058,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
             try {
                 documentDataController.create(dataDocument);
-                
+
             } catch (Exception ex) {
                 Logger.getLogger(MainCustomGui.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -2999,25 +3067,32 @@ public class MainCustomGui extends javax.swing.JFrame {
             refreshExpedientTree();
         }
     }
-    
+
     private void cleanDataButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-    
+
     private void registPersonMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         registPersonDialog = new JDialog();
         this.initComponentsRegistPersonDialog(registPersonDialog);
         registPersonDialog.setModal(true);
         registPersonDialog.setVisible(true);
     }
-    
+
+    private void templateCreationButtonAction(java.awt.event.ActionEvent evt) {
+        refreshExpedientTree();
+        expedientTree.setCellRenderer(null);
+        assingIconsToBussinesTree(expedientTree);
+        prepareTemplateCreationReestrictions();
+    }
+
     private void consultPersonMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         JDialog searchPersonDialog = new JDialog();
         initComponentSearchPersonDialog(searchPersonDialog);
         searchPersonDialog.setModal(true);
         searchPersonDialog.setVisible(true);
     }
-    
+
     private void expedientTreeMouseClicked(java.awt.event.MouseEvent evt) {
         if (SwingUtilities.isRightMouseButton(evt)) {
             int row = expedientTree.getClosestRowForLocation(evt.getX(), evt.getY());
@@ -3085,6 +3160,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JButton createExpedientButton;
     private javax.swing.JButton removeUpLeftButton;
     private javax.swing.JScrollPane dataCaptureScrollPane;
+    private javax.swing.JScrollPane jScrollPaneExpedientTree;
     private javax.swing.JPanel creationExpedientPane;
     private javax.swing.JLabel descriptionExpedientLabel;
     private javax.swing.JTextField descriptionExpedientTxt;
@@ -3199,6 +3275,8 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel indextionLayoutCardPane;
     private javax.swing.JTable searchTable;
+    private javax.swing.JButton templateCreationButton;
+    private javax.swing.JLabel templateCreationButtonLabel;
     private javax.swing.JScrollPane searchTableScrollPane;
     private javax.swing.JComboBox typeIdenSearchSelector;
     private javax.swing.JCheckBox documentRepeatCheckBox;

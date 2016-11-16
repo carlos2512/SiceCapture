@@ -25,6 +25,14 @@ public class TableModelCustom extends AbstractTableModel {
                 "Tipo Identificación", "No. Identificación", "Nombre", "Nacionalidad", "Expediente", "Fecha Ult. Movimiento"
             };
 
+    public List<ExpedientClient> getExpedientClientList() {
+        return expedientClientList;
+    }
+
+    public void setExpedientClientList(List<ExpedientClient> expedientClientList) {
+        this.expedientClientList = expedientClientList;
+    }
+
     public TableModelCustom() {
         expedientClientList = new ArrayList<>();
     }
