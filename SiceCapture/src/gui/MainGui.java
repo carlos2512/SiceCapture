@@ -377,12 +377,16 @@ public class MainGui extends javax.swing.JFrame {
         requiredDataParameterPaneCheckBox = new javax.swing.JCheckBox();
         scannerPaneUpLeft = new javax.swing.JPanel();
         removeUpLeftButton = new javax.swing.JButton();
+        sizeLabelImage = new javax.swing.JLabel();
         scannerPaneUpRight = new javax.swing.JPanel();
         removeUpRightButton = new javax.swing.JButton();
+        sizeLabelImageUpRight = new javax.swing.JLabel();
         scannerPaneDownRight = new javax.swing.JPanel();
         removeDownRightButton = new javax.swing.JButton();
+        sizeLabelImageDownRight = new javax.swing.JLabel();
         scannerPaneDownLeft = new javax.swing.JPanel();
         removeDownLeftButton = new javax.swing.JButton();
+        sizeLabelImageDownLeft = new javax.swing.JLabel();
         captureDataShowPane = new javax.swing.JPanel();
         captureDataShowDocumentNameLabel = new javax.swing.JLabel();
         dataCaptureScrollPane = new javax.swing.JScrollPane();
@@ -713,19 +717,29 @@ public class MainGui extends javax.swing.JFrame {
         removeUpLeftButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove.png"))); // NOI18N
         removeUpLeftButton.setBorder(null);
 
+        sizeLabelImage.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        sizeLabelImage.setForeground(new java.awt.Color(0, 204, 0));
+        sizeLabelImage.setText("Tamaño");
+
         javax.swing.GroupLayout scannerPaneUpLeftLayout = new javax.swing.GroupLayout(scannerPaneUpLeft);
         scannerPaneUpLeft.setLayout(scannerPaneUpLeftLayout);
         scannerPaneUpLeftLayout.setHorizontalGroup(
             scannerPaneUpLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpLeftLayout.createSequentialGroup()
-                .addGap(0, 183, Short.MAX_VALUE)
+                .addGap(0, 197, Short.MAX_VALUE)
                 .addComponent(removeUpLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpLeftLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(sizeLabelImage)
+                .addContainerGap())
         );
         scannerPaneUpLeftLayout.setVerticalGroup(
             scannerPaneUpLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(scannerPaneUpLeftLayout.createSequentialGroup()
                 .addComponent(removeUpLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 220, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
+                .addComponent(sizeLabelImage)
+                .addContainerGap())
         );
 
         scannerPaneUpRight.setMaximumSize(new java.awt.Dimension(240, 259));
@@ -742,11 +756,18 @@ public class MainGui extends javax.swing.JFrame {
             }
         });
 
+        sizeLabelImageUpRight.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        sizeLabelImageUpRight.setForeground(new java.awt.Color(0, 204, 0));
+        sizeLabelImageUpRight.setText("Tamaño");
+
         javax.swing.GroupLayout scannerPaneUpRightLayout = new javax.swing.GroupLayout(scannerPaneUpRight);
         scannerPaneUpRight.setLayout(scannerPaneUpRightLayout);
         scannerPaneUpRightLayout.setHorizontalGroup(
             scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 240, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpRightLayout.createSequentialGroup()
+                .addContainerGap(174, Short.MAX_VALUE)
+                .addComponent(sizeLabelImageUpRight)
+                .addContainerGap())
             .addGroup(scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpRightLayout.createSequentialGroup()
                     .addGap(0, 197, Short.MAX_VALUE)
@@ -754,7 +775,10 @@ public class MainGui extends javax.swing.JFrame {
         );
         scannerPaneUpRightLayout.setVerticalGroup(
             scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 259, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpRightLayout.createSequentialGroup()
+                .addContainerGap(231, Short.MAX_VALUE)
+                .addComponent(sizeLabelImageUpRight)
+                .addContainerGap())
             .addGroup(scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(scannerPaneUpRightLayout.createSequentialGroup()
                     .addComponent(removeUpRightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -770,11 +794,18 @@ public class MainGui extends javax.swing.JFrame {
         removeDownRightButton.setMinimumSize(new java.awt.Dimension(39, 39));
         removeDownRightButton.setPreferredSize(new java.awt.Dimension(39, 39));
 
+        sizeLabelImageDownRight.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        sizeLabelImageDownRight.setForeground(new java.awt.Color(0, 204, 0));
+        sizeLabelImageDownRight.setText("Tamaño");
+
         javax.swing.GroupLayout scannerPaneDownRightLayout = new javax.swing.GroupLayout(scannerPaneDownRight);
         scannerPaneDownRight.setLayout(scannerPaneDownRightLayout);
         scannerPaneDownRightLayout.setHorizontalGroup(
             scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 240, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownRightLayout.createSequentialGroup()
+                .addContainerGap(174, Short.MAX_VALUE)
+                .addComponent(sizeLabelImageDownRight)
+                .addContainerGap())
             .addGroup(scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownRightLayout.createSequentialGroup()
                     .addGap(0, 176, Short.MAX_VALUE)
@@ -782,7 +813,10 @@ public class MainGui extends javax.swing.JFrame {
         );
         scannerPaneDownRightLayout.setVerticalGroup(
             scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 259, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownRightLayout.createSequentialGroup()
+                .addContainerGap(231, Short.MAX_VALUE)
+                .addComponent(sizeLabelImageDownRight)
+                .addContainerGap())
             .addGroup(scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(scannerPaneDownRightLayout.createSequentialGroup()
                     .addComponent(removeDownRightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -797,11 +831,18 @@ public class MainGui extends javax.swing.JFrame {
         removeDownLeftButton.setBorder(null);
         removeDownLeftButton.setPreferredSize(new java.awt.Dimension(39, 39));
 
+        sizeLabelImageDownLeft.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        sizeLabelImageDownLeft.setForeground(new java.awt.Color(0, 204, 0));
+        sizeLabelImageDownLeft.setText("Tamaño");
+
         javax.swing.GroupLayout scannerPaneDownLeftLayout = new javax.swing.GroupLayout(scannerPaneDownLeft);
         scannerPaneDownLeft.setLayout(scannerPaneDownLeftLayout);
         scannerPaneDownLeftLayout.setHorizontalGroup(
             scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 240, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownLeftLayout.createSequentialGroup()
+                .addContainerGap(174, Short.MAX_VALUE)
+                .addComponent(sizeLabelImageDownLeft)
+                .addContainerGap())
             .addGroup(scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownLeftLayout.createSequentialGroup()
                     .addGap(0, 185, Short.MAX_VALUE)
@@ -809,7 +850,10 @@ public class MainGui extends javax.swing.JFrame {
         );
         scannerPaneDownLeftLayout.setVerticalGroup(
             scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 259, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownLeftLayout.createSequentialGroup()
+                .addContainerGap(231, Short.MAX_VALUE)
+                .addComponent(sizeLabelImageDownLeft)
+                .addContainerGap())
             .addGroup(scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(scannerPaneDownLeftLayout.createSequentialGroup()
                     .addComponent(removeDownLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1581,6 +1625,10 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JPanel scannerPaneUpLeft;
     private javax.swing.JPanel scannerPaneUpRight;
     private javax.swing.JLabel selectExpedientLabel;
+    private javax.swing.JLabel sizeLabelImage;
+    private javax.swing.JLabel sizeLabelImageDownLeft;
+    private javax.swing.JLabel sizeLabelImageDownRight;
+    private javax.swing.JLabel sizeLabelImageUpRight;
     private javax.swing.JPanel templateContainerCardPane;
     private javax.swing.JButton templateCreationButton;
     private javax.swing.JLabel templateCreationButtonLabel;

@@ -36,6 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Expedient.findByDescription", query = "SELECT e FROM Expedient e WHERE e.description = :description"),
     @NamedQuery(name = "Expedient.findByEstate", query = "SELECT e FROM Expedient e WHERE e.estate = :estate")})
 public class Expedient implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +56,7 @@ public class Expedient implements Serializable {
     private Collection<Document> documentCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "expedient")
     private Collection<ExpedientClient> expedientClientCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "expedient")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkExpedient")
     private Collection<Image> imageCollection;
 
     public Expedient() {
@@ -150,8 +151,10 @@ public class Expedient implements Serializable {
         }
         return true;
     }
+
     @Override
     public String toString() {
-        return name;
+        return "entities.Expedient[ idExpedient=" + idExpedient + " ]";
     }
+
 }

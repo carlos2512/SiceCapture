@@ -8,7 +8,9 @@ import controller.DocumentDataJpaController;
 import controller.DocumentJpaController;
 import controller.ExpedientClientJpaController;
 import controller.ExpedientJpaController;
+import controller.ImageJpaController;
 import controller.exceptions.NonexistentEntityException;
+import core.DirectoryHandler;
 import core.ScannerBackground;
 import entities.Client;
 import entities.ClientData;
@@ -19,20 +21,22 @@ import entities.DocumentData;
 import entities.Expedient;
 import entities.ExpedientClient;
 import entities.ExpedientClientPK;
+import entities.Image;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Label;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,10 +47,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.PatternSyntaxException;
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -102,6 +108,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private CheckTreeManager checkTreeManager;
     private ClientJpaController clientController;
     private DocumentDataJpaController documentDataController;
+    private ImageJpaController imageController;
     private DataTypeJpaController dataTypeController;
     private Expedient selectedExpedientInCreationPanel;
     private JDialog registPersonDialog;
@@ -195,7 +202,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             this.repeatDocumentPaneCheckBox.setSelected(false);
         }
 
-        if (selectedDocument.getHasResolution() != null &&  selectedDocument.getHasResolution() == 1) {
+        if (selectedDocument.getHasResolution() != null && selectedDocument.getHasResolution() == 1) {
             this.resolutionShowCheckBox.setSelected(true);
         } else {
             this.resolutionShowCheckBox.setSelected(false);
@@ -1113,14 +1120,16 @@ public class MainCustomGui extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
-
         creationExpedientState = true;
         documentsReceptionState = false;
-
         templateCreationButton = new javax.swing.JButton();
         templateCreationButtonLabel = new javax.swing.JLabel();
         templateCreationLayoutCardPane = new javax.swing.JPanel();
         templateContainerCardPane = new javax.swing.JPanel();
+        sizeLabelImageDownLeft = new javax.swing.JLabel();
+        sizeLabelImageDownRight = new javax.swing.JLabel();
+        sizeLabelImageUpRight = new javax.swing.JLabel();
+        sizeLabelImage = new javax.swing.JLabel();
         templateCreationIcon = new javax.swing.JLabel();
         templateCreationLabel = new javax.swing.JLabel();
         templateCreationInfo = new javax.swing.JLabel();
@@ -1146,7 +1155,6 @@ public class MainCustomGui extends javax.swing.JFrame {
         uploadImageLabel = new javax.swing.JLabel();
         indextionLayoutCardPane = new javax.swing.JPanel();
         documentReceptionNameClient = new javax.swing.JLabel();
-
         receptionIcon = new javax.swing.JLabel();
         selectExpedientLabel = new javax.swing.JLabel();
         documentReceptionLabel = new javax.swing.JLabel();
@@ -1204,6 +1212,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         mainTemplateOption = new javax.swing.JMenu();
         menuItemScannerSelection = new javax.swing.JMenuItem();
         mainMenuConfiguration = new javax.swing.JMenu();
+        menuItemDirectory = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -1539,19 +1548,29 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
 
+        sizeLabelImage.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        sizeLabelImage.setForeground(new java.awt.Color(3, 166, 224));
+        sizeLabelImage.setText("Tamaño");
+
         javax.swing.GroupLayout scannerPaneUpLeftLayout = new javax.swing.GroupLayout(scannerPaneUpLeft);
         scannerPaneUpLeft.setLayout(scannerPaneUpLeftLayout);
         scannerPaneUpLeftLayout.setHorizontalGroup(
                 scannerPaneUpLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpLeftLayout.createSequentialGroup()
-                        .addGap(0, 183, Short.MAX_VALUE)
+                        .addGap(0, 197, Short.MAX_VALUE)
                         .addComponent(removeUpLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpLeftLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(sizeLabelImage)
+                        .addContainerGap())
         );
         scannerPaneUpLeftLayout.setVerticalGroup(
                 scannerPaneUpLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(scannerPaneUpLeftLayout.createSequentialGroup()
                         .addComponent(removeUpLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 220, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
+                        .addComponent(sizeLabelImage)
+                        .addContainerGap())
         );
         scannerPaneUpRight.setMaximumSize(new java.awt.Dimension(240, 259));
         scannerPaneUpRight.setMinimumSize(new java.awt.Dimension(240, 259));
@@ -1565,11 +1584,18 @@ public class MainCustomGui extends javax.swing.JFrame {
             }
         });
 
+        sizeLabelImageUpRight.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        sizeLabelImageUpRight.setForeground(new java.awt.Color(3, 166, 224));
+        sizeLabelImageUpRight.setText("Tamaño");
+
         javax.swing.GroupLayout scannerPaneUpRightLayout = new javax.swing.GroupLayout(scannerPaneUpRight);
         scannerPaneUpRight.setLayout(scannerPaneUpRightLayout);
         scannerPaneUpRightLayout.setHorizontalGroup(
                 scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 240, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpRightLayout.createSequentialGroup()
+                        .addContainerGap(174, Short.MAX_VALUE)
+                        .addComponent(sizeLabelImageUpRight)
+                        .addContainerGap())
                 .addGroup(scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpRightLayout.createSequentialGroup()
                                 .addGap(0, 197, Short.MAX_VALUE)
@@ -1577,7 +1603,10 @@ public class MainCustomGui extends javax.swing.JFrame {
         );
         scannerPaneUpRightLayout.setVerticalGroup(
                 scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 259, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneUpRightLayout.createSequentialGroup()
+                        .addContainerGap(231, Short.MAX_VALUE)
+                        .addComponent(sizeLabelImageUpRight)
+                        .addContainerGap())
                 .addGroup(scannerPaneUpRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(scannerPaneUpRightLayout.createSequentialGroup()
                                 .addComponent(removeUpRightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1595,11 +1624,18 @@ public class MainCustomGui extends javax.swing.JFrame {
                 removeDownRightButtonActionPerformed(evt);
             }
         });
+        sizeLabelImageDownRight.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        sizeLabelImageDownRight.setForeground(new java.awt.Color(3, 166, 224));
+        sizeLabelImageDownRight.setText("Tamaño");
+
         javax.swing.GroupLayout scannerPaneDownRightLayout = new javax.swing.GroupLayout(scannerPaneDownRight);
         scannerPaneDownRight.setLayout(scannerPaneDownRightLayout);
         scannerPaneDownRightLayout.setHorizontalGroup(
                 scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 240, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownRightLayout.createSequentialGroup()
+                        .addContainerGap(174, Short.MAX_VALUE)
+                        .addComponent(sizeLabelImageDownRight)
+                        .addContainerGap())
                 .addGroup(scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownRightLayout.createSequentialGroup()
                                 .addGap(0, 176, Short.MAX_VALUE)
@@ -1607,7 +1643,10 @@ public class MainCustomGui extends javax.swing.JFrame {
         );
         scannerPaneDownRightLayout.setVerticalGroup(
                 scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 259, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownRightLayout.createSequentialGroup()
+                        .addContainerGap(231, Short.MAX_VALUE)
+                        .addComponent(sizeLabelImageDownRight)
+                        .addContainerGap())
                 .addGroup(scannerPaneDownRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(scannerPaneDownRightLayout.createSequentialGroup()
                                 .addComponent(removeDownRightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1625,11 +1664,18 @@ public class MainCustomGui extends javax.swing.JFrame {
                 removeDownLeftButtonActionPerformed(evt);
             }
         });
+        sizeLabelImageDownLeft.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        sizeLabelImageDownLeft.setForeground(new java.awt.Color(3, 166, 224));
+        sizeLabelImageDownLeft.setText("Tamaño");
+
         javax.swing.GroupLayout scannerPaneDownLeftLayout = new javax.swing.GroupLayout(scannerPaneDownLeft);
         scannerPaneDownLeft.setLayout(scannerPaneDownLeftLayout);
         scannerPaneDownLeftLayout.setHorizontalGroup(
                 scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 240, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownLeftLayout.createSequentialGroup()
+                        .addContainerGap(174, Short.MAX_VALUE)
+                        .addComponent(sizeLabelImageDownLeft)
+                        .addContainerGap())
                 .addGroup(scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownLeftLayout.createSequentialGroup()
                                 .addGap(0, 185, Short.MAX_VALUE)
@@ -1637,7 +1683,10 @@ public class MainCustomGui extends javax.swing.JFrame {
         );
         scannerPaneDownLeftLayout.setVerticalGroup(
                 scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 259, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scannerPaneDownLeftLayout.createSequentialGroup()
+                        .addContainerGap(231, Short.MAX_VALUE)
+                        .addComponent(sizeLabelImageDownLeft)
+                        .addContainerGap())
                 .addGroup(scannerPaneDownLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(scannerPaneDownLeftLayout.createSequentialGroup()
                                 .addComponent(removeDownLeftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2000,6 +2049,13 @@ public class MainCustomGui extends javax.swing.JFrame {
                 scannerSelectionAction(evt);
             }
         });
+        menuItemDirectory.setText("Seleccionar Directorio");
+        menuItemDirectory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                directorySelectionAction(evt);
+            }
+        });
+        mainMenuConfiguration.add(menuItemDirectory);
         mainMenuConfiguration.add(menuItemScannerSelection);
 
         mainBarMenu.add(mainMenuConfiguration);
@@ -2677,11 +2733,52 @@ public class MainCustomGui extends javax.swing.JFrame {
         checkTreeManager.automaticSelectionByClient();
     }
 
+    private boolean exceedMaxSize() {
+        Integer mazSize = selectedDocumentFromTree.getMaxImageSize();
+        if (scannerPaneUpLeft.isImageSelected()) {
+            return true;
+        }
+        if (scannerPaneUpRight.isImageSelected()) {
+            return true;
+        }
+        if (scannerPaneDownLeft.isImageSelected()) {
+            return true;
+        }
+        if (scannerPaneDownRight.isImageSelected()) {
+            return true;
+        }
+        return false;
+    }
+
+    private Integer getNumberImageForIndextion() {
+        Integer number = 0;
+        if (scannerPaneUpLeft.isImageSelected()) {
+            number++;
+        }
+        if (scannerPaneUpRight.isImageSelected()) {
+            number++;
+        }
+        if (scannerPaneDownLeft.isImageSelected()) {
+            number++;
+        }
+        if (scannerPaneDownRight.isImageSelected()) {
+            number++;
+        }
+        return number;
+    }
+
     private void indexImagesAction(java.awt.event.ActionEvent evt) {
+        DirectoryHandler drhandler = new DirectoryHandler();
+        String imagesDirectory = drhandler.getDirectory("imagesDirectory");
         //You have to choose one image at least
         boolean firstCondition = true;
         //You have to choose one document
         boolean secondCondition = true;
+
+        boolean thirdCondition = true;
+
+        boolean fourthCondition = true;
+
         SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
         if (!this.scannerPaneDownLeft.isImageSelected() && !scannerPaneDownRight.isImageSelected() && !scannerPaneUpRight.isImageSelected() && !scannerPaneUpLeft.isImageSelected()) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar almenos una Imagen para indexar");
@@ -2689,8 +2786,185 @@ public class MainCustomGui extends javax.swing.JFrame {
         } else if (this.selectedDocumentFromTree == null) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar el documento donde se quiere indexar las imagenes");
             secondCondition = false;
+        } else if (imagesDirectory == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un directorio en el menú configuración");
+            thirdCondition = false;
+        } else if (this.getNumberImageForIndextion() > 1 && selectedDocumentFromTree.getCanRepeat() == 0) {
+            JOptionPane.showMessageDialog(this, "El documento no permite imágenes duplicadas");
+            fourthCondition = false;
+        } else if (this.getNumberImageForIndextion() > 1 && selectedDocumentFromTree.getCanRepeat() == 0) {
+            JOptionPane.showMessageDialog(this, "El documento no permite imágenes duplicadas");
+            fourthCondition = false;
         }
-        if (firstCondition && secondCondition) {
+        if (firstCondition && secondCondition && thirdCondition && fourthCondition) {
+            //Verificamos la existencia de la carpeta de meta expedientes
+            //Meta Expedientes
+            String metaExpedientDirectory = imagesDirectory.concat("\\Meta Expedientes");
+            File fileMetaExpedient = new File(metaExpedientDirectory);
+            if (!fileMetaExpedient.exists()) {
+                fileMetaExpedient.mkdir();
+            }
+            String expedientDirectory = metaExpedientDirectory.concat("\\" + expedientClientInProcess.getExpedient().getName().trim());
+            File fileExpedient = new File(expedientDirectory);
+            if (!fileExpedient.exists()) {
+                fileExpedient.mkdir();
+            }
+            String documentDirectory = expedientDirectory.concat("\\" + selectedDocumentFromTree.getName().trim());
+            File fileDocument = new File(documentDirectory);
+            if (!fileDocument.exists()) {
+                fileDocument.mkdir();
+            }
+
+            String clientImageDirectory = documentDirectory.concat("\\" + expedientClientInProcess.getClient().getIdentification().toString().trim());
+            File clientImageFile = new File(clientImageDirectory);
+            if (!clientImageFile.exists()) {
+                clientImageFile.mkdir();
+            }
+            EntityManager em = emf.createEntityManager();
+            List<Image> listImage = imageController.findByExpedientDocumentClient(expedientClientInProcess.getExpedient(), selectedDocumentFromTree, expedientClientInProcess.getClient());
+            if (listImage != null) {
+                em.getTransaction().begin();
+                for (Image image : listImage) {
+                    File file = new File(image.getPath());
+                    try {
+                        DirectoryHandler.delete(file);
+                        imageController.destroy(image.getIdImage());
+
+                    } catch (NonexistentEntityException | IOException ex) {
+                        Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                em.getTransaction().commit();
+            }
+
+            if (scannerPaneUpLeft.isImageSelected()) {
+                em.getTransaction().begin();
+                Image image = new Image();
+                image.setFkClient(expedientClientInProcess.getClient());
+                image.setFkDocument(selectedDocumentFromTree);
+                image.setFkExpedient(expedientClientInProcess.getExpedient());
+                image.setDescription("");
+                image.setSize(selectedDocumentFromTree.getMaxImageSize());
+                image.setType("jpg");
+                image.setRegistrationData(Calendar.getInstance().getTime());
+                image.setLastModification(Calendar.getInstance().getTime());
+                image.setName("");
+                image.setPath(clientImageDirectory);
+                imageController.create(image);
+                em.getTransaction().commit();
+                String nameImagePath = clientImageDirectory.concat("\\" + image.getIdImage() + ".jpg");
+                File file = new File(nameImagePath);
+                BufferedImage selectedImage = scannerPaneUpLeft.getSelectedImage();
+                try {
+                    ImageIO.write(selectedImage, "jpg", file);  // ignore returned boolean
+                } catch (IOException e) {
+                    System.out.println("Write error for " + file.getPath()
+                            + ": " + e.getMessage());
+                }
+                image.setPath(nameImagePath);
+                try {
+                    imageController.edit(image);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            if (scannerPaneUpRight.isImageSelected()) {
+                em.getTransaction().begin();
+                Image image = new Image();
+                image.setFkClient(expedientClientInProcess.getClient());
+                image.setFkDocument(selectedDocumentFromTree);
+                image.setFkExpedient(expedientClientInProcess.getExpedient());
+                image.setDescription("");
+                image.setSize(selectedDocumentFromTree.getMaxImageSize());
+                image.setType("jpg");
+                image.setRegistrationData(Calendar.getInstance().getTime());
+                image.setLastModification(Calendar.getInstance().getTime());
+                image.setName("");
+                image.setPath(clientImageDirectory);
+                imageController.create(image);
+                em.getTransaction().commit();
+                String nameImagePath = clientImageDirectory.concat("\\" + image.getIdImage() + ".jpg");
+                File file = new File(nameImagePath);
+                BufferedImage selectedImage = scannerPaneUpRight.getSelectedImage();
+                try {
+                    ImageIO.write(selectedImage, "jpg", file);  // ignore returned boolean
+                } catch (IOException e) {
+                    System.out.println("Write error for " + file.getPath()
+                            + ": " + e.getMessage());
+                }
+                image.setPath(nameImagePath);
+                try {
+                    imageController.edit(image);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            if (scannerPaneDownLeft.isImageSelected()) {
+                em.getTransaction().begin();
+                Image image = new Image();
+                image.setFkClient(expedientClientInProcess.getClient());
+                image.setFkDocument(selectedDocumentFromTree);
+                image.setFkExpedient(expedientClientInProcess.getExpedient());
+                image.setDescription("");
+                image.setSize(selectedDocumentFromTree.getMaxImageSize());
+                image.setType("jpg");
+                image.setRegistrationData(Calendar.getInstance().getTime());
+                image.setLastModification(Calendar.getInstance().getTime());
+                image.setName("");
+                image.setPath(clientImageDirectory);
+                imageController.create(image);
+                em.getTransaction().commit();
+                String nameImagePath = clientImageDirectory.concat("\\" + image.getIdImage() + ".jpg");
+                File file = new File(nameImagePath);
+                BufferedImage selectedImage = scannerPaneDownLeft.getSelectedImage();
+                try {
+                    ImageIO.write(selectedImage, "jpg", file);  // ignore returned boolean
+                } catch (IOException e) {
+                    System.out.println("Write error for " + file.getPath()
+                            + ": " + e.getMessage());
+                }
+                image.setPath(nameImagePath);
+                try {
+                    imageController.edit(image);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            if (scannerPaneDownRight.isImageSelected()) {
+                em.getTransaction().begin();
+                Image image = new Image();
+                image.setFkClient(expedientClientInProcess.getClient());
+                image.setFkDocument(selectedDocumentFromTree);
+                image.setFkExpedient(expedientClientInProcess.getExpedient());
+                image.setDescription("");
+                image.setSize(selectedDocumentFromTree.getMaxImageSize());
+                image.setType("jpg");
+                image.setRegistrationData(Calendar.getInstance().getTime());
+                image.setLastModification(Calendar.getInstance().getTime());
+                image.setName("");
+                image.setPath(clientImageDirectory);
+                imageController.create(image);
+                em.getTransaction().commit();
+                String nameImagePath = clientImageDirectory.concat("\\" + image.getIdImage() + ".jpg");
+                File file = new File(nameImagePath);
+                BufferedImage selectedImage = scannerPaneDownRight.getSelectedImage();
+                try {
+                    ImageIO.write(selectedImage, "jpg", file);  // ignore returned boolean
+                } catch (IOException e) {
+                    System.out.println("Write error for " + file.getPath()
+                            + ": " + e.getMessage());
+                }
+                image.setPath(nameImagePath);
+                try {
+                    imageController.edit(image);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
             captureDataDialog = new JDialog();
             documentDataListCurrentCaptureProcess = documentDataController.findByDocument(selectedDocumentFromTree);
             componentList = new ArrayList<>();
@@ -2734,6 +3008,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                     }
                     labelMap.put(documentData.getIdDocumentdata(), new JLabel(documentData.getName()));
                 }
+
                 captureDataDialog.setModal(true);
                 initCreationCaptureDataDialog(captureDataDialog, componentList, labelMap);
                 captureDataDialog.setVisible(true);
@@ -2814,6 +3089,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         clientController = new ClientJpaController(emf);
         clientDataController = new ClientDataJpaController(emf);
         documentDataController = new DocumentDataJpaController(emf);
+        imageController = new ImageJpaController(emf);
     }
 
     private void createExpedientButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2876,6 +3152,29 @@ public class MainCustomGui extends javax.swing.JFrame {
                 return renderer;
             }
         });
+    }
+
+    private void directorySelectionAction(java.awt.event.ActionEvent evt) {
+        DirectoryHandler directoryHandler = new DirectoryHandler();
+        String imagesDirectory = directoryHandler.getDirectory("imagesDirectory");
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Seleccione el directorio");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setApproveButtonText("Seleccionar");
+        if (imagesDirectory == null) {
+            chooser.setCurrentDirectory(new java.io.File(""));
+        } else {
+            chooser.setCurrentDirectory(new java.io.File(imagesDirectory));
+        }
+        chooser.showDialog(this, null);
+        String path = null;
+        if (chooser.getSelectedFile() != null) {
+            path = chooser.getSelectedFile().getAbsolutePath();
+        }
+        if (path != null && !path.equalsIgnoreCase("")) {
+            directoryHandler.addDirectory("imagesDirectory", path);
+
+        }
     }
 
     private void scannerSelectionAction(java.awt.event.ActionEvent evt) {
@@ -3022,18 +3321,22 @@ public class MainCustomGui extends javax.swing.JFrame {
         String mimeType = URLConnection.guessContentTypeFromName(file.getName());
         if (mimeType.equalsIgnoreCase("image/jpeg")) {
             if (!scannerPaneUpLeft.isImageLoaded()) {
+                this.sizeLabelImage.setText(String.valueOf(file.length() / 1000) + "Kb");
                 scannerPaneUpLeft.loadImage(file);
                 scannerPaneUpLeft.setVisible(true);
                 scannerPaneUpLeft.setBorder(javax.swing.BorderFactory.createEtchedBorder());
             } else if (!scannerPaneUpRight.isImageLoaded()) {
+                this.sizeLabelImageUpRight.setText(String.valueOf(file.length() / 1000) + "Kb");
                 scannerPaneUpRight.loadImage(file);
                 scannerPaneUpRight.setVisible(true);
                 scannerPaneUpRight.setBorder(javax.swing.BorderFactory.createEtchedBorder());
             } else if (!scannerPaneDownLeft.isImageLoaded()) {
+                this.sizeLabelImageDownLeft.setText(String.valueOf(file.length() / 1000) + "Kb");
                 scannerPaneDownLeft.loadImage(file);
                 scannerPaneDownLeft.setVisible(true);
                 scannerPaneDownLeft.setBorder(javax.swing.BorderFactory.createEtchedBorder());
             } else if (!scannerPaneDownRight.isImageLoaded()) {
+                this.sizeLabelImageDownRight.setText(String.valueOf(file.length() / 1000) + "Kb");
                 scannerPaneDownRight.loadImage(file);
                 scannerPaneDownRight.setVisible(true);
                 scannerPaneDownRight.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -3077,8 +3380,10 @@ public class MainCustomGui extends javax.swing.JFrame {
             client.setCountry(nationalityTxt.getSelectedItem().toString());
             try {
                 clientController.create(client);
+
             } catch (Exception ex) {
-                Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MainCustomGui.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
 
             List selectedExpedientList = expedientIncludeList.getSelectedValuesList();
@@ -3095,8 +3400,10 @@ public class MainCustomGui extends javax.swing.JFrame {
                     expedientClient.setLastModification(Calendar.getInstance().getTime());
                     try {
                         expedientClientController.create(expedientClient);
+
                     } catch (Exception ex) {
-                        Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(MainCustomGui.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
@@ -3220,11 +3527,53 @@ public class MainCustomGui extends javax.swing.JFrame {
                     captureDataShowDocumentNameLabel.setText(selectedDocument.getName());
                     initShowCaptureData();
                 }
+            } else if (node != null && indexProcessIsActive) {
+                if (node.getUserObject() instanceof Document) {
+                    selectedDocument = (Document) node.getUserObject();
+                    List<Image> imageList = imageController.findByExpedientDocumentClient(expedientClientInProcess.getExpedient(), selectedDocument, expedientClientInProcess.getClient());
+                    if (imageList != null && !imageList.isEmpty()) {
+                        scannerPaneUpLeft.removeImage();
+                        scannerPaneUpRight.removeImage();
+                        scannerPaneDownLeft.removeImage();
+                        scannerPaneDownRight.removeImage();
+                        for (Image image : imageList) {
+                            File file = new File(image.getPath());
+                            if (!scannerPaneUpLeft.isImageLoaded()) {
+                                sizeLabelImage.setText(String.valueOf(file.length() / 1000) + "Kb");
+                                scannerPaneUpLeft.loadImage(file);
+                                scannerPaneUpLeft.setVisible(true);
+                                scannerPaneUpLeft.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+                            } else if (!scannerPaneUpRight.isImageLoaded()) {
+                                sizeLabelImageUpRight.setText(String.valueOf(file.length() / 1000) + "Kb");
+                                scannerPaneUpRight.loadImage(file);
+                                scannerPaneUpRight.setVisible(true);
+                                scannerPaneUpRight.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+                            } else if (!scannerPaneDownLeft.isImageLoaded()) {
+                                sizeLabelImageDownLeft.setText(String.valueOf(file.length() / 1000) + "Kb");
+                                scannerPaneDownLeft.loadImage(file);
+                                scannerPaneDownLeft.setVisible(true);
+                                scannerPaneDownLeft.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+                            } else if (!scannerPaneDownRight.isImageLoaded()) {
+                                sizeLabelImageDownRight.setText(String.valueOf(file.length() / 1000) + "Kb");
+                                scannerPaneDownRight.loadImage(file);
+                                scannerPaneDownRight.setVisible(true);
+                                scannerPaneDownRight.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+                            }
+                        }
+                    } else {
+                        scannerPaneUpLeft.removeImage();
+                        scannerPaneUpRight.removeImage();
+                        scannerPaneDownLeft.removeImage();
+                        scannerPaneDownRight.removeImage();
+                    }
+                    this.desactiveDocumentDataParameterPane();
+                    this.desactiveDocumentParameterPane();
+                }
             }
         }
     }
 
-    // Variables declaration - do not modify  
+    //Variables declaration - do not modify  
     private javax.swing.JList ExpedientDocumentList;
     private javax.swing.JButton cleanExpedientButton;
     private javax.swing.JButton createExpedientButton;
@@ -3234,6 +3583,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JLabel createDocumentTitleLabel;
     private javax.swing.JPanel creationDocumentPane;
     private javax.swing.JScrollPane creationDocumentScroll;
+    private javax.swing.JLabel sizeLabelImage;
     private javax.swing.JTextField descriptionDocumentTxt;
     private javax.swing.JLabel descriptionNameLabel;
     private javax.swing.JCheckBox documentExpireCheckBox;
@@ -3299,6 +3649,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JLabel genericDocumentPaneLabel;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem menuItemScannerSelection;
+    private javax.swing.JMenuItem menuItemDirectory;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
@@ -3390,6 +3741,9 @@ public class MainCustomGui extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JLabel sizeLabelImageDownLeft;
+    private javax.swing.JLabel sizeLabelImageDownRight;
+    private javax.swing.JLabel sizeLabelImageUpRight;
     private javax.swing.JPanel indextionContainerPane;
     private javax.swing.JPanel receptionContainerPane;
     private javax.swing.JTextField nameDataTxt;

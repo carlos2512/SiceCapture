@@ -6,18 +6,18 @@
 package controller;
 
 import controller.exceptions.NonexistentEntityException;
-import controller.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entities.Client;
-import entities.Document;
 import entities.Expedient;
+import entities.Document;
+import entities.Client;
 import entities.Image;
-import entities.ImagePK;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -36,51 +36,40 @@ public class ImageJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Image image) throws PreexistingEntityException, Exception {
-        if (image.getImagePK() == null) {
-            image.setImagePK(new ImagePK());
-        }
-        image.getImagePK().setFkDocument(image.getDocument().getIdDocument());
-        image.getImagePK().setFkExpedient(image.getExpedient().getIdExpedient());
-        image.getImagePK().setFkClient(image.getClient().getIdUser());
+    public void create(Image image) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Client client = image.getClient();
-            if (client != null) {
-                client = em.getReference(client.getClass(), client.getIdUser());
-                image.setClient(client);
+            Expedient fkExpedient = image.getFkExpedient();
+            if (fkExpedient != null) {
+                fkExpedient = em.getReference(fkExpedient.getClass(), fkExpedient.getIdExpedient());
+                image.setFkExpedient(fkExpedient);
             }
-            Document document = image.getDocument();
-            if (document != null) {
-                document = em.getReference(document.getClass(), document.getIdDocument());
-                image.setDocument(document);
+            Document fkDocument = image.getFkDocument();
+            if (fkDocument != null) {
+                fkDocument = em.getReference(fkDocument.getClass(), fkDocument.getIdDocument());
+                image.setFkDocument(fkDocument);
             }
-            Expedient expedient = image.getExpedient();
-            if (expedient != null) {
-                expedient = em.getReference(expedient.getClass(), expedient.getIdExpedient());
-                image.setExpedient(expedient);
+            Client fkClient = image.getFkClient();
+            if (fkClient != null) {
+                fkClient = em.getReference(fkClient.getClass(), fkClient.getIdUser());
+                image.setFkClient(fkClient);
             }
             em.persist(image);
-            if (client != null) {
-                client.getImageCollection().add(image);
-                client = em.merge(client);
+            if (fkExpedient != null) {
+                fkExpedient.getImageCollection().add(image);
+                fkExpedient = em.merge(fkExpedient);
             }
-            if (document != null) {
-                document.getImageCollection().add(image);
-                document = em.merge(document);
+            if (fkDocument != null) {
+                fkDocument.getImageCollection().add(image);
+                fkDocument = em.merge(fkDocument);
             }
-            if (expedient != null) {
-                expedient.getImageCollection().add(image);
-                expedient = em.merge(expedient);
+            if (fkClient != null) {
+                fkClient.getImageCollection().add(image);
+                fkClient = em.merge(fkClient);
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findImage(image.getImagePK()) != null) {
-                throw new PreexistingEntityException("Image " + image + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -88,63 +77,75 @@ public class ImageJpaController implements Serializable {
         }
     }
 
+    public List<Image> findByExpedientDocumentClient(Expedient fkExpedient,Document fkDocument, Client fkClient) {
+        List<Image> imageList = null;
+        try {
+            EntityManager em = getEntityManager();
+            Query query = em.createNamedQuery("Image.findByExpedientDocumentClient", Image.class);
+            query.setParameter("fkExpedient", fkExpedient);
+            query.setParameter("fkDocument", fkDocument);
+            query.setParameter("fkClient", fkClient);
+            imageList =  (List<Image>) query.getResultList();
+        } catch (Exception e) {
+            Logger.getLogger(DocumentJpaController.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return imageList;
+    }
+
     public void edit(Image image) throws NonexistentEntityException, Exception {
-        image.getImagePK().setFkDocument(image.getDocument().getIdDocument());
-        image.getImagePK().setFkExpedient(image.getExpedient().getIdExpedient());
-        image.getImagePK().setFkClient(image.getClient().getIdUser());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Image persistentImage = em.find(Image.class, image.getImagePK());
-            Client clientOld = persistentImage.getClient();
-            Client clientNew = image.getClient();
-            Document documentOld = persistentImage.getDocument();
-            Document documentNew = image.getDocument();
-            Expedient expedientOld = persistentImage.getExpedient();
-            Expedient expedientNew = image.getExpedient();
-            if (clientNew != null) {
-                clientNew = em.getReference(clientNew.getClass(), clientNew.getIdUser());
-                image.setClient(clientNew);
+            Image persistentImage = em.find(Image.class, image.getIdImage());
+            Expedient fkExpedientOld = persistentImage.getFkExpedient();
+            Expedient fkExpedientNew = image.getFkExpedient();
+            Document fkDocumentOld = persistentImage.getFkDocument();
+            Document fkDocumentNew = image.getFkDocument();
+            Client fkClientOld = persistentImage.getFkClient();
+            Client fkClientNew = image.getFkClient();
+            if (fkExpedientNew != null) {
+                fkExpedientNew = em.getReference(fkExpedientNew.getClass(), fkExpedientNew.getIdExpedient());
+                image.setFkExpedient(fkExpedientNew);
             }
-            if (documentNew != null) {
-                documentNew = em.getReference(documentNew.getClass(), documentNew.getIdDocument());
-                image.setDocument(documentNew);
+            if (fkDocumentNew != null) {
+                fkDocumentNew = em.getReference(fkDocumentNew.getClass(), fkDocumentNew.getIdDocument());
+                image.setFkDocument(fkDocumentNew);
             }
-            if (expedientNew != null) {
-                expedientNew = em.getReference(expedientNew.getClass(), expedientNew.getIdExpedient());
-                image.setExpedient(expedientNew);
+            if (fkClientNew != null) {
+                fkClientNew = em.getReference(fkClientNew.getClass(), fkClientNew.getIdUser());
+                image.setFkClient(fkClientNew);
             }
             image = em.merge(image);
-            if (clientOld != null && !clientOld.equals(clientNew)) {
-                clientOld.getImageCollection().remove(image);
-                clientOld = em.merge(clientOld);
+            if (fkExpedientOld != null && !fkExpedientOld.equals(fkExpedientNew)) {
+                fkExpedientOld.getImageCollection().remove(image);
+                fkExpedientOld = em.merge(fkExpedientOld);
             }
-            if (clientNew != null && !clientNew.equals(clientOld)) {
-                clientNew.getImageCollection().add(image);
-                clientNew = em.merge(clientNew);
+            if (fkExpedientNew != null && !fkExpedientNew.equals(fkExpedientOld)) {
+                fkExpedientNew.getImageCollection().add(image);
+                fkExpedientNew = em.merge(fkExpedientNew);
             }
-            if (documentOld != null && !documentOld.equals(documentNew)) {
-                documentOld.getImageCollection().remove(image);
-                documentOld = em.merge(documentOld);
+            if (fkDocumentOld != null && !fkDocumentOld.equals(fkDocumentNew)) {
+                fkDocumentOld.getImageCollection().remove(image);
+                fkDocumentOld = em.merge(fkDocumentOld);
             }
-            if (documentNew != null && !documentNew.equals(documentOld)) {
-                documentNew.getImageCollection().add(image);
-                documentNew = em.merge(documentNew);
+            if (fkDocumentNew != null && !fkDocumentNew.equals(fkDocumentOld)) {
+                fkDocumentNew.getImageCollection().add(image);
+                fkDocumentNew = em.merge(fkDocumentNew);
             }
-            if (expedientOld != null && !expedientOld.equals(expedientNew)) {
-                expedientOld.getImageCollection().remove(image);
-                expedientOld = em.merge(expedientOld);
+            if (fkClientOld != null && !fkClientOld.equals(fkClientNew)) {
+                fkClientOld.getImageCollection().remove(image);
+                fkClientOld = em.merge(fkClientOld);
             }
-            if (expedientNew != null && !expedientNew.equals(expedientOld)) {
-                expedientNew.getImageCollection().add(image);
-                expedientNew = em.merge(expedientNew);
+            if (fkClientNew != null && !fkClientNew.equals(fkClientOld)) {
+                fkClientNew.getImageCollection().add(image);
+                fkClientNew = em.merge(fkClientNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                ImagePK id = image.getImagePK();
+                Integer id = image.getIdImage();
                 if (findImage(id) == null) {
                     throw new NonexistentEntityException("The image with id " + id + " no longer exists.");
                 }
@@ -157,7 +158,7 @@ public class ImageJpaController implements Serializable {
         }
     }
 
-    public void destroy(ImagePK id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -165,24 +166,24 @@ public class ImageJpaController implements Serializable {
             Image image;
             try {
                 image = em.getReference(Image.class, id);
-                image.getImagePK();
+                image.getIdImage();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The image with id " + id + " no longer exists.", enfe);
             }
-            Client client = image.getClient();
-            if (client != null) {
-                client.getImageCollection().remove(image);
-                client = em.merge(client);
+            Expedient fkExpedient = image.getFkExpedient();
+            if (fkExpedient != null) {
+                fkExpedient.getImageCollection().remove(image);
+                fkExpedient = em.merge(fkExpedient);
             }
-            Document document = image.getDocument();
-            if (document != null) {
-                document.getImageCollection().remove(image);
-                document = em.merge(document);
+            Document fkDocument = image.getFkDocument();
+            if (fkDocument != null) {
+                fkDocument.getImageCollection().remove(image);
+                fkDocument = em.merge(fkDocument);
             }
-            Expedient expedient = image.getExpedient();
-            if (expedient != null) {
-                expedient.getImageCollection().remove(image);
-                expedient = em.merge(expedient);
+            Client fkClient = image.getFkClient();
+            if (fkClient != null) {
+                fkClient.getImageCollection().remove(image);
+                fkClient = em.merge(fkClient);
             }
             em.remove(image);
             em.getTransaction().commit();
@@ -217,7 +218,7 @@ public class ImageJpaController implements Serializable {
         }
     }
 
-    public Image findImage(ImagePK id) {
+    public Image findImage(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Image.class, id);
@@ -238,5 +239,5 @@ public class ImageJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

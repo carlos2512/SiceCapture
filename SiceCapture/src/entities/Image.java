@@ -9,8 +9,10 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -29,25 +31,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Image.findAll", query = "SELECT i FROM Image i"),
-    @NamedQuery(name = "Image.findByIdImage", query = "SELECT i FROM Image i WHERE i.imagePK.idImage = :idImage"),
-    @NamedQuery(name = "Image.findByCode", query = "SELECT i FROM Image i WHERE i.code = :code"),
+    @NamedQuery(name = "Image.findByIdImage", query = "SELECT i FROM Image i WHERE i.idImage = :idImage"),
     @NamedQuery(name = "Image.findByName", query = "SELECT i FROM Image i WHERE i.name = :name"),
     @NamedQuery(name = "Image.findByDescription", query = "SELECT i FROM Image i WHERE i.description = :description"),
     @NamedQuery(name = "Image.findByPath", query = "SELECT i FROM Image i WHERE i.path = :path"),
-    @NamedQuery(name = "Image.findByFkExpedient", query = "SELECT i FROM Image i WHERE i.imagePK.fkExpedient = :fkExpedient"),
-    @NamedQuery(name = "Image.findByFkDocument", query = "SELECT i FROM Image i WHERE i.imagePK.fkDocument = :fkDocument"),
-    @NamedQuery(name = "Image.findByFkClient", query = "SELECT i FROM Image i WHERE i.imagePK.fkClient = :fkClient"),
     @NamedQuery(name = "Image.findBySize", query = "SELECT i FROM Image i WHERE i.size = :size"),
+    @NamedQuery(name = "Image.findByExpedientDocumentClient", query = "SELECT i FROM Image i WHERE i.fkExpedient = :fkExpedient AND i.fkDocument = :fkDocument AND i.fkClient = :fkClient"),
     @NamedQuery(name = "Image.findByType", query = "SELECT i FROM Image i WHERE i.type = :type"),
     @NamedQuery(name = "Image.findByLastModification", query = "SELECT i FROM Image i WHERE i.lastModification = :lastModification"),
     @NamedQuery(name = "Image.findByRegistrationData", query = "SELECT i FROM Image i WHERE i.registrationData = :registrationData")})
 public class Image implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected ImagePK imagePK;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "code")
-    private String code;
+    @Column(name = "idImage")
+    private Integer idImage;
     @Basic(optional = false)
     @Column(name = "name")
     private String name;
@@ -71,26 +71,25 @@ public class Image implements Serializable {
     @Column(name = "registration_data")
     @Temporal(TemporalType.DATE)
     private Date registrationData;
-    @JoinColumn(name = "fk_client", referencedColumnName = "idUser", insertable = false, updatable = false)
+    @JoinColumn(name = "fk_expedient", referencedColumnName = "idExpedient")
     @ManyToOne(optional = false)
-    private Client client;
-    @JoinColumn(name = "fk_document", referencedColumnName = "idDocument", insertable = false, updatable = false)
+    private Expedient fkExpedient;
+    @JoinColumn(name = "fk_document", referencedColumnName = "idDocument")
     @ManyToOne(optional = false)
-    private Document document;
-    @JoinColumn(name = "fk_expedient", referencedColumnName = "idExpedient", insertable = false, updatable = false)
+    private Document fkDocument;
+    @JoinColumn(name = "fk_client", referencedColumnName = "idUser")
     @ManyToOne(optional = false)
-    private Expedient expedient;
+    private Client fkClient;
 
     public Image() {
     }
 
-    public Image(ImagePK imagePK) {
-        this.imagePK = imagePK;
+    public Image(Integer idImage) {
+        this.idImage = idImage;
     }
 
-    public Image(ImagePK imagePK, String code, String name, String description, String path, int size, String type, Date lastModification, Date registrationData) {
-        this.imagePK = imagePK;
-        this.code = code;
+    public Image(Integer idImage, String name, String description, String path, int size, String type, Date lastModification, Date registrationData) {
+        this.idImage = idImage;
         this.name = name;
         this.description = description;
         this.path = path;
@@ -100,24 +99,12 @@ public class Image implements Serializable {
         this.registrationData = registrationData;
     }
 
-    public Image(int idImage, int fkExpedient, int fkDocument, int fkClient) {
-        this.imagePK = new ImagePK(idImage, fkExpedient, fkDocument, fkClient);
+    public Integer getIdImage() {
+        return idImage;
     }
 
-    public ImagePK getImagePK() {
-        return imagePK;
-    }
-
-    public void setImagePK(ImagePK imagePK) {
-        this.imagePK = imagePK;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public void setIdImage(Integer idImage) {
+        this.idImage = idImage;
     }
 
     public String getName() {
@@ -176,34 +163,34 @@ public class Image implements Serializable {
         this.registrationData = registrationData;
     }
 
-    public Client getClient() {
-        return client;
+    public Expedient getFkExpedient() {
+        return fkExpedient;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setFkExpedient(Expedient fkExpedient) {
+        this.fkExpedient = fkExpedient;
     }
 
-    public Document getDocument() {
-        return document;
+    public Document getFkDocument() {
+        return fkDocument;
     }
 
-    public void setDocument(Document document) {
-        this.document = document;
+    public void setFkDocument(Document fkDocument) {
+        this.fkDocument = fkDocument;
     }
 
-    public Expedient getExpedient() {
-        return expedient;
+    public Client getFkClient() {
+        return fkClient;
     }
 
-    public void setExpedient(Expedient expedient) {
-        this.expedient = expedient;
+    public void setFkClient(Client fkClient) {
+        this.fkClient = fkClient;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (imagePK != null ? imagePK.hashCode() : 0);
+        hash += (idImage != null ? idImage.hashCode() : 0);
         return hash;
     }
 
@@ -214,7 +201,7 @@ public class Image implements Serializable {
             return false;
         }
         Image other = (Image) object;
-        if ((this.imagePK == null && other.imagePK != null) || (this.imagePK != null && !this.imagePK.equals(other.imagePK))) {
+        if ((this.idImage == null && other.idImage != null) || (this.idImage != null && !this.idImage.equals(other.idImage))) {
             return false;
         }
         return true;
@@ -222,7 +209,7 @@ public class Image implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Image[ imagePK=" + imagePK + " ]";
+        return "sds.Image[ idImage=" + idImage + " ]";
     }
-    
+
 }

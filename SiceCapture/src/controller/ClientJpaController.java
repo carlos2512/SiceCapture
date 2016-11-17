@@ -59,7 +59,7 @@ public class ClientJpaController implements Serializable {
             client.setExpedientClientCollection(attachedExpedientClientCollection);
             Collection<Image> attachedImageCollection = new ArrayList<Image>();
             for (Image imageCollectionImageToAttach : client.getImageCollection()) {
-                imageCollectionImageToAttach = em.getReference(imageCollectionImageToAttach.getClass(), imageCollectionImageToAttach.getImagePK());
+                imageCollectionImageToAttach = em.getReference(imageCollectionImageToAttach.getClass(), imageCollectionImageToAttach.getIdImage());
                 attachedImageCollection.add(imageCollectionImageToAttach);
             }
             client.setImageCollection(attachedImageCollection);
@@ -80,12 +80,12 @@ public class ClientJpaController implements Serializable {
                 }
             }
             for (Image imageCollectionImage : client.getImageCollection()) {
-                Client oldClientOfImageCollectionImage = imageCollectionImage.getClient();
-                imageCollectionImage.setClient(client);
+                Client oldFkClientOfImageCollectionImage = imageCollectionImage.getFkClient();
+                imageCollectionImage.setFkClient(client);
                 imageCollectionImage = em.merge(imageCollectionImage);
-                if (oldClientOfImageCollectionImage != null) {
-                    oldClientOfImageCollectionImage.getImageCollection().remove(imageCollectionImage);
-                    oldClientOfImageCollectionImage = em.merge(oldClientOfImageCollectionImage);
+                if (oldFkClientOfImageCollectionImage != null) {
+                    oldFkClientOfImageCollectionImage.getImageCollection().remove(imageCollectionImage);
+                    oldFkClientOfImageCollectionImage = em.merge(oldFkClientOfImageCollectionImage);
                 }
             }
             for (ClientData clientDataCollectionClientData : client.getClientDataCollection()) {
@@ -131,7 +131,7 @@ public class ClientJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Image " + imageCollectionOldImage + " since its client field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Image " + imageCollectionOldImage + " since its fkClient field is not nullable.");
                 }
             }
             for (ClientData clientDataCollectionOldClientData : clientDataCollectionOld) {
@@ -154,7 +154,7 @@ public class ClientJpaController implements Serializable {
             client.setExpedientClientCollection(expedientClientCollectionNew);
             Collection<Image> attachedImageCollectionNew = new ArrayList<Image>();
             for (Image imageCollectionNewImageToAttach : imageCollectionNew) {
-                imageCollectionNewImageToAttach = em.getReference(imageCollectionNewImageToAttach.getClass(), imageCollectionNewImageToAttach.getImagePK());
+                imageCollectionNewImageToAttach = em.getReference(imageCollectionNewImageToAttach.getClass(), imageCollectionNewImageToAttach.getIdImage());
                 attachedImageCollectionNew.add(imageCollectionNewImageToAttach);
             }
             imageCollectionNew = attachedImageCollectionNew;
@@ -180,12 +180,12 @@ public class ClientJpaController implements Serializable {
             }
             for (Image imageCollectionNewImage : imageCollectionNew) {
                 if (!imageCollectionOld.contains(imageCollectionNewImage)) {
-                    Client oldClientOfImageCollectionNewImage = imageCollectionNewImage.getClient();
-                    imageCollectionNewImage.setClient(client);
+                    Client oldFkClientOfImageCollectionNewImage = imageCollectionNewImage.getFkClient();
+                    imageCollectionNewImage.setFkClient(client);
                     imageCollectionNewImage = em.merge(imageCollectionNewImage);
-                    if (oldClientOfImageCollectionNewImage != null && !oldClientOfImageCollectionNewImage.equals(client)) {
-                        oldClientOfImageCollectionNewImage.getImageCollection().remove(imageCollectionNewImage);
-                        oldClientOfImageCollectionNewImage = em.merge(oldClientOfImageCollectionNewImage);
+                    if (oldFkClientOfImageCollectionNewImage != null && !oldFkClientOfImageCollectionNewImage.equals(client)) {
+                        oldFkClientOfImageCollectionNewImage.getImageCollection().remove(imageCollectionNewImage);
+                        oldFkClientOfImageCollectionNewImage = em.merge(oldFkClientOfImageCollectionNewImage);
                     }
                 }
             }
@@ -242,7 +242,7 @@ public class ClientJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Client (" + client + ") cannot be destroyed since the Image " + imageCollectionOrphanCheckImage + " in its imageCollection field has a non-nullable client field.");
+                illegalOrphanMessages.add("This Client (" + client + ") cannot be destroyed since the Image " + imageCollectionOrphanCheckImage + " in its imageCollection field has a non-nullable fkClient field.");
             }
             Collection<ClientData> clientDataCollectionOrphanCheck = client.getClientDataCollection();
             for (ClientData clientDataCollectionOrphanCheckClientData : clientDataCollectionOrphanCheck) {

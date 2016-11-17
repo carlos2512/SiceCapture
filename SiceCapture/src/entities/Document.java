@@ -37,7 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Document.findByName", query = "SELECT d FROM Document d WHERE UPPER(d.name) = :name"),
     @NamedQuery(name = "Document.findByDescription", query = "SELECT d FROM Document d WHERE d.description = :description")})
 public class Document implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,7 +73,7 @@ public class Document implements Serializable {
     private Collection<DocumentParameter> documentParameterCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkDocument")
     private Collection<DocumentData> documentDataCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "document")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkDocument")
     private Collection<Image> imageCollection;
 
     public Document() {
@@ -91,22 +90,6 @@ public class Document implements Serializable {
         this.canRepeat = canRepeat;
         this.isRequired = isRequired;
         this.canExpire = canExpire;
-    }
-
-    public Integer getHasResolution() {
-        return hasResolution;
-    }
-
-    public void setHasResolution(Integer hasResolution) {
-        this.hasResolution = hasResolution;
-    }
-
-    public String getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(String resolution) {
-        this.resolution = resolution;
     }
 
     public Integer getIdDocument() {
@@ -163,6 +146,22 @@ public class Document implements Serializable {
 
     public void setCanExpire(int canExpire) {
         this.canExpire = canExpire;
+    }
+
+    public Integer getHasResolution() {
+        return hasResolution;
+    }
+
+    public void setHasResolution(Integer hasResolution) {
+        this.hasResolution = hasResolution;
+    }
+
+    public String getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(String resolution) {
+        this.resolution = resolution;
     }
 
     @XmlTransient
@@ -223,7 +222,7 @@ public class Document implements Serializable {
 
     @Override
     public String toString() {
-        return name;
+        return "entities.Document[ idDocument=" + idDocument + " ]";
     }
 
 }

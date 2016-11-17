@@ -19,7 +19,6 @@ import java.util.Collection;
 import entities.DocumentParameter;
 import entities.DocumentData;
 import entities.Image;
-import gui.MainCustomGui;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,7 +77,7 @@ public class DocumentJpaController implements Serializable {
             document.setDocumentDataCollection(attachedDocumentDataCollection);
             Collection<Image> attachedImageCollection = new ArrayList<Image>();
             for (Image imageCollectionImageToAttach : document.getImageCollection()) {
-                imageCollectionImageToAttach = em.getReference(imageCollectionImageToAttach.getClass(), imageCollectionImageToAttach.getImagePK());
+                imageCollectionImageToAttach = em.getReference(imageCollectionImageToAttach.getClass(), imageCollectionImageToAttach.getIdImage());
                 attachedImageCollection.add(imageCollectionImageToAttach);
             }
             document.setImageCollection(attachedImageCollection);
@@ -106,12 +105,12 @@ public class DocumentJpaController implements Serializable {
                 }
             }
             for (Image imageCollectionImage : document.getImageCollection()) {
-                Document oldDocumentOfImageCollectionImage = imageCollectionImage.getDocument();
-                imageCollectionImage.setDocument(document);
+                Document oldFkDocumentOfImageCollectionImage = imageCollectionImage.getFkDocument();
+                imageCollectionImage.setFkDocument(document);
                 imageCollectionImage = em.merge(imageCollectionImage);
-                if (oldDocumentOfImageCollectionImage != null) {
-                    oldDocumentOfImageCollectionImage.getImageCollection().remove(imageCollectionImage);
-                    oldDocumentOfImageCollectionImage = em.merge(oldDocumentOfImageCollectionImage);
+                if (oldFkDocumentOfImageCollectionImage != null) {
+                    oldFkDocumentOfImageCollectionImage.getImageCollection().remove(imageCollectionImage);
+                    oldFkDocumentOfImageCollectionImage = em.merge(oldFkDocumentOfImageCollectionImage);
                 }
             }
             em.getTransaction().commit();
@@ -158,7 +157,7 @@ public class DocumentJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Image " + imageCollectionOldImage + " since its document field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Image " + imageCollectionOldImage + " since its fkDocument field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -187,7 +186,7 @@ public class DocumentJpaController implements Serializable {
             document.setDocumentDataCollection(documentDataCollectionNew);
             Collection<Image> attachedImageCollectionNew = new ArrayList<Image>();
             for (Image imageCollectionNewImageToAttach : imageCollectionNew) {
-                imageCollectionNewImageToAttach = em.getReference(imageCollectionNewImageToAttach.getClass(), imageCollectionNewImageToAttach.getImagePK());
+                imageCollectionNewImageToAttach = em.getReference(imageCollectionNewImageToAttach.getClass(), imageCollectionNewImageToAttach.getIdImage());
                 attachedImageCollectionNew.add(imageCollectionNewImageToAttach);
             }
             imageCollectionNew = attachedImageCollectionNew;
@@ -229,12 +228,12 @@ public class DocumentJpaController implements Serializable {
             }
             for (Image imageCollectionNewImage : imageCollectionNew) {
                 if (!imageCollectionOld.contains(imageCollectionNewImage)) {
-                    Document oldDocumentOfImageCollectionNewImage = imageCollectionNewImage.getDocument();
-                    imageCollectionNewImage.setDocument(document);
+                    Document oldFkDocumentOfImageCollectionNewImage = imageCollectionNewImage.getFkDocument();
+                    imageCollectionNewImage.setFkDocument(document);
                     imageCollectionNewImage = em.merge(imageCollectionNewImage);
-                    if (oldDocumentOfImageCollectionNewImage != null && !oldDocumentOfImageCollectionNewImage.equals(document)) {
-                        oldDocumentOfImageCollectionNewImage.getImageCollection().remove(imageCollectionNewImage);
-                        oldDocumentOfImageCollectionNewImage = em.merge(oldDocumentOfImageCollectionNewImage);
+                    if (oldFkDocumentOfImageCollectionNewImage != null && !oldFkDocumentOfImageCollectionNewImage.equals(document)) {
+                        oldFkDocumentOfImageCollectionNewImage.getImageCollection().remove(imageCollectionNewImage);
+                        oldFkDocumentOfImageCollectionNewImage = em.merge(oldFkDocumentOfImageCollectionNewImage);
                     }
                 }
             }
@@ -287,7 +286,7 @@ public class DocumentJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Document (" + document + ") cannot be destroyed since the Image " + imageCollectionOrphanCheckImage + " in its imageCollection field has a non-nullable document field.");
+                illegalOrphanMessages.add("This Document (" + document + ") cannot be destroyed since the Image " + imageCollectionOrphanCheckImage + " in its imageCollection field has a non-nullable fkDocument field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
@@ -330,6 +329,15 @@ public class DocumentJpaController implements Serializable {
         }
     }
 
+    public Document findDocument(Integer id) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(Document.class, id);
+        } finally {
+            em.close();
+        }
+    }
+
     public Document findByName(String name) {
         Document document = null;
         try {
@@ -341,15 +349,6 @@ public class DocumentJpaController implements Serializable {
             Logger.getLogger(DocumentJpaController.class.getName()).log(Level.SEVERE, null, e);
         }
         return document;
-    }
-
-    public Document findDocument(Integer id) {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(Document.class, id);
-        } finally {
-            em.close();
-        }
     }
 
     public int getDocumentCount() {

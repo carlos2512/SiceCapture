@@ -27,18 +27,20 @@ public class PaintedPane extends JPanel {
     private Rectangle drawRectangle;
     private boolean highlight = false;
     private boolean imageSelected = false;
+    private File file;
 
     public void removeImage() {
         this.setVisible(false);
         imageSelected = false;
         img = null;
+        file = null;
     }
 
     public PaintedPane() {
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 Color color = new Color(57, 105, 138);
-                setBorder(javax.swing.BorderFactory.createLineBorder(color,3));
+                setBorder(javax.swing.BorderFactory.createLineBorder(color, 3));
                 imageSelected = true;
             }
         });
@@ -48,20 +50,17 @@ public class PaintedPane extends JPanel {
         return imageSelected;
     }
 
-    public boolean imageSelected() {
-        boolean response = false;
-        if (getBorder().equals(javax.swing.BorderFactory.createLineBorder(Color.BLUE))) {
-            response = true;
-        }
-        return response;
-    }
-
     public void setHighlight(boolean highlight) {
         this.highlight = highlight;
     }
 
+    public BufferedImage getSelectedImage() {
+        return img;
+    }
+
     public void loadImage(File file) {
         try {
+            this.file = file;
             img = ImageIO.read(file);
         } catch (IOException ex) {
             Logger.getLogger(PaintedPane.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,6 +69,14 @@ public class PaintedPane extends JPanel {
 
     public boolean isImageLoaded() {
         return img != null;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 
     @Override

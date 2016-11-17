@@ -37,14 +37,6 @@ public class ExpedientJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public Expedient findByName(String name) {
-        EntityManager em = getEntityManager();
-        Query query = em.createNamedQuery("Expedient.findByName", Expedient.class);
-        query.setParameter("name", name);
-        Expedient expedient = (Expedient) query.getSingleResult();
-        return expedient;
-    }
-
     public void create(Expedient expedient) {
         if (expedient.getDocumentCollection() == null) {
             expedient.setDocumentCollection(new ArrayList<Document>());
@@ -73,7 +65,7 @@ public class ExpedientJpaController implements Serializable {
             expedient.setExpedientClientCollection(attachedExpedientClientCollection);
             Collection<Image> attachedImageCollection = new ArrayList<Image>();
             for (Image imageCollectionImageToAttach : expedient.getImageCollection()) {
-                imageCollectionImageToAttach = em.getReference(imageCollectionImageToAttach.getClass(), imageCollectionImageToAttach.getImagePK());
+                imageCollectionImageToAttach = em.getReference(imageCollectionImageToAttach.getClass(), imageCollectionImageToAttach.getIdImage());
                 attachedImageCollection.add(imageCollectionImageToAttach);
             }
             expedient.setImageCollection(attachedImageCollection);
@@ -92,12 +84,12 @@ public class ExpedientJpaController implements Serializable {
                 }
             }
             for (Image imageCollectionImage : expedient.getImageCollection()) {
-                Expedient oldExpedientOfImageCollectionImage = imageCollectionImage.getExpedient();
-                imageCollectionImage.setExpedient(expedient);
+                Expedient oldFkExpedientOfImageCollectionImage = imageCollectionImage.getFkExpedient();
+                imageCollectionImage.setFkExpedient(expedient);
                 imageCollectionImage = em.merge(imageCollectionImage);
-                if (oldExpedientOfImageCollectionImage != null) {
-                    oldExpedientOfImageCollectionImage.getImageCollection().remove(imageCollectionImage);
-                    oldExpedientOfImageCollectionImage = em.merge(oldExpedientOfImageCollectionImage);
+                if (oldFkExpedientOfImageCollectionImage != null) {
+                    oldFkExpedientOfImageCollectionImage.getImageCollection().remove(imageCollectionImage);
+                    oldFkExpedientOfImageCollectionImage = em.merge(oldFkExpedientOfImageCollectionImage);
                 }
             }
             em.getTransaction().commit();
@@ -134,7 +126,7 @@ public class ExpedientJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Image " + imageCollectionOldImage + " since its expedient field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Image " + imageCollectionOldImage + " since its fkExpedient field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -156,7 +148,7 @@ public class ExpedientJpaController implements Serializable {
             expedient.setExpedientClientCollection(expedientClientCollectionNew);
             Collection<Image> attachedImageCollectionNew = new ArrayList<Image>();
             for (Image imageCollectionNewImageToAttach : imageCollectionNew) {
-                imageCollectionNewImageToAttach = em.getReference(imageCollectionNewImageToAttach.getClass(), imageCollectionNewImageToAttach.getImagePK());
+                imageCollectionNewImageToAttach = em.getReference(imageCollectionNewImageToAttach.getClass(), imageCollectionNewImageToAttach.getIdImage());
                 attachedImageCollectionNew.add(imageCollectionNewImageToAttach);
             }
             imageCollectionNew = attachedImageCollectionNew;
@@ -187,12 +179,12 @@ public class ExpedientJpaController implements Serializable {
             }
             for (Image imageCollectionNewImage : imageCollectionNew) {
                 if (!imageCollectionOld.contains(imageCollectionNewImage)) {
-                    Expedient oldExpedientOfImageCollectionNewImage = imageCollectionNewImage.getExpedient();
-                    imageCollectionNewImage.setExpedient(expedient);
+                    Expedient oldFkExpedientOfImageCollectionNewImage = imageCollectionNewImage.getFkExpedient();
+                    imageCollectionNewImage.setFkExpedient(expedient);
                     imageCollectionNewImage = em.merge(imageCollectionNewImage);
-                    if (oldExpedientOfImageCollectionNewImage != null && !oldExpedientOfImageCollectionNewImage.equals(expedient)) {
-                        oldExpedientOfImageCollectionNewImage.getImageCollection().remove(imageCollectionNewImage);
-                        oldExpedientOfImageCollectionNewImage = em.merge(oldExpedientOfImageCollectionNewImage);
+                    if (oldFkExpedientOfImageCollectionNewImage != null && !oldFkExpedientOfImageCollectionNewImage.equals(expedient)) {
+                        oldFkExpedientOfImageCollectionNewImage.getImageCollection().remove(imageCollectionNewImage);
+                        oldFkExpedientOfImageCollectionNewImage = em.merge(oldFkExpedientOfImageCollectionNewImage);
                     }
                 }
             }
@@ -238,7 +230,7 @@ public class ExpedientJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Expedient (" + expedient + ") cannot be destroyed since the Image " + imageCollectionOrphanCheckImage + " in its imageCollection field has a non-nullable expedient field.");
+                illegalOrphanMessages.add("This Expedient (" + expedient + ") cannot be destroyed since the Image " + imageCollectionOrphanCheckImage + " in its imageCollection field has a non-nullable fkExpedient field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
@@ -260,7 +252,7 @@ public class ExpedientJpaController implements Serializable {
     public List<Expedient> findExpedientEntities() {
         return findExpedientEntities(true, -1, -1);
     }
-    
+
     public List<Expedient> findExpedientEntities(int maxResults, int firstResult) {
         return findExpedientEntities(false, maxResults, firstResult);
     }
@@ -301,6 +293,14 @@ public class ExpedientJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+
+    public Expedient findByName(String name) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Expedient.findByName", Expedient.class);
+        query.setParameter("name", name);
+        Expedient expedient = (Expedient) query.getSingleResult();
+        return expedient;
     }
 
 }

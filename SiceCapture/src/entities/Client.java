@@ -5,7 +5,6 @@
  */
 package entities;
 
-
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -48,7 +47,7 @@ public class Client implements Serializable {
     private String name;
     @Basic(optional = false)
     @Column(name = "identification")
-    private int identification;
+    private Integer identification;
     @Basic(optional = false)
     @Column(name = "identification_type")
     private String identificationType;
@@ -57,7 +56,7 @@ public class Client implements Serializable {
     private String country;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
     private Collection<ExpedientClient> expedientClientCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkClient")
     private Collection<Image> imageCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
     private Collection<ClientData> clientDataCollection;
@@ -69,7 +68,7 @@ public class Client implements Serializable {
         this.idUser = idUser;
     }
 
-    public Client(Integer idUser, String name, String lastname, int identification, String identificationType, String country) {
+    public Client(Integer idUser, String name, Integer identification, String identificationType, String country) {
         this.idUser = idUser;
         this.name = name;
         this.identification = identification;
@@ -93,13 +92,11 @@ public class Client implements Serializable {
         this.name = name;
     }
 
-
-
-    public int getIdentification() {
+    public Integer getIdentification() {
         return identification;
     }
 
-    public void setIdentification(int identification) {
+    public void setIdentification(Integer identification) {
         this.identification = identification;
     }
 
@@ -168,7 +165,7 @@ public class Client implements Serializable {
 
     @Override
     public String toString() {
-        return "asd.Client[ idUser=" + idUser + " ]";
+        return "entities.Client[ idUser=" + idUser + " ]";
     }
     
 }
