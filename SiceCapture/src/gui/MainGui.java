@@ -561,9 +561,9 @@ public class MainGui extends javax.swing.JFrame {
             .addGroup(documentParameterPaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
                     .addGroup(documentParameterPaneLayout.createSequentialGroup()
                         .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3)
                             .addGroup(documentParameterPaneLayout.createSequentialGroup()
                                 .addComponent(titleDocumentPaneLabel)
                                 .addGap(0, 0, Short.MAX_VALUE))
@@ -624,11 +624,11 @@ public class MainGui extends javax.swing.JFrame {
                     .addComponent(maxSizeDocumentPaneTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxSizeDocumentPaneLabel))
                 .addGap(18, 18, 18)
-                .addComponent(repeatDocumentPaneLabel)
-                .addGap(9, 9, 9)
-                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(alertDocumentPaneLabel)
+                .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(repeatDocumentPaneLabel)
                     .addComponent(repeatDocumentPaneCheckBox))
+                .addGap(11, 11, 11)
+                .addComponent(alertDocumentPaneLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -862,6 +862,7 @@ public class MainGui extends javax.swing.JFrame {
 
         captureDataShowDocumentNameLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         captureDataShowDocumentNameLabel.setForeground(new java.awt.Color(153, 153, 153));
+        captureDataShowDocumentNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         captureDataShowDocumentNameLabel.setText("Nombre Documento");
 
         dataCaptureTable.setModel(new javax.swing.table.DefaultTableModel(

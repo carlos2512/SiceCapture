@@ -303,4 +303,11 @@ public class ExpedientJpaController implements Serializable {
         return expedient;
     }
 
+    public List<Expedient> finAllExpedients() {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Expedient.findAll", Expedient.class);
+        List<Expedient> expedient = (List<Expedient>) query.getResultList();
+        return expedient;
+    }
+
 }

@@ -28,9 +28,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "expedient_client")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ExpedientClient.findAll", query = "SELECT e FROM ExpedientClient e"),
+    @NamedQuery(name = "ExpedientClient.findAll", query = "SELECT e FROM ExpedientClient e WHERE e.expedient.estate  = 1"),
     @NamedQuery(name = "ExpedientClient.findByFkExpedient", query = "SELECT e FROM ExpedientClient e WHERE e.expedientClientPK.fkExpedient = :fkExpedient"),
-    @NamedQuery(name = "ExpedientClient.findByFkClient", query = "SELECT e FROM ExpedientClient e WHERE e.client = :fkClient"),
+    @NamedQuery(name = "ExpedientClient.findByFkClient", query = "SELECT e FROM ExpedientClient e WHERE e.client = :fkClient and e.expedient.estate = 1"),
     @NamedQuery(name = "ExpedientClient.findByLastModification", query = "SELECT e FROM ExpedientClient e WHERE e.lastModification = :lastModification")})
 public class ExpedientClient implements Serializable {
     private static final long serialVersionUID = 1L;

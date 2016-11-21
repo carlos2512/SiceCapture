@@ -9,6 +9,7 @@ import controller.DocumentJpaController;
 import controller.ExpedientClientJpaController;
 import controller.ExpedientJpaController;
 import controller.ImageJpaController;
+import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import core.DirectoryHandler;
 import core.ScannerBackground;
@@ -27,27 +28,24 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,6 +82,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /*
@@ -104,6 +103,7 @@ public class MainCustomGui extends javax.swing.JFrame {
     private DocumentJpaController documentController;
     private ExpedientJpaController expedientController;
     private JDialog includeDocumentDialog;
+    private Expedient expedientParentSelected;
     private ExpedientClientJpaController expedientClientController;
     private CheckTreeManager checkTreeManager;
     private ClientJpaController clientController;
@@ -115,7 +115,9 @@ public class MainCustomGui extends javax.swing.JFrame {
     private List componentList;
     private ClientDataJpaController clientDataController;
     private JDialog includeExpedientDialog;
+    private JDialog creationExpedientDialog;
     private boolean indexProcessIsActive;
+    private JDialog creationDocumentDialog;
     private Expedient selectedExpedientFromTree;
     private List<DocumentData> documentDataListCurrentCaptureProcess;
     private Document selectedDocumentFromTree;
@@ -145,10 +147,10 @@ public class MainCustomGui extends javax.swing.JFrame {
         this.emf = emf;
         initControllers();
         initComponents();
+        this.setLocationRelativeTo(null);
         desactiveDocumentParameterPane();
         desactiveDocumentDataParameterPane();
         desactiveCaptureDataShowPane();
-        setLocationRelativeTo(null);
         scannerBackground = new ScannerBackground();
         desactiveAllScannerPanes();
     }
@@ -207,6 +209,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         } else {
             this.resolutionShowCheckBox.setSelected(false);
         }
+        resolutionShowCheckBox.setEnabled(false);
         requeridDocumentPaneCheckBox.setEnabled(false);
         repeatDocumentPaneCheckBox.setEnabled(false);
         expireDocumentPaneCheckBox.setEnabled(false);
@@ -226,10 +229,21 @@ public class MainCustomGui extends javax.swing.JFrame {
                 dataCreationDialog.setVisible(true);
             }
         });
-        JMenuItem modifyDocumentLabel = new JMenuItem("Modificar Documento");
-        JMenuItem deleteDocumentLabel = new JMenuItem("Eliminar Documento");
+        JMenuItem deleteDocumentLabel = new JMenuItem("Desincluir Documento");
+        deleteDocumentLabel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectedDocumentFromTree.getExpedientCollection().remove(expedientParentSelected);
+                try {
+                    documentController.edit(selectedDocumentFromTree);
+                } catch (NonexistentEntityException ex) {
+                    Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                refreshExpedientTree();
+            }
+        });
         popupDocument.add(addDataLabel);
-        popupDocument.add(modifyDocumentLabel);
         popupDocument.add(deleteDocumentLabel);
         popupDocument.show(component, x, y);
     }
@@ -239,6 +253,25 @@ public class MainCustomGui extends javax.swing.JFrame {
         JMenuItem modifyExpedientLabel = new JMenuItem("Modificar Expediente");
         JMenuItem documentInclude = new JMenuItem("Incluir Documento");
         JMenuItem deleteExpedientLabel = new JMenuItem("Eliminar Expediente");
+        deleteExpedientLabel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EntityManager em = emf.createEntityManager();
+                em.getTransaction().begin();
+                selectedExpedientFromTree.setEstate(0);
+                try {
+                    expedientController.edit(selectedExpedientFromTree);
+                } catch (NonexistentEntityException ex) {
+                    Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                refreshExpedientTree();
+
+                em.getTransaction().commit();
+
+            }
+        });
+
         documentInclude.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 includeDocumentDialog = new JDialog();
@@ -273,15 +306,17 @@ public class MainCustomGui extends javax.swing.JFrame {
         DefaultMutableTreeNodeCustom expedientNode = new DefaultMutableTreeNodeCustom(expedientClient.getExpedient());
         if (expedientClient.getExpedient().getDocumentCollection() != null && !expedientClient.getExpedient().getDocumentCollection().isEmpty()) {
             for (Document document : expedientClient.getExpedient().getDocumentCollection()) {
-                DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
-                List<DocumentData> documentDataList = documentDataController.findByDocument(document);
-                if (documentDataList != null && !documentDataList.isEmpty()) {
-                    for (DocumentData documentData : documentDataList) {
-                        DefaultMutableTreeNodeCustom documentDataNode = new DefaultMutableTreeNodeCustom(documentData);
-                        documentNode.add(documentDataNode);
+                if (document.getEstate() == 1) {
+                    DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
+                    List<DocumentData> documentDataList = documentDataController.findByDocument(document);
+                    if (documentDataList != null && !documentDataList.isEmpty()) {
+                        for (DocumentData documentData : documentDataList) {
+                            DefaultMutableTreeNodeCustom documentDataNode = new DefaultMutableTreeNodeCustom(documentData);
+                            documentNode.add(documentDataNode);
+                        }
                     }
+                    expedientNode.add(documentNode);
                 }
-                expedientNode.add(documentNode);
             }
         }
         metaExpedient.add(expedientNode);
@@ -294,15 +329,17 @@ public class MainCustomGui extends javax.swing.JFrame {
             DefaultMutableTreeNodeCustom expedientNode = new DefaultMutableTreeNodeCustom(expedient);
             if (expedient.getDocumentCollection() != null && !expedient.getDocumentCollection().isEmpty()) {
                 for (Document document : expedient.getDocumentCollection()) {
-                    DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
-                    List<DocumentData> documentDataList = documentDataController.findByDocument(document);
-                    if (documentDataList != null && !documentDataList.isEmpty()) {
-                        for (DocumentData documentData : documentDataList) {
-                            DefaultMutableTreeNodeCustom documentDataNode = new DefaultMutableTreeNodeCustom(documentData);
-                            documentNode.add(documentDataNode);
+                    if (document.getEstate() == 1) {
+                        DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
+                        List<DocumentData> documentDataList = documentDataController.findByDocument(document);
+                        if (documentDataList != null && !documentDataList.isEmpty()) {
+                            for (DocumentData documentData : documentDataList) {
+                                DefaultMutableTreeNodeCustom documentDataNode = new DefaultMutableTreeNodeCustom(documentData);
+                                documentNode.add(documentDataNode);
+                            }
                         }
+                        expedientNode.add(documentNode);
                     }
-                    expedientNode.add(documentNode);
                 }
             }
             metaExpedient.add(expedientNode);
@@ -359,7 +396,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         findSearchButton.setText("Buscar");
         cleanSearchButton.setText("Limpiar");
         List<ExpedientClient> expedientClientList = new ArrayList<>();
-        expedientClientList = expedientClientController.findExpedientClientEntities();
+        expedientClientList = expedientClientController.finAllExpedientClient();
         TableModelCustom tblModel = new TableModelCustom(expedientClientList);
         sorter = new TableRowSorter<TableModel>(tblModel);
         searchTable.setModel(new TableModelCustom(expedientClientList));
@@ -551,6 +588,7 @@ public class MainCustomGui extends javax.swing.JFrame {
             newDocument.setMaxImageSize(300);
             newDocument.setCanRepeat(1);
             newDocument.setCanExpire(1);
+            newDocument.setEstate(1);
             newDocument.setIsRequired(1);
             documentController.create(newDocument);
             DocumentData identificationNumberData = new DocumentData();
@@ -607,7 +645,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         registPersonDialog.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         registPersonDialog.setResizable(false);
         registPersonDialog.setTitle("Registrar Persona");
-
+        identificacionNumberTxt.setDocument(new JTextFieldLimit(9));
         idenTypeSelectorLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         idenTypeSelectorLabel.setForeground(new java.awt.Color(153, 153, 153));
         idenTypeSelectorLabel.setText("Tipo Identificación:");
@@ -625,7 +663,11 @@ public class MainCustomGui extends javax.swing.JFrame {
         nationSelectorRegistPersonLabel.setText("Nacionalidad:");
 
         registPersonButton.setText("Guardar");
-
+        cleanRegistPersonButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cleanRegistPersonAction(evt);
+            }
+        });
         registPersonButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registPersonAction(evt);
@@ -648,7 +690,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         expedientIncludeRegistLabel.setForeground(new java.awt.Color(153, 153, 153));
         expedientIncludeRegistLabel.setText("Inlcuir Expediente:");
 
-        List<Expedient> expedientList = this.expedientController.findExpedientEntities();
+        List<Expedient> expedientList = this.expedientController.finAllExpedients();
         expedientIncludeList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         expedientIncludeList = new JList(new Vector<Expedient>(expedientList));
         expedientIncludeList.setVisibleRowCount(10);
@@ -797,7 +839,7 @@ public class MainCustomGui extends javax.swing.JFrame {
 
         cleanDocumentButton.setText("Limpiar");
 
-        List<Expedient> expedientList = this.expedientController.findExpedientEntities();
+        List<Expedient> expedientList = this.expedientController.finAllExpedients();
         ExpedientList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         ExpedientList = new JList(new Vector<Expedient>(expedientList));
         ExpedientList.setVisibleRowCount(10);
@@ -967,7 +1009,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addContainerGap())
         );
         creationDocumentDialog.pack();
-        creationDocumentDialog.setLocationRelativeTo(null);
+        creationDocumentDialog.setLocationRelativeTo(this);
 
     }// </editor-fold>                        
 
@@ -1031,6 +1073,13 @@ public class MainCustomGui extends javax.swing.JFrame {
         jScrollPane2.setViewportView(ExpedientDocumentList);
 
         createExpedientButton.setText("Crear");
+
+        cleanExpedientButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cleanExpedientButtonAction(evt);
+            }
+        });
+
         createExpedientButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createExpedientButtonActionPerformed(evt);
@@ -1109,7 +1158,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         );
 
         dialogCreationExpedient.pack();
-        dialogCreationExpedient.setLocationRelativeTo(null);
+        dialogCreationExpedient.setLocationRelativeTo(this);
     }// </editor-fold>                      
 
     /**
@@ -1236,21 +1285,23 @@ public class MainCustomGui extends javax.swing.JFrame {
         documentReceptionLabel.setVisible(false);
         indextionLayoutCardPane.setVisible(false);
         templateCreationLayoutCardPane.setVisible(true);
-        List<Expedient> allExpedientsList = expedientController.findExpedientEntities();
+        List<Expedient> allExpedientsList = expedientController.finAllExpedients();
         DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
         for (Expedient expedient : allExpedientsList) {
             DefaultMutableTreeNodeCustom expedientNode = new DefaultMutableTreeNodeCustom(expedient);
             if (expedient.getDocumentCollection() != null && !expedient.getDocumentCollection().isEmpty()) {
                 for (Document document : expedient.getDocumentCollection()) {
-                    DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
-                    List<DocumentData> documentDataList = documentDataController.findByDocument(document);
-                    if (documentDataList != null && !documentDataList.isEmpty()) {
-                        for (DocumentData documentData : documentDataList) {
-                            DefaultMutableTreeNodeCustom documentDataNode = new DefaultMutableTreeNodeCustom(documentData);
-                            documentNode.add(documentDataNode);
+                    if (document.getEstate() == 1) {
+                        DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
+                        List<DocumentData> documentDataList = documentDataController.findByDocument(document);
+                        if (documentDataList != null && !documentDataList.isEmpty()) {
+                            for (DocumentData documentData : documentDataList) {
+                                DefaultMutableTreeNodeCustom documentDataNode = new DefaultMutableTreeNodeCustom(documentData);
+                                documentNode.add(documentDataNode);
+                            }
                         }
+                        expedientNode.add(documentNode);
                     }
-                    expedientNode.add(documentNode);
                 }
             }
             metaExpedient.add(expedientNode);
@@ -1265,12 +1316,15 @@ public class MainCustomGui extends javax.swing.JFrame {
             public void valueChanged(TreeSelectionEvent evt) {
                 selectedExpedientFromTree = null;
                 selectedDocumentFromTree = null;
-
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) expedientTree.getLastSelectedPathComponent();
                 if (node != null) {
                     if (node.getUserObject() instanceof Expedient) {
                         selectedExpedientFromTree = (Expedient) node.getUserObject();
                     } else if (node.getUserObject() instanceof Document) {
+                        DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) node.getParent();
+                        if (parentNode.getUserObject() instanceof Expedient) {
+                            expedientParentSelected = (Expedient) parentNode.getUserObject();
+                        }
                         selectedDocumentFromTree = (Document) node.getUserObject();
                     }
                 }
@@ -1316,7 +1370,7 @@ public class MainCustomGui extends javax.swing.JFrame {
                 mainPanelNavigationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelNavigationLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPaneExpedientTree, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPaneExpedientTree, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
         );
 
@@ -1369,15 +1423,15 @@ public class MainCustomGui extends javax.swing.JFrame {
         requeridDocumentPaneLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         requeridDocumentPaneLabel.setForeground(new java.awt.Color(153, 153, 153));
         requeridDocumentPaneLabel.setText("Es requerido:");
-
         resolutionShowTextArea.setColumns(20);
-        resolutionShowTextArea.setRows(5);
+        resolutionShowTextArea.setRows(4);
+        resolutionShowTextArea.setEditable(false);
+
         jScrollPane3.setViewportView(resolutionShowTextArea);
 
         resolutionShowLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         resolutionShowLabel.setForeground(new java.awt.Color(153, 153, 153));
         resolutionShowLabel.setText("Resolución:");
-
         javax.swing.GroupLayout documentParameterPaneLayout = new javax.swing.GroupLayout(documentParameterPane);
         documentParameterPane.setLayout(documentParameterPaneLayout);
         documentParameterPaneLayout.setHorizontalGroup(
@@ -1388,9 +1442,9 @@ public class MainCustomGui extends javax.swing.JFrame {
                 .addGroup(documentParameterPaneLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
                                 .addGroup(documentParameterPaneLayout.createSequentialGroup()
                                         .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jScrollPane3)
                                                 .addGroup(documentParameterPaneLayout.createSequentialGroup()
                                                         .addComponent(titleDocumentPaneLabel)
                                                         .addGap(0, 0, Short.MAX_VALUE))
@@ -1451,11 +1505,11 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addComponent(maxSizeDocumentPaneTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(maxSizeDocumentPaneLabel))
                         .addGap(18, 18, 18)
-                        .addComponent(repeatDocumentPaneLabel)
-                        .addGap(9, 9, 9)
-                        .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(alertDocumentPaneLabel)
+                        .addGroup(documentParameterPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(repeatDocumentPaneLabel)
                                 .addComponent(repeatDocumentPaneCheckBox))
+                        .addGap(11, 11, 11)
+                        .addComponent(alertDocumentPaneLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1536,9 +1590,9 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addContainerGap(274, Short.MAX_VALUE))
         );
 
-        scannerPaneUpLeft.setMaximumSize(new java.awt.Dimension(240, 259));
-        scannerPaneUpLeft.setMinimumSize(new java.awt.Dimension(240, 259));
-        scannerPaneUpLeft.setPreferredSize(new java.awt.Dimension(240, 259));
+        scannerPaneUpLeft.setMaximumSize(new java.awt.Dimension(240, 250));
+        scannerPaneUpLeft.setMinimumSize(new java.awt.Dimension(240, 250));
+        scannerPaneUpLeft.setPreferredSize(new java.awt.Dimension(240, 250));
 
         removeUpLeftButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove3.png"))); // NOI18N
         removeUpLeftButton.setBorder(null);
@@ -1572,9 +1626,9 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addComponent(sizeLabelImage)
                         .addContainerGap())
         );
-        scannerPaneUpRight.setMaximumSize(new java.awt.Dimension(240, 259));
-        scannerPaneUpRight.setMinimumSize(new java.awt.Dimension(240, 259));
-        scannerPaneUpRight.setPreferredSize(new java.awt.Dimension(240, 259));
+        scannerPaneUpRight.setMaximumSize(new java.awt.Dimension(240, 250));
+        scannerPaneUpRight.setMinimumSize(new java.awt.Dimension(240, 250));
+        scannerPaneUpRight.setPreferredSize(new java.awt.Dimension(240, 250));
 
         removeUpRightButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove3.png"))); // NOI18N
         removeUpRightButton.setPreferredSize(new java.awt.Dimension(39, 39));
@@ -1613,9 +1667,9 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addGap(0, 227, Short.MAX_VALUE)))
         );
 
-        scannerPaneDownRight.setMaximumSize(new java.awt.Dimension(240, 259));
-        scannerPaneDownRight.setMinimumSize(new java.awt.Dimension(240, 259));
-        scannerPaneDownRight.setPreferredSize(new java.awt.Dimension(240, 259));
+        scannerPaneDownRight.setMaximumSize(new java.awt.Dimension(240, 250));
+        scannerPaneDownRight.setMinimumSize(new java.awt.Dimension(240, 250));
+        scannerPaneDownRight.setPreferredSize(new java.awt.Dimension(240, 250));
 
         removeDownRightButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove3.png"))); // NOI18N
         removeDownRightButton.setPreferredSize(new java.awt.Dimension(39, 39));
@@ -1653,9 +1707,9 @@ public class MainCustomGui extends javax.swing.JFrame {
                                 .addGap(0, 220, Short.MAX_VALUE)))
         );
 
-        scannerPaneDownLeft.setMaximumSize(new java.awt.Dimension(240, 259));
-        scannerPaneDownLeft.setMinimumSize(new java.awt.Dimension(240, 259));
-        scannerPaneDownLeft.setPreferredSize(new java.awt.Dimension(240, 259));
+        scannerPaneDownLeft.setMaximumSize(new java.awt.Dimension(240, 250));
+        scannerPaneDownLeft.setMinimumSize(new java.awt.Dimension(240, 250));
+        scannerPaneDownLeft.setPreferredSize(new java.awt.Dimension(240, 250));
         removeDownLeftButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/remove3.png")));
         removeDownLeftButton.setPreferredSize(new java.awt.Dimension(39, 39));
         removeDownLeftButton.setBorder(null);
@@ -1695,6 +1749,7 @@ public class MainCustomGui extends javax.swing.JFrame {
 
         captureDataShowDocumentNameLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         captureDataShowDocumentNameLabel.setForeground(new java.awt.Color(153, 153, 153));
+        captureDataShowDocumentNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         captureDataShowDocumentNameLabel.setText("Nombre Documento");
 
         dataCaptureScrollPane.setViewportView(dataCaptureTable);
@@ -1887,7 +1942,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         indextionLayoutCardPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         indextionLayoutCardPane.setLayout(new java.awt.CardLayout());
 
-        indexDocumentIconProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/indextionProcess.png"))); // NOI18N
+        indexDocumentIconProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/indexIcon.png"))); // NOI18N
 
         indexDocumentLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         indexDocumentLabel.setForeground(new java.awt.Color(153, 153, 153));
@@ -2200,9 +2255,10 @@ public class MainCustomGui extends javax.swing.JFrame {
                         .addContainerGap())
         );
 
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         receptionLayoutCardPane.setVisible(false);
-        Dimension mainPanesDimension = new Dimension(480, 518);
-        Dimension mainWindow = new Dimension(915, 780);
+        Dimension mainPanesDimension = new Dimension(480, 500);
+        Dimension mainWindow = new Dimension(915, 740);
         layeredOperationalPane.setMaximumSize(mainPanesDimension);
         layeredOperationalPane.setMinimumSize(mainPanesDimension);
         layeredOperationalPane.setPreferredSize(mainPanesDimension);
@@ -2368,7 +2424,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         );
 
         dialogCreationData.pack();
-        dialogCreationData.setLocationRelativeTo(null);
+        dialogCreationData.setLocationRelativeTo(this);
     }// </editor-fold>  
 
     private void scannerButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2464,6 +2520,8 @@ public class MainCustomGui extends javax.swing.JFrame {
         this.uploadImageButton.setEnabled(false);
         this.scannerButton.setEnabled(false);
         this.indexButton.setEnabled(true);
+        indexButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/index1.png")));
+        this.indexLabel.setText("Indexar");
         this.templateCreationButton.setEnabled(true);
         //Desactivamos y activamos paneles de operacion
         this.receptionLayoutCardPane.setVisible(true);
@@ -2580,7 +2638,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         inclusionExpedientLabel = new javax.swing.JLabel();
         includeExpedientDialog.setTitle("Inclusión de Expedientes");
         includeExpedientDialog.setResizable(false);
-        List<Expedient> expedientList = this.expedientController.findExpedientEntities();
+        List<Expedient> expedientList = this.expedientController.finAllExpedients();
         List<Expedient> expedientTemp = new ArrayList<>();
         List<ExpedientClient> allExpedientsListOfClient = expedientClientController.findExpedientClientByClient(expedientClientInProcess.getClient());
         for (ExpedientClient expedientClient : allExpedientsListOfClient) {
@@ -2664,7 +2722,13 @@ public class MainCustomGui extends javax.swing.JFrame {
         );
 
         includeExpedientDialog.pack();
-        includeExpedientDialog.setLocationRelativeTo(null);
+        includeExpedientDialog.setLocationRelativeTo(this);
+    }
+
+    private Expedient findExpedientParent(TreePath documentPath) {
+        TreePath parentPath = documentPath.getParentPath();
+        return new Expedient();
+
     }
 
     private void initShowCaptureData() {
@@ -2718,7 +2782,7 @@ public class MainCustomGui extends javax.swing.JFrame {
         dialog.pack();
         dialog.setResizable(false);
         dialog.setTitle("Capturar Datos");
-        dialog.setLocationRelativeTo(null);
+        dialog.setLocationRelativeTo(this);
         captureButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 captureProcessAction(evt);
@@ -3092,43 +3156,58 @@ public class MainCustomGui extends javax.swing.JFrame {
         imageController = new ImageJpaController(emf);
     }
 
+    private void cleanExpedientButtonAction(java.awt.event.ActionEvent evt) {
+        nameExpedientTxt.setText("");
+        descriptionExpedientTxt.setText("");
+        ExpedientDocumentList.clearSelection();
+    }
+
     private void createExpedientButtonActionPerformed(java.awt.event.ActionEvent evt) {
         boolean validProcess = true;
         if ("".equals(nameExpedientTxt.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un nombre para el expediente");
             validProcess = false;
         } else if ("".equals(descriptionExpedientTxt.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una descripción para el expediente");
             validProcess = false;
         }
+
         if (validProcess) {
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
             Expedient expedient = new Expedient();
+            expedient.setEstate(1);
             expedient.setName(nameExpedientTxt.getText().trim());
             expedient.setDescription(descriptionExpedientTxt.getText().trim());
             List<Document> selectedDocuments = ExpedientDocumentList.getSelectedValuesList();
             expedient.setDocumentCollection(selectedDocuments);
             expedientController.create(expedient);
             em.getTransaction().commit();
-            refreshExpedientTree();
+            if (creationExpedientState) {
+                refreshExpedientTree();
+            }
+            creationExpedientDialog.setVisible(false);
         }
     }
 
     public void refreshExpedientTree() {
-        List<Expedient> allExpedientsList = expedientController.findExpedientEntities();
+        List<Expedient> allExpedientsList = expedientController.finAllExpedients();
         DefaultMutableTreeNode metaExpedient = new DefaultMutableTreeNode("Meta Expedientes");
         for (Expedient expedient : allExpedientsList) {
             DefaultMutableTreeNodeCustom expedientNode = new DefaultMutableTreeNodeCustom(expedient);
             if (expedient.getDocumentCollection() != null && !expedient.getDocumentCollection().isEmpty()) {
                 for (Document document : expedient.getDocumentCollection()) {
-                    DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
-                    List<DocumentData> documentDataList = documentDataController.findByDocument(document);
-                    if (documentDataList != null && !documentDataList.isEmpty()) {
-                        for (DocumentData documentData : documentDataList) {
-                            DefaultMutableTreeNodeCustom documentDataNode = new DefaultMutableTreeNodeCustom(documentData);
-                            documentNode.add(documentDataNode);
+                    if (document.getEstate() == 1) {
+                        DefaultMutableTreeNodeCustom documentNode = new DefaultMutableTreeNodeCustom(document);
+                        List<DocumentData> documentDataList = documentDataController.findByDocument(document);
+                        if (documentDataList != null && !documentDataList.isEmpty()) {
+                            for (DocumentData documentData : documentDataList) {
+                                DefaultMutableTreeNodeCustom documentDataNode = new DefaultMutableTreeNodeCustom(documentData);
+                                documentNode.add(documentDataNode);
+                            }
                         }
+                        expedientNode.add(documentNode);
                     }
-                    expedientNode.add(documentNode);
                 }
             }
             metaExpedient.add(expedientNode);
@@ -3166,15 +3245,27 @@ public class MainCustomGui extends javax.swing.JFrame {
         } else {
             chooser.setCurrentDirectory(new java.io.File(imagesDirectory));
         }
-        chooser.showDialog(this, null);
-        String path = null;
-        if (chooser.getSelectedFile() != null) {
-            path = chooser.getSelectedFile().getAbsolutePath();
-        }
-        if (path != null && !path.equalsIgnoreCase("")) {
-            directoryHandler.addDirectory("imagesDirectory", path);
 
+        int result = chooser.showDialog(this, null);
+        switch (result) {
+            case JFileChooser.APPROVE_OPTION:
+                String path = null;
+                if (chooser.getSelectedFile() != null) {
+                    path = chooser.getSelectedFile().getAbsolutePath();
+                }
+                if (path != null && !path.equalsIgnoreCase("")) {
+                    directoryHandler.addDirectory("imagesDirectory", path);
+
+                }
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("Cancel or the close-dialog icon was clicked");
+                break;
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("Error");
+                break;
         }
+
     }
 
     private void scannerSelectionAction(java.awt.event.ActionEvent evt) {
@@ -3184,7 +3275,7 @@ public class MainCustomGui extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-        JDialog creationExpedientDialog = new JDialog();
+        creationExpedientDialog = new JDialog();
         initComponentsCreationExpedientDialog(creationExpedientDialog);
         creationExpedientDialog.setModal(true);
         creationExpedientDialog.setVisible(true);
@@ -3203,10 +3294,13 @@ public class MainCustomGui extends javax.swing.JFrame {
         boolean validSize = true;
 
         if ("".equals(nameDocumentTxt.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un nombre para el documento");
             validProcess = false;
         } else if ("".equals(descriptionDocumentTxt.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una descripcion para el documento");
             validProcess = false;
         } else if ("".equals(this.maxImageSizeTxt.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Debe especificar un tamaño maximo de imagenes para el documento");
             validProcess = false;
         }
 
@@ -3252,7 +3346,10 @@ public class MainCustomGui extends javax.swing.JFrame {
             document.setExpedientCollection(selectedExpedients);
             documentController.create(document);
             em.getTransaction().commit();
-            refreshExpedientTree();
+            if (creationExpedientState) {
+                refreshExpedientTree();
+            }
+            creationDocumentDialog.setVisible(false);
         }
     }
 
@@ -3340,7 +3437,6 @@ public class MainCustomGui extends javax.swing.JFrame {
                 scannerPaneDownRight.loadImage(file);
                 scannerPaneDownRight.setVisible(true);
                 scannerPaneDownRight.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
             }
         }
     }
@@ -3349,9 +3445,16 @@ public class MainCustomGui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
+    private void cleanRegistPersonAction(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        identificacionNumberTxt.setText("");
+        nameRegistPersonTxt.setText("");
+        expedientIncludeList.clearSelection();
+    }
+
     private void createNewDocumentItemMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-        JDialog creationDocumentDialog = new JDialog();
+        creationDocumentDialog = new JDialog();
         initComponentsCreationDocumentDialog(creationDocumentDialog);
         creationDocumentDialog.setModal(true);
         creationDocumentDialog.setVisible(true);
@@ -3376,7 +3479,9 @@ public class MainCustomGui extends javax.swing.JFrame {
             Client client = new Client();
             client.setName(nameRegistPersonTxt.getText());
             client.setIdentificationType(idenTypeSelector.getSelectedItem().toString());
-            client.setIdentification(Integer.valueOf(identificacionNumberTxt.getText()));
+            String identificationText = identificacionNumberTxt.getText();
+            Integer identificationNumber = (Integer.parseInt(identificationText.trim(), 10));
+            client.setIdentification(identificationNumber);
             client.setCountry(nationalityTxt.getSelectedItem().toString());
             try {
                 clientController.create(client);
@@ -3447,6 +3552,18 @@ public class MainCustomGui extends javax.swing.JFrame {
 
     private void cleanDataButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+    }
+
+    private void deleteDocumentAction(java.awt.event.ActionEvent evt) {
+        this.selectedDocument.setEstate(0);
+        try {
+            documentController.edit(selectedDocument);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(MainCustomGui.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        refreshExpedientTree();
     }
 
     private void registPersonMenuItemActionPerformed(java.awt.event.ActionEvent evt) {

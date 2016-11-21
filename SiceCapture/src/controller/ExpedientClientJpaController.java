@@ -132,13 +132,13 @@ public class ExpedientClientJpaController implements Serializable {
         }
     }
 
-   public List<ExpedientClient> findExpedientClientByClient(Client fkClient){
-       EntityManager em = getEntityManager();
-       Query query = em.createNamedQuery("ExpedientClient.findByFkClient", ExpedientClient.class);
-       query.setParameter("fkClient", fkClient);
-       List<ExpedientClient> expedientClientList = (List<ExpedientClient>) query.getResultList();
-       return expedientClientList;
-   }
+    public List<ExpedientClient> findExpedientClientByClient(Client fkClient) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("ExpedientClient.findByFkClient", ExpedientClient.class);
+        query.setParameter("fkClient", fkClient);
+        List<ExpedientClient> expedientClientList = (List<ExpedientClient>) query.getResultList();
+        return expedientClientList;
+    }
 
     public void destroy(ExpedientClientPK id) throws NonexistentEntityException {
         EntityManager em = null;
@@ -193,6 +193,13 @@ public class ExpedientClientJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+
+    public List<ExpedientClient> finAllExpedientClient() {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("ExpedientClient.findAll", ExpedientClient.class);
+        List<ExpedientClient> expedientClient = (List<ExpedientClient>) query.getResultList();
+        return expedientClient;
     }
 
     public ExpedientClient findExpedientClient(ExpedientClientPK id) {

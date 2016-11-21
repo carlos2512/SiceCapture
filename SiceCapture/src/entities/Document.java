@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Document.findByName", query = "SELECT d FROM Document d WHERE UPPER(d.name) = :name"),
     @NamedQuery(name = "Document.findByDescription", query = "SELECT d FROM Document d WHERE d.description = :description")})
 public class Document implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,7 +76,9 @@ public class Document implements Serializable {
     private Collection<DocumentData> documentDataCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkDocument")
     private Collection<Image> imageCollection;
-
+    @Column(name = "estate")
+    private Integer estate;
+    
     public Document() {
     }
 
@@ -102,6 +105,14 @@ public class Document implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public Integer getEstate() {
+        return estate;
+    }
+
+    public void setEstate(Integer estate) {
+        this.estate = estate;
     }
 
     public void setName(String name) {
@@ -222,7 +233,7 @@ public class Document implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Document[ idDocument=" + idDocument + " ]";
+        return name;
     }
 
 }
